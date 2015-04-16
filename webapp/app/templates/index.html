@@ -12,6 +12,11 @@
         {% else %}
         <p>Happy to see you again!</p>
         {% endif %}
+        {% if admin %}
+        <p>You're an admin.</p>
+        {% else %}
+        <p>You're a user.</p>
+        {% endif %}
     </div>
     {{ moment.lang('th') }}
     <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>

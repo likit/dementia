@@ -10,7 +10,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 # db = SQLAlchemy()
-mongodb = PyMongo()
+mongo = PyMongo()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -21,7 +21,7 @@ def create_app(config_name):
     mail.init_app(app)
     moment.init_app(app)
     # db.init_app(app)
-    mongodb.init_app(app)
+    mongo.init_app(app)
 
     from main import main as main_blueprint
     app.register_blueprint(main_blueprint)
