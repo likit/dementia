@@ -2,15 +2,35 @@ from flask import render_template, session, redirect, url_for
 from datetime import datetime
 from . import main
 from .forms import NameForm
-from .. import mongo
-# from ..models import User
+from .. import db
+
+from bson.objectid import ObjectId
+import flask_admin as admin
+from wtforms import form, fields
+
+from flask_admin.form import Select2Widget
+from flask_admin.contrib.pymongo import ModelView, filters
+from flask_admin.model.fields import InlineFormField, InlineFieldList
+
+# User admin
+class UserForm(form.Form):
+    username = fields.TextField('Username')
+    email = fields.TextField('Email')
+    role = fields.TextField('Role')
+
+
+class UserView(ModelView):
+    column_list = ('username', 'email', 'role')
+    column_sortable_list = ('username', 'email', 'password')
+
+    form = UserForm
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
     pass
     form = NameForm()
     if form.validate_on_submit():
-        user = mongo.db.users.find_one({'username': form.name.data})
+        user = db.users.find_one({'username': form.name.data})
         session['admin'] = False
         if user is None:
             session['known'] = False
@@ -37,4 +57,3 @@ def index():
 @main.route('/user/<name>')
 def user(name):
     return render_template('user.html', name=name)
-
