@@ -12,6 +12,8 @@ from flask_admin.form import Select2Widget
 from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.model.fields import InlineFormField, InlineFieldList
 
+from flask.ext.login import login_required, current_user
+
 # User admin
 class UserForm(form.Form):
     username = fields.TextField('Username')
@@ -25,9 +27,13 @@ class UserView(ModelView):
 
     form = UserForm
 
+    def is_accessible(self):
+        # return current_user.is_authenticated()
+        return True
+
 @main.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
-    pass
     form = NameForm()
     if form.validate_on_submit():
         user = db.users.find_one({'username': form.name.data})
@@ -54,6 +60,7 @@ def index():
             form=form,
             )
 
-@main.route('/user/<name>')
-def user(name):
-    return render_template('user.html', name=name)
+@main.route('/user')
+@login_required
+def user():
+    return render_template('user.html')
