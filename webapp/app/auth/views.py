@@ -1,29 +1,29 @@
-from flask import render_template, redirect, session
+from flask import render_template, redirect, request, flash, url_for
 from . import auth
-from ..main.forms import NameForm
 from .. import db
 from datetime import datetime
+from flask.ext.login import login_user, login_required, logout_user
+from ..models import User
+from .forms import LoginForm
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    form = NameForm()
+    form = LoginForm()
     if form.validate_on_submit():
-        user = db.users.find_one({'username': form.name.data})
-        session['admin'] = False
-        if user is None:
-            session['known'] = False
-        elif user['role'] == 'admin':
-            session['admin'] = True
-            session['name'] = form.name.data
-            return render_template('admin.html',
-                    current_time=datetime.utcnow(),
-                    name=session.get('name'),
-                    admin=session.get('admin', False),
-                    )
-        else:
-            session['known'] = True
+        user = db.users.find_one({'username': form.username.data})
+        if user is not None:
+            #FIXME: use email instead?
+            user = User(user['username'])
+            login_user(user, form.remember_me.data)
+            return redirect(request.args.get('next') \
+                    or url_for('main.index'))
+        flash('Invalid username')
+    return render_template('auth/login.html', form=form)
 
-        session['name'] = form.name.data
-        form.name.data = ''
 
-    return render_template('/auth/login.html', form=form)
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out!')
+    return redirect(url_for('main.index'))
