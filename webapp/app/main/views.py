@@ -19,6 +19,7 @@ class UserForm(form.Form):
     username = fields.TextField('Username')
     email = fields.TextField('Email')
     role = fields.TextField('Role')
+    password = fields.PasswordField('Password')
 
 
 class UserView(ModelView):
@@ -34,31 +35,7 @@ class UserView(ModelView):
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    form = NameForm()
-    if form.validate_on_submit():
-        user = db.users.find_one({'username': form.name.data})
-        session['admin'] = False
-        if user is None:
-            session['known'] = False
-        elif user['role'] == 'admin':
-            session['admin'] = True
-            session['name'] = form.name.data
-            return render_template('admin.html',
-                    current_time=datetime.utcnow(),
-                    name=session.get('name'),
-                    admin=session.get('admin', False),
-                    )
-        else:
-            session['known'] = True
-
-        session['name'] = form.name.data
-        form.name.data = ''
-
-        return redirect(url_for('.index'))
-
-    return render_template('index.html',
-            form=form,
-            )
+    return render_template('index.html', user=current_user)
 
 @main.route('/user')
 @login_required

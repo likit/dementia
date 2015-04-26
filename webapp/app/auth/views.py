@@ -5,19 +5,21 @@ from datetime import datetime
 from flask.ext.login import login_user, login_required, logout_user
 from ..models import User
 from .forms import LoginForm
+from werkzeug.security import check_password_hash
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = db.users.find_one({'username': form.username.data})
-        if user is not None:
+        if user is not None and check_password_hash(user['password'],
+                form.password.data):
             #FIXME: use email instead?
             user = User(user['username'])
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
-        flash('Invalid username')
+        flash('Invalid username or password')
     return render_template('auth/login.html', form=form)
 
 
