@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Admin Index Page{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        {% if admin %}
+        <h1>Welcome to an admin index page.</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
