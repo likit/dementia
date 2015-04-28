@@ -3,24 +3,40 @@ from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.model.fields import InlineFormField, InlineFieldList
 from flask_admin import AdminIndexView, expose
 from wtforms import form, fields
-from flask.ext.login import current_user
-from flask import redirect, url_for, render_template, flash
+from wtforms.validators import Email, Length, Required
+from flask.ext.login import current_user, login_user
+from flask import redirect, url_for, render_template, flash, request
+from werkzeug.security import check_password_hash
 from datetime import datetime
 from .forms import AdminLoginForm
-from .models import User
-from . import db
+from ..models import User
+from .. import db
+from ..main.forms import Form1
 
 
 class UserForm(form.Form):
-    username = fields.TextField('Username')
-    email = fields.TextField('Email')
-    role = fields.TextField('Role')
-    password = fields.PasswordField('Password')
+    username = fields.TextField('Username',
+            validators=[Required(), Length(1,64)])
+    email = fields.TextField('Email', validators=[Email()])
+    role = fields.TextField('Role', validators=[Required()])
+    # password = fields.PasswordField('Password', validators=[Required()])
+    zone = fields.TextField('Zone', validators=[Required()])
+
+
+class Form1View(ModelView):
+    can_create = False
+    column_list = ('title', 'name', 'district', 'age', 'zone')
+    column_sortable_list = ('name', 'district', 'zone')
+
+    form = Form1
+
+    def is_accessible(self):
+        return current_user.is_authenticated()
 
 
 class UserView(ModelView):
-    column_list = ('username', 'email', 'role')
-    column_sortable_list = ('username', 'email', 'password')
+    column_list = ('username', 'email', 'role', 'password', 'zone')
+    column_sortable_list = ('username', 'email', 'zone', 'password')
 
     form = UserForm
 
@@ -45,11 +61,18 @@ class MyAdminIndexView(AdminIndexView):
         if form.validate_on_submit():
             user = db.users.find_one({'username': form.username.data})
             if user is not None and check_password_hash(user['password'],
-                    form.password.data and user['role']=='admin'):
-                #FIXME: use email instead?
-                user = User(user['username'])
-                login_user(user, form.remember_me.data)
-                return redirect(request.args.get('next') \
-                        or url_for('.index'))
-        flash('Invalid username or password')
+                    form.password.data):
+                if user['role']=='admin':
+                    #FIXME: use email instead?
+                    user = User(user['username'], user['zone'])
+                    login_user(user, form.remember_me.data)
+                    return redirect(request.args.get('next') \
+                            or url_for('.index'))
+                else:
+                    flash('Admin account required.')
+                    form.username.data = ''
+                    form.password.data = ''
+                    return render_template('admin/login.html',
+                            form=form)
+            flash('Invalid username or password')
         return render_template('admin/login.html', form=form)

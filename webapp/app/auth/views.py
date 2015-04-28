@@ -15,7 +15,7 @@ def login():
         if user is not None and check_password_hash(user['password'],
                 form.password.data):
             #FIXME: use email instead?
-            user = User(user['username'])
+            user = User(user['username'], user['zone'])
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
