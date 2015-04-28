@@ -29,3 +29,8 @@ def form_1():
         db.form1.insert(form_data, safe=True)
     return render_template('form_1.html', form=form,
             user=current_user)
+
+@main.route('/form_1_view', methods=['GET', 'POST'])
+@login_required
+def form_1_view():
+    return render_template('form_1_report.html', db=db)
