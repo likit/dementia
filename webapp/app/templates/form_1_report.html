@@ -7,9 +7,11 @@
     <div class="page-header">
         <h2>Form 1 Report</h2>
         <table class="table table-striped table-bordered table-condensed">
-            <tr><td>No.<td>Title<td>Name<td>Age<td>District<td>Community<td>Weight<td>Height</tr>
+            <tr><td>No.<td>Title<td>Name<td>Age<td>District<td>Community<td>Weight<td>Height<td>Zone</tr>
         {% for user in db.form1.find() %}
-        <tr><td>{{ loop.index }}<td>{{ user.title }}<td>{{ user.name }}<td>{{ user.age }}<td>{{ user.district }}<td>{{ user.community }}<td>{{ user.weight }}<td>{{ user.height }}</tr>
+        {% if user.zone == current_user.zone %}
+        <tr><td>{{ loop.index }}<td>{{ user.title }}<td>{{ user.name }}<td>{{ user.age }}<td>{{ user.district }}<td>{{ user.community }}<td>{{ user.weight }}<td>{{ user.height }}<td>{{ user.zone }}</tr>
+        {% endif %}
         {% endfor %}
         </table>
     </div>
