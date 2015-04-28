@@ -7,8 +7,8 @@ from flask.ext.login import current_user
 from flask import redirect, url_for, render_template, flash
 from datetime import datetime
 from .forms import AdminLoginForm
-from ..models import User
-# from .. import db
+from .models import User
+from . import db
 
 
 class UserForm(form.Form):
