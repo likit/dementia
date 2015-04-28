@@ -6,9 +6,12 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header">
-        {% if admin %}
-        <h1>Welcome to a login admin page.</h1>
+        {% if not admin %}
+        <h2>Please log in with an admin account.</h2>
         {% endif %}
     </div>
+</div>
+<div class="col-md4">
+    {{ wtf.quick_form(form) }}
 </div>
 {% endblock %}

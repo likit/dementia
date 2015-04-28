@@ -4,8 +4,11 @@ from flask_admin.model.fields import InlineFormField, InlineFieldList
 from flask_admin import AdminIndexView, expose
 from wtforms import form, fields
 from flask.ext.login import current_user
-from flask import redirect, url_for, render_template
+from flask import redirect, url_for, render_template, flash
 from datetime import datetime
+from .forms import AdminLoginForm
+from ..models import User
+# from .. import db
 
 
 class UserForm(form.Form):
@@ -26,7 +29,8 @@ class UserView(ModelView):
 
     def _handle_view(self, name, **kwargs):
         if not self.is_accessible():
-            return redirect(url_for('.login'))
+            return redirect(url_for('.login_view'))
+
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
@@ -37,4 +41,15 @@ class MyAdminIndexView(AdminIndexView):
 
     @expose('/login/', methods=['GET', 'POST'])
     def login_view(self):
-        return redirect(url_for('main.login'))
+        form = AdminLoginForm()
+        if form.validate_on_submit():
+            user = db.users.find_one({'username': form.username.data})
+            if user is not None and check_password_hash(user['password'],
+                    form.password.data and user['role']=='admin'):
+                #FIXME: use email instead?
+                user = User(user['username'])
+                login_user(user, form.remember_me.data)
+                return redirect(request.args.get('next') \
+                        or url_for('.index'))
+        flash('Invalid username or password')
+        return render_template('admin/login.html', form=form)
