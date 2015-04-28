@@ -1,7 +1,7 @@
 from flask_admin.form import Select2Widget
 from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.model.fields import InlineFormField, InlineFieldList
-from flask_admin import AdminIndexView, expose
+from flask_admin import AdminIndexView, expose, BaseView
 from wtforms import form, fields
 from wtforms.validators import Email, Length, Required
 from flask.ext.login import current_user, login_user
@@ -76,3 +76,9 @@ class MyAdminIndexView(AdminIndexView):
                             form=form)
             flash('Invalid username or password')
         return render_template('admin/login.html', form=form)
+
+class HomeView(BaseView):
+    @expose('/')
+    def home(self):
+        return redirect(url_for('main.index'))
+

@@ -32,11 +32,12 @@ def create_app(config_name):
     ''' Views has to be imported after app instance has been created,
         otherwise relative import will not work.'''
 
-    from adminpage.views import UserView, MyAdminIndexView, Form1View
+    from adminpage.views import UserView, MyAdminIndexView, Form1View, HomeView
     admin = Admin(name='My Admin', index_view=MyAdminIndexView())
 
     admin.add_view(UserView(db.users, 'User'))
     admin.add_view(Form1View(db.form1, 'Form1'))
+    admin.add_view(HomeView(name='App Home'))
 
     admin.init_app(app)
 
