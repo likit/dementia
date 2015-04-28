@@ -33,8 +33,7 @@ def create_app(config_name):
         otherwise relative import will not work.'''
 
     from adminpage.views import UserView, MyAdminIndexView
-    admin = Admin(name='My Admin', index_view=MyAdminIndexView(),
-            base_template='admin/index.html')
+    admin = Admin(name='My Admin', index_view=MyAdminIndexView())
 
     admin.add_view(UserView(db.users, 'User'))
 
