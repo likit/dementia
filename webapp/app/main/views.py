@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, url_for
+from flask import render_template, session, redirect, url_for, flash
 from . import main
 from .. import db
 from .forms import Form1
@@ -32,6 +32,8 @@ def form_1():
                 # add "added by"
                 }
         db.form1.insert(form_data, safe=True)
+        flash('Data added sucessfully.')
+        return redirect(url_for('.form_1_view'))
     return render_template('form_1.html', form=form,
             user=current_user)
 
