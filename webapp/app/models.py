@@ -5,9 +5,10 @@ from . import login_manager
 from flask.ext.login import UserMixin
 
 class User():
-    def __init__(self, username, zone):
+    def __init__(self, username, zone, role):
         self.username = username
         self.zone = zone
+        self.role = role
 
     def is_active(self):
         return True
@@ -30,4 +31,4 @@ def load_user(username):
     u = db.users.find_one({'username':username})
     if not u:
         return None
-    return User(u['username'], u['zone'])
+    return User(u['username'], u['zone'], u['role'])

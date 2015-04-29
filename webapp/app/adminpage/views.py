@@ -31,17 +31,21 @@ class Form1View(ModelView):
     form = Form1
 
     def is_accessible(self):
-        return current_user.is_authenticated()
+        return (current_user.is_authenticated() and
+                current_user.role == 'admin')
 
 
 class UserView(ModelView):
-    column_list = ('username', 'email', 'role', 'password', 'zone')
-    column_sortable_list = ('username', 'email', 'zone', 'password')
+    column_list = ('username', 'name', 'lastname', 'email', 'role',
+           'verified', 'zone', 'create_date_time')
+    column_sortable_list = ('verified', 'name', 'lastname', 'role',
+            'zone', 'create_date_time')
 
     form = UserForm
 
     def is_accessible(self):
-        return current_user.is_authenticated()
+        return (current_user.is_authenticated() and
+                current_user.role == 'admin')
 
     def _handle_view(self, name, **kwargs):
         if not self.is_accessible():
@@ -51,7 +55,8 @@ class UserView(ModelView):
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def index(self):
-        if not current_user.is_authenticated():
+        if (not current_user.is_authenticated() or
+                current_user.role != 'admin'):
             return redirect(url_for('.login_view'))
         return super(MyAdminIndexView, self).index()
 
@@ -64,7 +69,7 @@ class MyAdminIndexView(AdminIndexView):
                     form.password.data):
                 if user['role']=='admin':
                     #FIXME: use email instead?
-                    user = User(user['username'], user['zone'])
+                    user = User(user['username'], user['zone'], user['role'])
                     login_user(user, form.remember_me.data)
                     return redirect(request.args.get('next') \
                             or url_for('.index'))

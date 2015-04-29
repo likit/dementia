@@ -5,6 +5,7 @@ from app import create_app, db
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from werkzeug.security import generate_password_hash
+from datetime import datetime
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -22,16 +23,22 @@ def test():
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 @manager.command
-def dbinit():
+def initdb():
     """Init the database."""
     db.drop_collection('users')
+    db.drop_collection('form1')
     password = generate_password_hash('hardtoguess')
     user_doc = {
-            'username': 'admin',
-            'email': 'likit.pre@mahidol.edu',
-            'password': password,
-            'role': 'admin',
-            'zone': 0,
+                'username': 'admin',
+                'email': 'admin@example.com',
+                'password': generate_password_hash('superhard'),
+                'name': 'Likit',
+                'lastname': 'Preeyanon',
+                'organization': 'MUMT',
+                'verified': True,
+                'create_date_time': datetime.today(),
+                'role': 'admin',
+                'zone': 0,
             }
     db.users.insert(user_doc, safe=True)
 
