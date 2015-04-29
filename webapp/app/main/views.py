@@ -25,6 +25,11 @@ def form_1():
                 'weight': form.weight.data,
                 'height': form.height.data,
                 'zone': current_user.zone,
+                # add "update datetime"
+                # add "add datetime"
+                # add "PID"
+                # add "updated by"
+                # add "added by"
                 }
         db.form1.insert(form_data, safe=True)
     return render_template('form_1.html', form=form,
