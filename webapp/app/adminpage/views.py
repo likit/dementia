@@ -80,7 +80,7 @@ class MyAdminIndexView(AdminIndexView):
                     return render_template('admin/login.html',
                             form=form)
             flash('Invalid username or password')
-        return render_template('admin/login.html', form=form)
+        return self.render('admin/login.html', form=form)
 
 class HomeView(BaseView):
     @expose('/')

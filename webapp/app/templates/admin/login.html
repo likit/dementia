@@ -1,9 +1,8 @@
-{% extends "base.html" %}
+{% extends "admin/master.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Admin Login Page{% endblock %}
-
-{% block page_content %}
+{% block body %}
+{{ super() }}
 <div class="container">
     <div class="page-header">
         {% if not admin %}
@@ -14,4 +13,4 @@
 <div class="col-md4">
     {{ wtf.quick_form(form) }}
 </div>
-{% endblock %}
+{% endblock body %}
