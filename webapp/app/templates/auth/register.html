@@ -6,10 +6,43 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header">
-        <h1>Please sign up</h1>
+        <h1>ลงทะเบียน</h1>
     </div>
 </div>
 <div class="col-md4">
-{{ wtf.quick_form(form) }}
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        {{ form.hidden_tag() }}
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
+            <div class="panel-body">
+                {{ form.pid.label  }} {{ form.pid(size=13, maxlength=13) }}
+                <br>
+                {{ form.title.label }} {{ form.title }}
+                {{ form.name.label  }} {{ form.name(size=30, maxlength=50) }}
+                {{ form.lastname.label  }} {{ form.lastname(size=30, maxlength=50) }}
+                <br>
+                {{ form.position.label  }} {{ form.position(size=30, maxlength=50) }}
+                {{ form.phone.label  }} {{ form.phone(size=20, maxlength=20) }}
+                {{ form.cell.label  }} {{ form.cell(size=20, maxlength=20) }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ข้อมูลหน่วยงาน/สังกัด</strong></h4></div>
+            <div class="panel-body">
+                {{ form.org.label  }} {{ form.org(size=20, maxlength=50) }}
+                {{ form.org_address.label  }} {{ form.org_address(size=20, maxlength=50) }}
+                {{ form.mhoo.label  }} {{ form.mhoo(size=5, maxlength=3) }}
+                <br>
+                {{ form.province.label  }} {{ form.province }}
+                {{ form.district.label  }} {{ form.district }}
+                {{ form.tambon.label  }} {{ form.tambon }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>วัตถุประสงค์</strong></h4></div>
+            <div class="panel-body">
+                {{ form.objective }}
+            </div>
+        </div>
 </div>
 {% endblock %}
