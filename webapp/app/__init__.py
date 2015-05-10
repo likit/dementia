@@ -13,6 +13,8 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 conn = pymongo.Connection()
+
+# TODO: use config db instead
 db = conn['data-dev']
 
 login_manager = LoginManager()
