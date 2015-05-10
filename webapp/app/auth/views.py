@@ -33,6 +33,18 @@ def logout():
 @auth.route('/register', methods=('GET', 'POST'))
 def register():
     form = RegistrationForm()
+    form.province.choices = sorted([(x.get('province'), x.get('province'))
+            for x in db.provinces.find()], key=lambda x: x[0])
+    try:
+        amphur_dict = db.provinces.find_one({'province':
+                form.province.data}).get('amphur')
+    except AttributeError:
+        form.district.choices = []
+        form.tambon.choices = []
+    else:
+        form.district.choices = sorted(amphur_dict.keys()) or []
+        form.tambon.choices = sorted(amphur_dict[form.amphur.data]) or []
+
     if form.validate_on_submit():
         user_doc = {
                 'username': form.username.data,
