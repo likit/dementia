@@ -1,5 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 from . import login_manager
 from flask.ext.login import UserMixin
@@ -32,3 +34,19 @@ def load_user(username):
     if not u:
         return None
     return User(u['username'], u['zone'], u['role'])
+
+def generate_confirmation_token(pid, expiration=3600):
+    s = Serializer(current_app.config['SECRET_KEY'], expiration)
+    return s.dumps({'confirm': pid})
+
+def confirm(user, token):
+    s = Serializer(current_app.config['SECRET_KEY'])
+    try:
+        data = s.loads(token)
+    except:
+        return False
+    if data.get('confirm') != user['pid']:
+        return False
+    # TODO: read data from mongo db and update verify field
+    user['verified'] = True
+    return True

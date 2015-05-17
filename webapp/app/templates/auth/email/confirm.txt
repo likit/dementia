@@ -1,8 +1,19 @@
-Dear {{ user.username }},
+Dear admin,
 
-Welcome to Medtech Webboard,
+Please check the account info and click on the link below to verify the account.
 
-To confirm your account please click on the following link:
+PID: {{ user['pid'] }}
+Name: {{ user['name'] }}
+Lastname: {{ user['lastname'] }}
+Title: {{ user['title'] }}
+Position: {{ user['position'] }}
+Phone: {{ user['phone'] }}
+Cell: {{ user['cell'] }}
+
+Organization: {{ user['org'] }}
+Address: {{ user['org_address'] }} {{ user['mhoo'] }} {{ user['tambon'] }}
+{{ user['district'] }} {{ user['province'] }}
+Objective: {{ user['objective'] }}
 
 {{ url_for('auth.confirm', token=token, _external=True) }}
 
