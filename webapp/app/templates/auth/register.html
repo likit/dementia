@@ -2,6 +2,55 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Sign Up{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+
+$('#tambon').empty();
+$('#district').empty();
+$('#tambon').show();
+$('#district').show();
+{# $('<label for="district"></label><select name="district" id="district"></select>').insertAfter('#province') #}
+{# $('<label for="tambon"></label><select name="tambon" id="tambon"></select>').insertAfter('#district') #}
+
+(function set_province() {
+    $('#province').empty();
+    $('#province').append('<option>Select province</option>')
+    var provinces = {{ provinces | safe }};
+    for (i in provinces) {
+        $('#province').append('<option value=' + provinces[i] + '>' + provinces[i] + '</option>')
+    };
+})();
+
+function get_amphur(province) {
+    return {{ amphurs | safe }}[province];
+};
+
+function get_tambon(amphur) {
+    return {{ tambons | safe }}[amphur];
+};
+
+function change_tambon() {
+    var tambons = get_tambon($('#district').val());
+    $('#tambon').empty()
+    for (i in tambons.sort()) {
+        $('#tambon').append("<option value=" + tambons[i] + ">" + tambons[i] + "</option>");
+    };
+};
+
+$('#province').change(function(){
+    var amphurs = get_amphur($(this).val());
+    $('#district').empty()
+    for (i in amphurs.sort()) {
+        $('#district').append("<option value=" + amphurs[i] + ">" + amphurs[i] + "</option>");
+    };
+
+    change_tambon();
+});
+
+$('#district').change(change_tambon);
+</script>
+{% endblock scripts %}
 
 {% block page_content %}
 <div class="container">
@@ -11,11 +60,13 @@
 </div>
 <div class="col-md4">
     <form method="POST" action="{{ url_for('auth.register') }}">
-        {{ form.hidden_tag() }}
+        {{ form.show_hidden_tag }}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
             <div class="panel-body">
                 {{ form.pid.label  }} {{ form.pid(size=13, maxlength=13) }}
+                {{ form.password.label }} {{ form.password(size=20, maxlength=30) }}
+                {{ form.password2.label }} {{ form.password2(size=20, maxlength=30) }}
                 <br>
                 {{ form.title.label }} {{ form.title }}
                 {{ form.name.label  }} {{ form.name(size=30, maxlength=50) }}
@@ -33,9 +84,10 @@
                 {{ form.org_address.label  }} {{ form.org_address(size=20, maxlength=50) }}
                 {{ form.mhoo.label  }} {{ form.mhoo(size=5, maxlength=3) }}
                 <br>
-                {{ form.province.label  }} {{ form.province }}
-                {{ form.district.label  }} {{ form.district }}
-                {{ form.tambon.label  }} {{ form.tambon }}
+                {{ form.province.label }} {{ form.province }}
+                {{ form.district.label }} {{ form.district(style="display: none;") }}
+                {{ form.tambon.label }} {{ form.tambon(style="display: none;") }}
+
             </div>
         </div>
         <div class="panel panel-default">
@@ -44,5 +96,8 @@
                 {{ form.objective }}
             </div>
         </div>
+        {{ form.csrf_token }}
+        {{ form.submit }}
+    </form>
 </div>
 {% endblock %}

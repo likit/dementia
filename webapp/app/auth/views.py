@@ -1,3 +1,7 @@
+from collections import defaultdict
+from bson import json_util
+from flask import request
+
 from flask import render_template, redirect, request, flash, url_for
 from . import auth
 from .. import db
@@ -32,34 +36,58 @@ def logout():
 
 @auth.route('/register', methods=('GET', 'POST'))
 def register():
-    form = RegistrationForm()
-    form.province.choices = sorted([(x.get('province'), x.get('province'))
+    form = RegistrationForm(request.form)
+    form.province.choices = [('', 'Select province')] + \
+            sorted([(x.get('province'), x.get('province'))
             for x in db.provinces.find()], key=lambda x: x[0])
-    try:
-        amphur_dict = db.provinces.find_one({'province':
-                form.province.data}).get('amphur')
-    except AttributeError:
-        form.district.choices = []
-        form.tambon.choices = []
-    else:
-        form.district.choices = sorted(amphur_dict.keys()) or []
-        form.tambon.choices = sorted(amphur_dict[form.amphur.data]) or []
+    provinces = sorted([x.get('province')
+            for x in db.provinces.find()], key=lambda x: x[0])
+
+    amphurs = {}
+    amphur_list = []
+    for prov in db.provinces.find():
+        amphurs[prov.get('province')] = prov.get('amphur').keys()
+        amphur_list += prov.get('amphur').keys()
+
+    tambons = {}
+    tambon_list = []
+    for prov in db.provinces.find():
+        for a, t in prov.get('amphur').iteritems():
+            tambons[a] = t
+            tambon_list += t
+
+    form.district.choices = [('', '')] + [(x,x) for x in amphur_list]
+    form.tambon.choices = [('', '')] + [(x,x) for x in tambon_list]
 
     if form.validate_on_submit():
         user_doc = {
-                'username': form.username.data,
-                'email': form.email.data,
+                'pid': form.pid.data,
                 'password': generate_password_hash(form.password.data),
+                'title': form.title.data,
                 'name': form.name.data,
                 'lastname': form.lastname.data,
-                'organization': form.org.data,
+                'position': form.position.data,
+
+                # TODO: use telephone field
+                'phone': form.phone.data,
+                'cell': form.cell.data,
+
+                'org': form.org.data,
+                'org_address': form.org_address.data,
+                'mhoo': form.mhoo.data,
+                'province': form.province.data,
+                'district': form.district.data,
+                'tambon': form.tambon.data,
+                'objective': form.objective.data,
                 'verified': False,
                 'create_date_time': datetime.today(),
                 'role': 'staff',
-                'zone': form.zone.data,
                 }
         db.users.insert(user_doc, safe=True)
-
         flash('You can now login.')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+
+    return render_template('auth/register.html', form=form,
+                                provinces=json_util.dumps(provinces),
+                                amphurs=json_util.dumps(amphurs),
+                                tambons=json_util.dumps(tambons))
