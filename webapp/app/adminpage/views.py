@@ -14,6 +14,7 @@ from .. import db
 from ..main.forms import Form1
 
 
+# TODO: update UserForm
 class UserForm(form.Form):
     username = fields.TextField('Username',
             validators=[Required(), Length(1,64)])
@@ -65,21 +66,18 @@ class MyAdminIndexView(AdminIndexView):
     def login_view(self):
         form = AdminLoginForm()
         if form.validate_on_submit():
-            user = db.users.find_one({'username': form.username.data})
+            user = db.users.find_one({'email': form.email.data})
             if user is not None and check_password_hash(user['password'],
                     form.password.data):
-                if user['role']=='admin':
-                    #FIXME: use email instead?
-                    user = User(user['username'], user['zone'], user['role'])
-                    login_user(user, form.remember_me.data)
-                    return redirect(request.args.get('next') \
-                            or url_for('.index'))
-                else:
-                    flash('Admin account required.')
-                    form.username.data = ''
-                    form.password.data = ''
-                    return render_template('admin/login.html',
-                            form=form)
+                user = User(user['username'], role=user['role'])
+                login_user(user, form.remember_me.data)
+                return redirect(request.args.get('next') \
+                        or url_for('.index'))
+            else:
+                flash('Admin account required.')
+                form.email.data = ''
+                form.password.data = ''
+                return self.render('admin/login.html', form=form)
             flash('Invalid username or password')
         return self.render('admin/login.html', form=form)
 
