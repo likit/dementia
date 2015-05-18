@@ -68,6 +68,7 @@ def register():
     if form.validate_on_submit():
         user_doc = {
                 'pid': form.pid.data,
+                'username': form.pid.data,  # username is used for load_user()
                 'password': generate_password_hash(form.password.data),
                 'title': form.title.data,
                 'name': form.name.data,
