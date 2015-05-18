@@ -35,7 +35,8 @@ def create_app(config_name):
         otherwise relative import will not work.'''
 
     from adminpage.views import UserView, MyAdminIndexView, Form1View, HomeView
-    admin = Admin(name='My Admin', index_view=MyAdminIndexView())
+    admin = Admin(name='My Admin',
+            index_view=MyAdminIndexView(endpoint='admin'))
 
     admin.add_view(UserView(db.users, 'User'))
     admin.add_view(Form1View(db.form1, 'Form1'))
