@@ -4,12 +4,13 @@ from wtforms.validators import Required, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
 
 class AdminLoginForm(Form):
-    username = StringField('Username',
-            validators=[Required(), Length(1, 64)])
+    email = StringField('Email', validators=[Required(), Email()])
     password = PasswordField('Password',
             validators=[Required()])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
+
+# TODO: admin register page
 
 # class RegistrationForm(Form):
 #     email = StringField('Email', validators=[Required(),
