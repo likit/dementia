@@ -6,15 +6,15 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header">
-        <h1>Please sign in</h1>
+        <h1>กรุณาลงชื่อเข้าใช้งานระบบ</h1>
     </div>
 </div>
 <div class="col-md4">
 {{ wtf.quick_form(form) }}
 <p>
-New user?
+ยังไม่มีบัญชี?
 <a href="{{ url_for('auth.register') }}">
-    Click here to register
+    คลิกที่นี่เพื่อลงทะเบียน
 </a>
 </p>
 </div>
