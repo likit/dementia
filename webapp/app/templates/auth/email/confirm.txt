@@ -1,24 +1,29 @@
 Dear admin,
 
-Please check the account info and click on the link below to verify the account.
+Please login to verify the account below.
+
+Click here to login: {{ url_for('admin.login_view', _external=True) }}
+
+ข้อมูลส่วนตัว
+---------
 
 PID: {{ user['pid'] }}
-Name: {{ user['name'] }}
-Lastname: {{ user['lastname'] }}
-Title: {{ user['title'] }}
-Position: {{ user['position'] }}
-Phone: {{ user['phone'] }}
-Cell: {{ user['cell'] }}
+ชื่อ: {{ user['title'] }} {{ user['name'] }} {{ user['lastname'] }}
+ตำแหน่ง: {{ user['position'] }}
+โทรศัพท์: {{ user['phone'] }}
+{% if user['cell'] %} มือถือ: {{ user['cell'] }} {% else %} มือถือ: N/A {% endif %}
 
-Organization: {{ user['org'] }}
-Address: {{ user['org_address'] }} {{ user['mhoo'] }} {{ user['tambon'] }}
-{{ user['district'] }} {{ user['province'] }}
-Objective: {{ user['objective'] }}
+หน่วยงาน
+-------
+{{ user['org'] }}
+เลขที่ {{ user['org_address'] }} หมู่ {{ user['mhoo'] }} ตำบล {{ user['tambon'] }} อำเภอ {{ user['district'] }} จังหวัด {{ user['province'] }}
 
-{{ url_for('auth.confirm', token=token, _external=True) }}
+จุดประสงค์
+--------
+{% if user['objective'] %} {{ user['objective'] }} {% else %} N/A {% endif %}
 
 Sincerely,
 
-The Medtech Webboard team
+The Elderly Information System (TEIS) team
 
 Note: replies to this email address are not monitered.
