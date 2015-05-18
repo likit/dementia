@@ -27,20 +27,21 @@ def initdb():
     """Init the database."""
     db.drop_collection('users')
     db.drop_collection('form1')
-    password = generate_password_hash('hardtoguess')
-    user_doc = {
+    password = generate_password_hash('testpass')
+    admin_doc = {
                 'username': 'admin',
                 'email': 'admin@example.com',
-                'password': generate_password_hash('superhard'),
+                'password': password,
                 'name': 'Likit',
                 'lastname': 'Preeyanon',
                 'organization': 'MUMT',
+                'role': 'admin',
+                'zone': -1,
                 'verified': True,
                 'create_date_time': datetime.today(),
-                'role': 'admin',
-                'zone': 0,
             }
-    db.users.insert(user_doc, safe=True)
+
+    db.users.insert(admin_doc, safe=True)
 
 if __name__ == '__main__':
     manager.run()
