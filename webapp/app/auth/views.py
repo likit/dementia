@@ -21,11 +21,11 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.users.find_one({'username': form.username.data})
+        user = db.users.find_one({'username': form.pid.data})
         if user is not None and check_password_hash(user['password'],
                 form.password.data):
             #FIXME: use email instead?
-            user = User(user['username'], user['zone'], user['role'])
+            user = User(user['username'], user['province'], user['role'])
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
@@ -67,8 +67,7 @@ def register():
 
     if form.validate_on_submit():
         user_doc = {
-                'pid': form.pid.data,
-                'username': form.pid.data,  # username is used for load_user()
+                'username': form.pid.data, # pid is used as a username
                 'password': generate_password_hash(form.password.data),
                 'title': form.title.data,
                 'name': form.name.data,
