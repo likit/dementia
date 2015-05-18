@@ -41,3 +41,9 @@ def form_1():
 @login_required
 def form_1_view():
     return render_template('form_1_report.html', db=db)
+
+@main.route('/your_account')
+@login_required
+def your_account_view():
+    user = db.users.find_one({'username': current_user.username})
+    return render_template('your_account.html', db=db, user=user)

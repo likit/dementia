@@ -36,7 +36,7 @@ def initdb():
                 'lastname': 'Preeyanon',
                 'organization': 'MUMT',
                 'role': 'admin',
-                'zone': -1,
+                'province': 'all',
                 'verified': True,
                 'create_date_time': datetime.today(),
             }
