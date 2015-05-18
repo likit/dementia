@@ -7,9 +7,8 @@ Click here to login: {{ url_for('admin.login_view', _external=True) }}
 ข้อมูลส่วนตัว
 ---------
 
-PID: {{ user['pid'] }}
-ชื่อ: {{ user['title'] }} {{ user['name'] }} {{ user['lastname'] }}
-ตำแหน่ง: {{ user['position'] }}
+PID (Username): {{ user['username'] }}
+ชื่อ: {{ user['title'] }} {{ user['name'] }} {{ user['lastname'] }} ตำแหน่ง: {{ user['position'] }}
 โทรศัพท์: {{ user['phone'] }}
 {% if user['cell'] %} มือถือ: {{ user['cell'] }} {% else %} มือถือ: N/A {% endif %}
 
