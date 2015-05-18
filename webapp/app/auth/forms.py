@@ -13,12 +13,12 @@ from .. import db
 import sys
 
 class LoginForm(Form):
-    pid = StringField('Username', validators=[Required(), Length(1, 13,
-                message='PID must be 13 digits long')])
-    password = PasswordField('Password',
+    pid = StringField(u'รหัสบัตรประชาชน', validators=[Required(), Length(1, 13,
+                message=u'รหัสบัตรประชาชนต้องมี 13 หลัก')])
+    password = PasswordField(u'รหัสผ่าน',
             validators=[Required()])
-    remember_me = BooleanField('Keep me logged in')
-    submit = SubmitField('Log In')
+    remember_me = BooleanField(u'จดจำบัญชีนี้ไว้')
+    submit = SubmitField(u'ลงชื่อเข้าใช้')
 
 class RegistrationForm(Form):
     pid = StringField(u'รหัสบัตรประชาชน', validators=[Required()])
