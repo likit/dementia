@@ -24,7 +24,7 @@ def form_1():
                 'age': form.age.data,
                 'weight': form.weight.data,
                 'height': form.height.data,
-                'zone': current_user.zone,
+                'locale': current_user.province,
                 # add "update datetime"
                 # add "add datetime"
                 # add "PID"

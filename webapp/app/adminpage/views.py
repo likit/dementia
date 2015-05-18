@@ -21,13 +21,13 @@ class UserForm(form.Form):
     email = fields.TextField('Email', validators=[Email()])
     role = fields.TextField('Role', validators=[Required()])
     # password = fields.PasswordField('Password', validators=[Required()])
-    zone = fields.TextField('Zone', validators=[Required()])
+    province = fields.TextField('Province', validators=[Required()])
 
 
 class Form1View(ModelView):
     can_create = False
-    column_list = ('title', 'name', 'district', 'age', 'zone')
-    column_sortable_list = ('name', 'district', 'zone')
+    column_list = ('title', 'name', 'district', 'age', 'province')
+    column_sortable_list = ('name', 'district', 'province')
 
     form = Form1
 

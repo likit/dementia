@@ -8,9 +8,9 @@ from flask.ext.login import UserMixin
 
 
 class User():
-    def __init__(self, username, zone=-1, role='user'):
+    def __init__(self, username, province=None, role='user'):
         self.username = username
-        self.zone = zone
+        self.province = province
         self.role = role
 
     def is_active(self):
@@ -35,7 +35,7 @@ def load_user(username):
     if not u:
         return None
     else:
-        return User(u['username'], zone=u['zone'], role=u['role'])
+        return User(u['username'], province=u['province'], role=u['role'])
 
 
 def generate_confirmation_token(pid, expiration=3600):
