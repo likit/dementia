@@ -12,7 +12,7 @@ from .. import db
 from datetime import datetime
 from flask.ext.login import login_user, login_required, logout_user
 from .forms import LoginForm, RegistrationForm
-from ..models import User
+from ..models import User, LoginUser
 from ..email import send_email
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -25,8 +25,7 @@ def login():
         if user is not None and check_password_hash(user['password'],
                 form.password.data):
             #FIXME: use email instead?
-            user = User(user['username'], user['province'], user['role'])
-            login_user(user, form.remember_me.data)
+            login_user(LoginUser(user['username']), form.remember_me.data)
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
         flash('Invalid username or password')

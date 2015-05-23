@@ -9,19 +9,20 @@ from flask import redirect, url_for, render_template, flash, request
 from werkzeug.security import check_password_hash
 from datetime import datetime
 from .forms import AdminLoginForm
-from ..models import User
+from ..models import LoginUser
 from .. import db
 from ..main.forms import Form1
 
 
 # TODO: update UserForm
 class UserForm(form.Form):
-    username = fields.TextField('Username',
-            validators=[Required(), Length(1,64)])
-    email = fields.TextField('Email', validators=[Email()])
-    role = fields.TextField('Role', validators=[Required()])
+    # username = fields.TextField('Username',
+    #         validators=[Required(), Length(1,64)])
+    # email = fields.TextField('Email', validators=[Email()])
+    # role = fields.TextField('Role', validators=[Required()])
     # password = fields.PasswordField('Password', validators=[Required()])
-    province = fields.TextField('Province', validators=[Required()])
+    # province = fields.TextField('Province', validators=[Required()])
+    verified = fields.BooleanField(default="unchecked")
 
 
 class Form1View(ModelView):
@@ -37,7 +38,7 @@ class Form1View(ModelView):
 
 
 class UserView(ModelView):
-    column_list = ('pid', 'title', 'name', 'lastname', 'role', 'position', 'phone',
+    column_list = ('username', 'title', 'name', 'lastname', 'role', 'position', 'phone',
            'verified', 'org', 'org_address', 'mhoo',
            'province', 'district', 'tambon', 'create_date_time')
     column_sortable_list = ('verified', 'name', 'lastname', 'role',
@@ -69,7 +70,7 @@ class MyAdminIndexView(AdminIndexView):
             user = db.users.find_one({'email': form.email.data})
             if user is not None and check_password_hash(user['password'],
                     form.password.data):
-                user = User(user['username'], role=user['role'])
+                user = LoginUser(user['username'])
                 login_user(user, form.remember_me.data)
                 return redirect(request.args.get('next') \
                         or url_for('.index'))
