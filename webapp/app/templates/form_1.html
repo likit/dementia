@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{# {% assets "jquery/jquery-1.11.3.min.js", "jquery-ui/jquery-ui.js" %} #}
+{# <script type="text/javascript" src="{{ ASSET_URL }}"></script> #}
+{# {% endassets %} #}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for("static", filename="jquery-ui/datepicker-th.js") }}"></script>
+<script>
+$(function() {
+        $("#datepicker").datepicker($.datepicker.regional['th']);
+        });
+</script>
+{% endblock %}
 
 {% block title %}แบบประเมิน/คัดกรอกผู้สูงอายุ{% endblock %}
 
@@ -17,6 +30,13 @@
             </div>
         </div>
     </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>วันที่เก็บข้อมูล</strong></h4></div>
+            <div class="panel-body">
+                <label class="control-label" for="datepicker">โปรดเลือกวันที่เก็บข้อมูล </label>
+                <input type="text" id="datepicker">
+            </div>
+        </div>
 </div>
 <div class="col-md4">
     {% if current_user.verified %}
