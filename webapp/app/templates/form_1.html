@@ -10,6 +10,23 @@
 <script>
 $(function() {
         $("#datepicker").datepicker($.datepicker.regional['th']);
+        $('#marital').change(function() {
+            $('#marital-div').remove();
+            $('#edu-other-div').remove();
+            if ($(this).val() === 'other') {
+            $(this).after('<div id="marital-div"><label for="marital-reason" class="control-label">โปรดระบุสถานภาพสมรส</label><input type="text" id="martial-reason"></input></div>');
+                }
+            });
+        $('#edu').change(function() {
+            $('#edu-other-div').remove();
+            $('#edu-years-div').remove();
+            if ($(this).val() === 'other') {
+            $(this).after('<div id="edu-other-div"><label for="edu-other" class="control-label">โปรดระบุการศึกษา</label><input type="text" id="edu-other"></input></div>');
+                }
+            if ($(this).val() !== 'none') {
+            $(this).after('<div id="edu-years-div"><label for="edu-years" class="control-label">รวมจำนวนปีที่ได้รับการศึกษา</label><input type="text" id="edu-years"></input></div>');
+                }
+            });
         });
 </script>
 {% endblock %}
@@ -35,6 +52,36 @@ $(function() {
             <div class="panel-body">
                 <label class="control-label" for="datepicker">โปรดเลือกวันที่เก็บข้อมูล </label>
                 <input type="text" id="datepicker">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>แบบสัมภาษณ์ข้อมูลส่วนบุคคล</strong></h4></div>
+            <div class="panel-body">
+                <label class="control-label" for="age">อายุ </label> <input type="text" id="age">
+                <label class="control-label" for="gender">เพศ </label> <select id="gender">
+                    <option value="male">ชาย</option>
+                    <option value="female">หญิง</option>
+                    <option value="">ไม่ระบุ</option>
+                </select>
+                <br>
+                <label class="control-label" for="marital">สถานภาพสมรส </label> <select id="marital">
+                    <option value="married">แต่งงานแล้ว</option>
+                    <option value="widow">หม้าย</option>
+                    <option value="divorce">หย่าร้าง/แยกทาง</option>
+                    <option value="single">โสด</option>
+                    <option value="other">อื่นๆ</option>
+                </select>
+                <br>
+                <label class="control-label" for="edu">ระดับการศึกษา </label> <select id="edu">
+                    <option value="none">ไม่ได้รับการศึกษา</option>
+                    <option value="elementary">ประถมศึกษา</option>
+                    <option value="middleschool">มัธยมต้น</option>
+                    <option value="highschool">มัธยมปลาย</option>
+                    <option value="diploma">อนุปริญญา</option>
+                    <option value="bachelor">ปริญญาตรี</option>
+                    <option value="higherbachelor">สูงกว่าปริญญาตรี</option>
+                    <option value="other">อื่นๆ</option>
+                </select>
             </div>
         </div>
 </div>
