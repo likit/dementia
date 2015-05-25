@@ -13,6 +13,10 @@ $(function() {
         $('label[for=smoke_years], input#smoke_years').hide();
         $('label[for=quit_smoke_years], input#quit_smoke_years').hide()
         $('label[for=congenital_dis_years], input#congenital_dis_years').hide();
+        $('label[for=drink_per_day], input#drink_per_day').hide();
+        $('label[for=drink_years], input#drink_years').hide();
+        $('label[for=quit_drink_years], input#quit_drink_years').hide();
+
         $('#congenital_dis_other').prop('disabled', true);
 
         $('#marital').change(function() {
@@ -184,8 +188,6 @@ $(function() {
                     </td></tr>
                     <tr><td>
                         {{ form.congenital_dis_other.label }} {{ form.congenital_dis_other() }}
-                    </td></tr>
-                    <tr><td>
                         {{ form.congenital_dis_years.label }} {{ form.congenital_dis_years() }}
                     </td></tr>
                 </table>
