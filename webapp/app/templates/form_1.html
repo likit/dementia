@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{# {% assets "jquery/jquery-1.11.3.min.js", "jquery-ui/jquery-ui.js" %} #}
-{# <script type="text/javascript" src="{{ ASSET_URL }}"></script> #}
-{# {% endassets %} #}
 
 {% block scripts %}
 {{ super() }}
@@ -88,12 +85,35 @@ $(function() {
                     $('#smokeperweek').show();
                     $('#smokeperday-label').hide();
                     $('#smokeperday').hide();
-                
                 } else {
                     $('#smokeperweek-label').hide();
                     $('#smokeperweek').hide();
                     $('#smokeperday-label').show();
                     $('#smokeperday').show();
+                }
+            });
+        $('#alcohol').change(function() {
+                if($(this).val() === 'daily') {
+                    $('#drinkperday-label').show();
+                    $('#drinkperday').show();
+                    $('#drinkyears-label').hide();
+                    $('#drinkyears').hide();
+                    $('#quitdrinkyears-label').hide();
+                    $('#quitdrinkyears').hide();
+                } else if ($(this).val() === 'quit') {
+                    $('#drinkperday-label').show();
+                    $('#drinkperday').show();
+                    $('#drinkyears-label').show();
+                    $('#drinkyears').show();
+                    $('#quitdrinkyears-label').show();
+                    $('#quitdrinkyears').show();
+                } else {
+                    $('#drinkperday-label').hide();
+                    $('#drinkperday').hide();
+                    $('#drinkyears-label').hide();
+                    $('#drinkyears').hide();
+                    $('#quitdrinkyears-label').hide();
+                    $('#quitdrinkyears').hide();
                 }
             });
         });
@@ -134,6 +154,7 @@ $(function() {
                     <option value="">ไม่ระบุ</option>
                 </select>
                 <br>
+                <br>
                 <label class="control-label" for="marital">สถานภาพสมรส </label> <select id="marital">
                     <option value="married">แต่งงานแล้ว</option>
                     <option value="widow">หม้าย</option>
@@ -143,6 +164,7 @@ $(function() {
                 </select>
                 <label for="marital-reason" class="control-label">อื่นๆ โปรดระบุ</label>
                 <input type="text" disabled id="marital-reason"></input>
+                <br>
                 <br>
                 <label class="control-label" for="edu">ระดับการศึกษา </label> <select id="edu">
                     <option value="none">ไม่ได้รับการศึกษา</option>
@@ -159,6 +181,7 @@ $(function() {
                 <label for="edu-years" class="control-label">รวมจำนวนปีที่ได้รับการศึกษา</label>
                 <input disabled type="text" id="edu-years"></input>
                 <br>
+                <br>
                 <label class="control-label" for="living">การพักอาศัย</label> <select id="living">
                     <option value="single">คนเดียว</option>
                     <option value="couple">คู่ครอง</option>
@@ -171,16 +194,19 @@ $(function() {
                 <label for="living-other" class="control-label">อื่นๆ โปรดระบุ</label>
                 <input disabled type="text" id="living-other"></input>
                 <br>
+                <br>
                 <label class="control-label" for="income">ท่านคิดว่ามีรายได้เพียงพอในครอบครัว</label> <select id="income">
                     <option value="excess">เหลือเก็บ</option>
                     <option value="enough">กำลังพอดี</option>
                     <option value="notenough">ไม่เพียงพอ</option>
                 </select>
                 <br>
+                <br>
                 <label class="control-label" for="elderclub">การเป็นสมาชิกชมรมผู้สูงอายุและอื่นๆ</label> <select id="elderclub">
                     <option value="yes">เป็น</option>
                     <option value="no">ไม่เป็น</option>
                 </select>
+                <br>
                 <br>
                 <label class="control-label" for="healthstatus">ความรู้สึกต่อสุขภาพตัวเองโดยรวม</label> <select id="healthstatus">
                     <option value="excellent">ดีเยี่ยม</option>
@@ -189,6 +215,7 @@ $(function() {
                     <option value="bad">แย่</option>
                     <option value="verybad">แย่มาก</option>
                 </select>
+                <br>
                 <br>
                 <label class="control-label" for="smoking">การสูบบุหรี่/ยาสูบ</label> <select id="smoking">
                     <option value="no">ไม่เคยสูบเลย</option>
@@ -208,6 +235,21 @@ $(function() {
                 <input type="text" id="smokeyears" style="display:none"></input>
                 <label class="control-label" for="quitsmokeyears" style="display:none" id="quitsmokeyears-label">เลิกมา (ปี)</label>
                 <input type="text" id="quitsmokeyears" style="display:none"></input>
+                <br>
+                <br>
+                <label class="control-label" for="alcohol">ดื่มแอลกอฮอล์</label>
+                <select id="alcohol">
+                    <option value="none">ไม่เคย</option>
+                    <option value="sometimes">บางครั้ง</option>
+                    <option value="daily">ทุกวัน</option>
+                    <option value="quit">เคยดื่ม</option>
+                </select>
+                <label class="control-label" for="drinkperday" style="display:none" id="drinkperday-label">จำนวน (แก้วต่อวัน)</label>
+                <input type="text" id="drinkperday" style="display:none"></input>
+                <label class="control-label" for="drinkyears" style="display:none" id="drinkyears-label">เป็นเวลา (ปี)</label>
+                <input type="text" id="drinkyears" style="display:none"></input>
+                <label class="control-label" for="quitdrinkyears" style="display:none" id="quitdrinkyears-label">เลิกมา (ปี)</label>
+                <input type="text" id="quitdrinkyears" style="display:none"></input>
             </div>
         </div>
     {% else %}
