@@ -11,20 +11,89 @@
 $(function() {
         $("#datepicker").datepicker($.datepicker.regional['th']);
         $('#marital').change(function() {
-            $('#marital-div').remove();
-            $('#edu-other-div').remove();
             if ($(this).val() === 'other') {
-            $(this).after('<div id="marital-div"><label for="marital-reason" class="control-label">โปรดระบุสถานภาพสมรส</label><input type="text" id="martial-reason"></input></div>');
+                $('#marital-reason').prop('disabled', false).prop('required', true)
+                } else {
+                $('#marital-reason').prop('disabled', true).prop('required', false)
                 }
             });
         $('#edu').change(function() {
-            $('#edu-other-div').remove();
-            $('#edu-years-div').remove();
             if ($(this).val() === 'other') {
-            $(this).after('<div id="edu-other-div"><label for="edu-other" class="control-label">โปรดระบุการศึกษา</label><input type="text" id="edu-other"></input></div>');
+                $('#edu-other').prop('disabled', false).prop('required', true)
+                $('#edu-years').prop('disabled', false).prop('required', true)
                 }
-            if ($(this).val() !== 'none') {
-            $(this).after('<div id="edu-years-div"><label for="edu-years" class="control-label">รวมจำนวนปีที่ได้รับการศึกษา</label><input type="text" id="edu-years"></input></div>');
+            else if ($(this).val() === 'none') {
+                $('#edu-years').prop('disabled', true).prop('required', false)
+                $('#edu-other').prop('disabled', true).prop('required', false)
+                }
+            else {
+                $('#edu-years').prop('disabled', false).prop('required', true)
+                }
+            });
+        $('#living').change(function() {
+                if ($(this).val() === 'caretaker') {
+                    $('#living-caretaker').prop('disabled', false).prop('required', true)
+                    $('#living-other').prop('disabled', true).prop('required', false)
+                }
+                else if ($(this).val() === 'other') {
+                    $('#living-caretaker').prop('disabled', true).prop('required', false)
+                    $('#living-other').prop('disabled', false).prop('required', true)
+                }
+                else {
+                    $('#living-caretaker').prop('disabled', true).prop('required', false)
+                    $('#living-other').prop('disabled', true).prop('required', false)
+                }
+            });
+        $('#smoking').change(function() {
+                console.log($(this).val())
+                if($(this).val() === 'yes') {
+                    $('#smokingfreq').show();
+                    $('#smokingfreq-label').show();
+                    $('#smokeperweek-label').show();
+                    $('#smokeperweek').show();
+
+                    $('#smokeyears-label').hide()
+                    $('#smokeyears').hide();
+                    $('#quitsmokeyears-label').hide()
+                    $('#quitsmokeyears').hide()
+                } else if ($(this).val() === 'quit') {
+                    $('#smokingfreq').hide();
+                    $('#smokingfreq-label').hide();
+                    $('#smokeperweek-label').hide();
+                    $('#smokeperweek').hide();
+
+                    $('#smokeperday-label').show();
+                    $('#smokeperday').show();
+                    $('#smokeyears-label').show()
+                    $('#smokeyears').show();
+                    $('#quitsmokeyears-label').show()
+                    $('#quitsmokeyears').show()
+                } else {
+                    $('#smokingfreq').hide();
+                    $('#smokingfreq-label').hide();
+                    $('#smokeperday').hide();
+                    $('#smokeperday-label').hide();
+                    $('#smokeperweek').hide();
+                    $('#smokeperweek-label').hide();
+
+                    $('#smokeyears-label').hide()
+                    $('#smokeyears').hide();
+                    $('#quitsmokeyears-label').hide()
+                    $('#quitsmokeyears').hide()
+                }
+            });
+        $('#smokingfreq').change(function() {
+                if($(this).val() === 'sometimes') {
+                    $('#smokeperweek-label').show();
+                    $('#smokeperweek').show();
+                    $('#smokeperday-label').hide();
+                    $('#smokeperday').hide();
+                
+                } else {
+                    $('#smokeperweek-label').hide();
+                    $('#smokeperweek').hide();
+                    $('#smokeperday-label').show();
+                    $('#smokeperday').show();
                 }
             });
         });
@@ -35,6 +104,7 @@ $(function() {
 
 {% block page_content %}
 <div class="container">
+    {% if current_user.verified %}
     <div class="page-header">
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลผู้กรอกแบบประเมิน</strong></h4></div>
@@ -71,6 +141,8 @@ $(function() {
                     <option value="single">โสด</option>
                     <option value="other">อื่นๆ</option>
                 </select>
+                <label for="marital-reason" class="control-label">อื่นๆ โปรดระบุ</label>
+                <input type="text" disabled id="marital-reason"></input>
                 <br>
                 <label class="control-label" for="edu">ระดับการศึกษา </label> <select id="edu">
                     <option value="none">ไม่ได้รับการศึกษา</option>
@@ -82,14 +154,70 @@ $(function() {
                     <option value="higherbachelor">สูงกว่าปริญญาตรี</option>
                     <option value="other">อื่นๆ</option>
                 </select>
+                <label for="edu-other" class="control-label">อื่นๆ โปรดระบุ</label>
+                <input disabled type="text" id="edu-other"></input>
+                <label for="edu-years" class="control-label">รวมจำนวนปีที่ได้รับการศึกษา</label>
+                <input disabled type="text" id="edu-years"></input>
+                <br>
+                <label class="control-label" for="living">การพักอาศัย</label> <select id="living">
+                    <option value="single">คนเดียว</option>
+                    <option value="couple">คู่ครอง</option>
+                    <option value="family">ครอบครัว/บุตรหลาน</option>
+                    <option value="caretaker">อยู่กับผู้ดูแล</option>
+                    <option value="other">อื่นๆ</option>
+                </select>
+                <label for="living-caretaker" class="control-label">มีผู้ดูแลโปรดระบุ</label>
+                <input disabled type="text" id="living-caretaker"></input>
+                <label for="living-other" class="control-label">อื่นๆ โปรดระบุ</label>
+                <input disabled type="text" id="living-other"></input>
+                <br>
+                <label class="control-label" for="income">ท่านคิดว่ามีรายได้เพียงพอในครอบครัว</label> <select id="income">
+                    <option value="excess">เหลือเก็บ</option>
+                    <option value="enough">กำลังพอดี</option>
+                    <option value="notenough">ไม่เพียงพอ</option>
+                </select>
+                <br>
+                <label class="control-label" for="elderclub">การเป็นสมาชิกชมรมผู้สูงอายุและอื่นๆ</label> <select id="elderclub">
+                    <option value="yes">เป็น</option>
+                    <option value="no">ไม่เป็น</option>
+                </select>
+                <br>
+                <label class="control-label" for="healthstatus">ความรู้สึกต่อสุขภาพตัวเองโดยรวม</label> <select id="healthstatus">
+                    <option value="excellent">ดีเยี่ยม</option>
+                    <option value="verygood">ดีมาก</option>
+                    <option value="good">ดี</option>
+                    <option value="bad">แย่</option>
+                    <option value="verybad">แย่มาก</option>
+                </select>
+                <br>
+                <label class="control-label" for="smoking">การสูบบุหรี่/ยาสูบ</label> <select id="smoking">
+                    <option value="no">ไม่เคยสูบเลย</option>
+                    <option value="yes">ปัจจุบันยังสูบ</option>
+                    <option value="quit">เคยสูบ(ตอนนี้เลิกแล้ว)</option>
+                </select>
+                <label class="control-label" for="smokingfreq" style="display:none" id="smokingfreq-label">การสูบบุหรี่/ยาสูบ</label>
+                <select id="smokingfreq" style="display:none">
+                    <option value="sometimes">บางครั้ง</option>
+                    <option value="daily">ทุกวัน</option>
+                </select>
+                <label class="control-label" for="smokeperweek" style="display:none" id="smokeperweek-label">จำนวน (มวนต่อสัปดาห์)</label>
+                <input type="text" id="smokeperweek" style="display:none"></input>
+                <label class="control-label" for="smokeperday" style="display:none" id="smokeperday-label">จำนวน (มวนต่อวัน)</label>
+                <input type="text" id="smokeperday" style="display:none"></input>
+                <label class="control-label" for="smokeyears" style="display:none" id="smokeyears-label">เป็นเวลา (ปี)</label>
+                <input type="text" id="smokeyears" style="display:none"></input>
+                <label class="control-label" for="quitsmokeyears" style="display:none" id="quitsmokeyears-label">เลิกมา (ปี)</label>
+                <input type="text" id="quitsmokeyears" style="display:none"></input>
             </div>
         </div>
-</div>
-<div class="col-md4">
-    {% if current_user.verified %}
-        {{ wtf.quick_form(form) }}
     {% else %}
-        <p>บัญชีของท่านยังไม่ผ่านการตรวจสอบจึงไม่สามารถกรอกข้อมูลได้ในขณะนี้</p>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
+            <div class="panel-body">
+                <p>บัญชีของท่านยังไม่ผ่านการตรวจสอบจึงไม่สามารถกรอกข้อมูลได้ในขณะนี้</p>
+                <p>โปรดรอให้บัญชีของท่านได้รับการยืนยันจากเจ้าหน้าที่ดูแลระบบก่อน</p>
+            </div>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
