@@ -39,6 +39,7 @@ class User():
             self.position = kwargs['position']
             self.org = kwargs['org']
             self.verified = kwargs['verified']
+            self.last_login = kwargs['last_login']
         elif kwargs['role'] == 'admin':
             self.username = username
             self.role = 'admin'
@@ -71,7 +72,7 @@ def load_user(username):
             return User(u['username'], title=u['title'], name=u['name'],
                     lastname=u['lastname'], province=u['province'],
                     role=u['role'], org=u['org'], position=u['position'],
-                    verified=u['verified'])
+                    verified=u['verified'], last_login=u['last_login'])
         elif u['role'] == 'admin':
             return User(u['username'], email=u['email'], role=u['role'])
         else:

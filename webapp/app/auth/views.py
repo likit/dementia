@@ -25,6 +25,9 @@ def login():
         if user is not None and check_password_hash(user['password'],
                 form.password.data):
             #FIXME: use email instead?
+            new_user = copy.deepcopy(user)
+            new_user['last_login'].append(datetime.now())
+            db.users.update({'username': user['username']}, new_user, safe=True)
             login_user(LoginUser(user['username']), form.remember_me.data)
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
@@ -87,6 +90,7 @@ def register():
                 'verified': False,
                 'create_date_time': datetime.today(),
                 'role': 'staff',
+                'last_login': [],
                 }
 
         db.users.insert(user_doc, safe=True)
