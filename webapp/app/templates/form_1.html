@@ -189,6 +189,62 @@ $(function() {
                         {{ form.congenital_dis_years.label }} {{ form.congenital_dis_years() }}
                     </td></tr>
                 </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ค่าความดันโลหิต</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr><td>
+                            {{ form.systolic.label }} {{ form.systolic() }}
+                    </td></tr>
+                    <tr><td>
+                            {{ form.diastolic.label }} {{ form.diastolic() }}
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองความเสี่ยงต่อโรคหัวใจและหลอดเลือดสมอง</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr><td>
+                        {{ form.smoke_screening.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.smoke_screening() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.bp.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.bp() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.fpg.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.fpg() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.abnormal_lipid.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.abnormal_lipid() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.waist.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.waist() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.infarction.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.infarction() }}
+                    </td></tr>
+                    <tr><td>
+                        {{ form.family_infarction.label }}
+                    </td><td class="success col-md-2">
+                        {{ form.family_infarction() }}
+                    </td></tr>
+                </table>
+            </div>
         </div>
     {% else %}
         <div class="panel panel-default">
