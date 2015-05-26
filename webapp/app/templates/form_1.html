@@ -335,6 +335,43 @@ $(function() {
                 {{ form.dental_transfer.label }} {{ form.dental_transfer() }}
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองสุขภาพทางตา</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr>
+                        <td>ข้อ</td><td>คำถาม</td><td>ใช่</td><td>ระบุตา</td>
+                    </tr>
+                    <tbody>
+                    <tr>
+                        <td>1</td><td>{{ form.eye_exam_one.label }}</td>
+                        <td class="success"> {{ form.eye_exam_one() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.eye_exam_two.label }}</td>
+                        <td class="success"> {{ form.eye_exam_two() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>{{ form.eye_exam_three.label }}</td>
+                        <td class="success"> {{ form.eye_exam_three() }}</td>
+                        <td>{{ form.eye_exam_three_side() }}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>{{ form.eye_exam_four.label }}</td>
+                        <td class="success"> {{ form.eye_exam_four() }}</td>
+                        <td>{{ form.eye_exam_four_side() }}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>{{ form.eye_exam_five.label }}</td>
+                        <td class="success"> {{ form.eye_exam_five() }}</td>
+                        <td>{{ form.eye_exam_five_side() }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>

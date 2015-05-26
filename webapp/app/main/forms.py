@@ -169,4 +169,24 @@ class Form1(Form):
                 ('denture', u'ฟันเทียม'),
                 ])
 
+    eye_exam_one = BooleanField(u'นับนิ้วในระยะสามเมตรได้ถูกต้อง<u>น้อยกว่า 3 ใน 4 ครั้ง</u>')
+    eye_exam_two = BooleanField(u'อ่านหนังสือพิมพ์หน้าหนึ่งในระยะหนึ่งฟุต<u>ไม่ได้</u>')
+    eye_exam_three = BooleanField(u'ปิดตาดูทีละข้าง <u>พบว่า</u> ตามัวคล้ายมีหมอกบัง')
+    eye_exam_four = BooleanField(u'ปิดตาดูทีละข้าง <u>พบว่า</u> มองเห็นชัดแต่ตรงกลาง ไม่เห็นรอบข้าง หรือมักเดินชนประตู สิ่งของบ่อยๆ')
+    eye_exam_five = BooleanField(u'ปิดตาดูทีละข้าง <u>พบว่า</u> เห็นจุดดำกลางภาพ หรือเห็นภาพบิดเบี้ยว')
+
+    eye_exam_three_side = RadioField(u'', choices=[
+        ('left', u'ซ้าย'),
+        ('right', u'ขวา'),
+        ])
+    eye_exam_four_side = RadioField(u'', choices=[
+        ('left', u'ซ้าย'),
+        ('right', u'ขวา'),
+        ])
+    eye_exam_five_side = RadioField(u'', choices=[
+        ('left', u'ซ้าย'),
+        ('right', u'ขวา'),
+        ])
+
+
     submit = SubmitField('Submit')
