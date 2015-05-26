@@ -432,6 +432,180 @@ $(function() {
                 </table>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การทดสอบสภาพสมองเบื้องต้นฉบับภาษาไทย MMSE-Thai 2002</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr class="active">
+                        <td><strong>1. Orientation for time: ทดสอบการรับรู้เกี่ยวกับเวลาในปัจจุบัน (5 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_one_one.label }}</td>
+                        <td class="success">{{ form.mmse_one_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_one_two.label }}</td>
+                        <td class="success">{{ form.mmse_one_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_one_three.label }}</td>
+                        <td class="success">{{ form.mmse_one_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_one_four.label }}</td>
+                        <td class="success">{{ form.mmse_one_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_one_five.label }}</td>
+                        <td class="success">{{ form.mmse_one_five() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>2. Orientation for place: ทดสอบการรับรู้เกี่ยวกับที่อยู่ในปัจจุบัน (5 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>2.1 กรณีอยู่สถานพยาบาล</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_one_one.label }}</td>
+                        <td class="success">{{ form.mmse_two_one_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_one_two.label }}</td>
+                        <td class="success">{{ form.mmse_two_one_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_one_three.label }}</td>
+                        <td class="success">{{ form.mmse_two_one_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_one_four.label }}</td>
+                        <td class="success">{{ form.mmse_two_one_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_one_five.label }}</td>
+                        <td class="success">{{ form.mmse_two_one_five() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>2.2 กรณีอยู่บ้านของผู้ถูกทดสอบ</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_two_one.label }}</td>
+                        <td class="success">{{ form.mmse_two_two_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_two_two.label }}</td>
+                        <td class="success">{{ form.mmse_two_two_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_two_three.label }}</td>
+                        <td class="success">{{ form.mmse_two_two_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_two_four.label }}</td>
+                        <td class="success">{{ form.mmse_two_two_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_two_two_five.label }}</td>
+                        <td class="success">{{ form.mmse_two_two_five() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>3. Registration: ทดสอบการบันทึกความจำโดยให้จำของชื่อ 3 อย่าง</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_three_flower.label }} {{ form.mmse_three_flower() }}
+                        {{ form.mmse_three_river.label }} {{ form.mmse_three_river() }}
+                        {{ form.mmse_three_train.label }} {{ form.mmse_three_train() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td>กรณีทำแบบทดสอบซ้ำภายในสองเดือน ให้ใช้คำว่า</td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_three_tree.label }} {{ form.mmse_three_tree() }}
+                        {{ form.mmse_three_sea.label }} {{ form.mmse_three_sea() }}
+                        {{ form.mmse_three_car.label }} {{ form.mmse_three_car() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>4. Attention or Calculation: ทดสอบสมาธิโดยให้คิดเลขในใจ (5 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_four_one.label }}</td>
+                        <td class="success">{{ form.mmse_four_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_four_two.label }}</td>
+                        <td class="success">{{ form.mmse_four_two() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>5. Recall: ทดสอบการความจำระยะสั้นของชื่อสิ่ง 3 อย่าง (3 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_five_flower.label }} {{ form.mmse_five_flower() }}
+                        {{ form.mmse_five_river.label }} {{ form.mmse_five_river() }}
+                        {{ form.mmse_five_train.label }} {{ form.mmse_five_train() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td>กรณีทำแบบทดสอบซ้ำภายในสองเดือน ให้ใช้คำว่า</td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_five_tree.label }} {{ form.mmse_five_tree() }}
+                        {{ form.mmse_five_sea.label }} {{ form.mmse_five_sea() }}
+                        {{ form.mmse_five_car.label }} {{ form.mmse_five_car() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>6. Naming: ทดสอบการบอกชื่อสิ่งของที่ได้เห็น (2 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_six_one.label }}</td>
+                        <td class="success">{{ form.mmse_six_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_six_two.label }}</td>
+                        <td class="success">{{ form.mmse_six_two() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>7. Repetition: ทดสอบการพูดซ้ำคำที่ได้ยิน (1 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_seven_one.label }}</td>
+                        <td class="success">{{ form.mmse_seven_one() }}</td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>8. Verbal command: ทดสอบการเข้าใจความหมายและคำสั่ง (3 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_eight_one.label }} {{ form.mmse_eight_one() }}
+                        {{ form.mmse_eight_two.label }} {{ form.mmse_eight_two() }}
+                        {{ form.mmse_eight_three.label }} {{ form.mmse_eight_three() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>9. Written command: ทดสอบการอ่าน การเข้าใจความหมายและทำตามได้ (1 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_nine_one.label }} {{ form.mmse_nine_one() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>10. Writing: ทดสอบการเขียนภาษาอย่างมีความหมาย (1 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_ten_one.label }} {{ form.mmse_ten_one() }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="active">
+                        <td><strong>11. Visuoconstruction: ทดสอบความสัมพันธ์ระหว่างตากับมือ (1 คะแนน)</strong></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.mmse_eleven_one.label }} {{ form.mmse_eleven_one() }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>

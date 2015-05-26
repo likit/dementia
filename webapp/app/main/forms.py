@@ -219,4 +219,133 @@ class Form1(Form):
     amt_nine = BooleanField(u'พระมหากษัตริย์องค์ปัจจุบันมีพระนามว่าอะไร')
     amt_ten = BooleanField(u'ให้นับถอยหลังจาก 20 ถึง 1')
 
+    mmse_one_one = RadioField(u'วันนี้ วันที่เท่าไหร่', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_one_two = RadioField(u'วันนี้ วันอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_one_three = RadioField(u'เดือนนี้ เดือนอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_one_four = RadioField(u'ปีนี้ ปีอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_one_five = RadioField(u'ฤดูนี้ ฤดูอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_two_one_one = RadioField(u'สถานที่ตรงนี้เรียกว่าอะไรและชื่อว่าอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_one_two = RadioField(u'ขณะนี้อยู่ชั้นที่เท่าไหร่ของตัวอาคาร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_one_three = RadioField(u'ที่นี่อยู่ในอำเภออะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_one_four = RadioField(u'ที่นี่จังหวัดอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_one_five = RadioField(u'ที่นี่ภาคอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_two_two_one = RadioField(u'สถานที่ตรงนี้เรียกว่าอะไร และเลขที่เท่าไหร่', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_two_two = RadioField(u'ที่นี่หมู่บ้าน (หรือละแวก คุ้ม ย่าน ถนน) อะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_two_three = RadioField(u'ที่นี่อำเภอ หรือเขตอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_two_four = RadioField(u'ที่นี่จังหวัดอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_two_two_five = RadioField(u'ที่นี่ภาคอะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_three_flower = BooleanField(u'ดอกไม้')
+    mmse_three_river = BooleanField(u'แม่น้ำ')
+    mmse_three_train = BooleanField(u'รถไฟ')
+    mmse_three_tree = BooleanField(u'ต้นไม้')
+    mmse_three_sea = BooleanField(u'ทะเล')
+    mmse_three_car = BooleanField(u'รถยนต์')
+
+    mmse_four_one = RadioField(u'คิดเลขในใจโดยให้เอา 100 ตั้งลบออกทีละ 7 ไปเรื่อยๆ', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_four_two = RadioField(u'สะกดคำว่ามะนาวถอยหลัง', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_five_flower = BooleanField(u'ดอกไม้')
+    mmse_five_river = BooleanField(u'แม่น้ำ')
+    mmse_five_train = BooleanField(u'รถไฟ')
+    mmse_five_tree = BooleanField(u'ต้นไม้')
+    mmse_five_sea = BooleanField(u'ทะเล')
+    mmse_five_car = BooleanField(u'รถยนต์')
+
+    mmse_six_one = RadioField(u'ยื่นดินสอให้ผู้ถูกทดสอบดูแล้วถามว่า สิ่งนี้คืออะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+    mmse_six_two = RadioField(u'ชี้นาฬิกาข้อมือให้ผู้ถูกทดสอบดูแล้วถามว่านี่คืออะไร', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_seven_one = RadioField(u'พูดตามคำว่า "ใครใคร่ขายไข่ไก่"', choices=[
+        ('correct', u'ถูกต้อง'),
+        ('wrong', u'ผิด'),
+        ('na', u'ไม่ได้ทำ'),
+        ])
+
+    mmse_eight_one = BooleanField(u'รับด้วยมือขวา')
+    mmse_eight_two = BooleanField(u'พับครึ่งด้วยมือสองข้าง')
+    mmse_eight_three = BooleanField(u'วางไว้ที่ (พื้น โต๊ะ เตียง)')
+
+    mmse_nine_one = BooleanField(u'หลับตาได้')
+    mmse_ten_one = BooleanField(u'ประโยคมีความหมาย')
+    mmse_eleven_one = BooleanField(u'วาดได้')
+
     submit = SubmitField('Submit')
