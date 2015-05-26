@@ -208,4 +208,15 @@ class Form1(Form):
         ('20/20', '20/20'),
         ])
 
+    amt_one = BooleanField(u'อายุเท่าไหร่')
+    amt_two = BooleanField(u'ขณะนี้เวลาอะไร')
+    amt_three = BooleanField(u'ที่อยู่ปัจจุบันของท่านคือ')
+    amt_four = BooleanField(u'ปีนี้ปีอะไร')
+    amt_five = BooleanField(u'สถานที่ตรงนี้เรียกว่าอะไร')
+    amt_six = BooleanField(u'คนนี้คือใคร (ชี้ที่คนสัมภาษณ์) และคนนี้คือใคร (ชี้ที่คนข้างๆ :ญาติ)')
+    amt_seven = BooleanField(u'วันเดือนปีเกิดของท่านคือ')
+    amt_eight = BooleanField(u'เหตุการณ์ 14 ตุลา หรือเหตุการณ์มหาวิปโยคเกิดขึ้นในปีพ.ศ.อะไร')
+    amt_nine = BooleanField(u'พระมหากษัตริย์องค์ปัจจุบันมีพระนามว่าอะไร')
+    amt_ten = BooleanField(u'ให้นับถอยหลังจาก 20 ถึง 1')
+
     submit = SubmitField('Submit')

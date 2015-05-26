@@ -380,6 +380,58 @@ $(function() {
                 {{ form.snellen_right.label }} {{ form.snellen_right() }}
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การทดสอบสภาพสมอง: Abbreviated Mental Test (AMT)</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr>
+                        <td>ข้อ</td><td>คำถาม</td><td>ถูก</td>
+                    </tr>
+                    <tbody>
+                    <tr>
+                        <td>1</td><td>{{ form.amt_one.label }}</td>
+                        <td class="success">{{ form.amt_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.amt_two.label }}</td>
+                        <td class="success">{{ form.amt_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>{{ form.amt_three.label }}</td>
+                        <td class="success">{{ form.amt_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>{{ form.amt_four.label }}</td>
+                        <td class="success">{{ form.amt_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>{{ form.amt_five.label }}</td>
+                        <td class="success">{{ form.amt_five() }}</td>
+                    </tr>
+                    <tr>
+                        <td>6</td><td>{{ form.amt_six.label }}</td>
+                        <td class="success">{{ form.amt_six() }}</td>
+                    </tr>
+                    <tr>
+                        <td>7</td><td>{{ form.amt_seven.label }}</td>
+                        <td class="success">{{ form.amt_seven() }}</td>
+                    </tr>
+                    <tr>
+                        <td>8</td><td>{{ form.amt_eight.label }}</td>
+                        <td class="success">{{ form.amt_eight() }}</td>
+                    </tr>
+                    <tr>
+                        <td>9</td><td>{{ form.amt_nine.label }}</td>
+                        <td class="success">{{ form.amt_nine() }}</td>
+                    </tr>
+                    <tr>
+                        <td>10</td><td>{{ form.amt_ten.label }}</td>
+                        <td class="success">{{ form.amt_ten() }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
