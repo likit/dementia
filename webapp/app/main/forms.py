@@ -7,6 +7,7 @@ from wtforms import (StringField,
                         IntegerField,
                         SelectField,
                         BooleanField,
+                        RadioField,
                         )
 
 class Form1(Form):
@@ -118,5 +119,54 @@ class Form1(Form):
     waist = BooleanField(u'เส้นรอบเอวมากกว่าส่วนสูง (ซม.) หาร 2')
     infarction = BooleanField(u'เคยได้รับการวินิจฉัยจากแพทย์ว่าเป็นโรคหัวใจขาดเลือด หรืออัมพฤกษ์ อัมพาต')
     family_infarction = BooleanField(u'มีญาติสายตรง (พ่อ แม่ พี่หรือน้องท้องเดียวกัน) ที่แพทย์วินิจฉัยว่าเป็นโรคหัวใจขาดเลือด หรืออัมพฤกษ์ อัมพาต (ผู้ชายเป็นก่อนอายุ 55 ปี ผู้หญิงเป็นก่อนอายุ 65 ปี)')
+    dental_brushing = SelectField(u'', validators=[Required()],
+            choices=[
+                ('none', u'ไม่ได้แปรง/ไม่ได้ใช้แปรงสีฟัน'),
+                ('bedtime', u'แปรงวันละ 1 ครั้ง ก่อนนอน'),
+                ('twice', u'แปรงวันละ 2 ครั้ง เช้าและก่อนนอน'),
+                ('many', u'แปรงมากกว่าวันละ 2 ครั้ง'),
+                ('other', u'อื่นๆ'),
+                ])
+    dental_brushing_gt_twice = IntegerField(u'ระบุ')
+    dental_brushing_other = StringField(u'อื่นๆ โปรดระบุ')
+
+    fluoride_toothpaste = BooleanField(u'การใช้ยาสีฟันผสมฟลูโอไรด์ทุกวัน',
+            validators=[Required()])
+    dental_floss = BooleanField(u'การทำความสะอาดซอกฟันทุกวัน')
+    dental_floss_equip = StringField(u'ใช้อุปกรณ์ได้แก่')
+    smoke_ten_cig = BooleanField(u'สูบบุหรี่มากกว่า 10 มวนต่อวัน')
+    chew_gum = BooleanField(u'เคี้ยวหมากเป็นประจำ')
+
+    dental_part_two_one = RadioField(u'<u>เนื้อเยื่อในช่องปาก</u><br>บริเวณริมฝีปาก แก้ม ลิ้น มีปุ่ม ก้อนเนื้อ มีแผลเรื้อรังหรือไม่',
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+    dental_part_two_two = RadioField(u'<u>เหงือกและอวัยวะปริทันต์</u><br>บริเวณเหงือกมีเลือดออก มีฝีหนอง ฟันโยกหรือไม่',
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+    dental_part_two_three = RadioField(u'<u>ฟันผุ</u><br>มีฟันผุเป็นรู เสียวฟัน ฟันหัก ฟันแตกเหลือแต่ตอฟันหรือไม่',
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+    dental_part_two_four = RadioField(u'<u>ปัญหาการเคี้ยวอาหาร/การกลืน</u><br>มีปัญหาการเคี้ยวอาหารการกลืนหรือไม่',
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+    dental_part_two_five = RadioField(u'<u>ฟันเทียม</u><br>จำเป็นต้องใส่ฟันเทียมหรือทำฟันเทียมหรือไม่',
+            choices=[(0, u'จำเป็น'), (1, u'ไม่จำเป็น')], coerce=int)
+    dental_part_two_six = RadioField(u'<u>การได้รับการตรวจหรือรักษาจากทันตบุคลากร</u><br>ท่านเคยได้รับการตรวจหรือรักษาจากทันตบุคลากรหรือไม่',
+            choices=[(0, u'เคย'), (1, u'ไม่เคย')], coerce=int)
+    dental_part_two_seven = RadioField(u'<u>ความต้องการการรักษาทางทันตกรรม</u><br>ปัจจุบันท่านต้องการการรักษาหรือไม่',
+            choices=[(0, u'ต้องการ'), (1, u'ไม่ต้องการ')], coerce=int)
+
+    dental_part_two_one_follow_up = BooleanField(u'ใช่')
+    dental_part_two_two_follow_up = BooleanField(u'ใช่')
+    dental_part_two_three_follow_up = BooleanField(u'ใช่')
+    dental_part_two_four_follow_up = BooleanField(u'ใช่')
+    dental_part_two_five_follow_up = BooleanField(u'ใช่')
+    dental_part_two_six_follow_up = BooleanField(u'ใช่')
+    dental_part_two_seven_follow_up = BooleanField(u'ใช่')
+
+    dental_transfer = SelectField(u'', validators=[Required()],
+            choices=[
+                ('tissue', u'เนื้อเยื่อในช่องปาก'),
+                ('gum', u'เหงือกและอวัยวะปริทันต์'),
+                ('cavity', u'ฟันผุ'),
+                ('swallow', u'ปัญหาการเคี้ยวอาหาร/การกลืน'),
+                ('denture', u'ฟันเทียม'),
+                ])
 
     submit = SubmitField('Submit')

@@ -248,6 +248,93 @@ $(function() {
                 </table>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การประเมินสุขภาพช่องปาก</strong></h4></div>
+            <div class="panel-body">
+                <h4>ส่วนที่ 1 ประเมินพฤฒิกรรมเสี่ยงต่อสุขภาพช่องปาก</h4>
+                <br>
+                <table class="table table-hover">
+                    <tr><td class="active">
+                            <strong>ประเมินพฤฒิกรรมการทำความสะอาดช่องปาก</strong>
+                    </td><td class="active"></td></tr>
+                    <tr><td>
+                            {{ form.dental_brushing.label }} {{ form.dental_brushing() }}
+                            {{ form.dental_brushing_gt_twice.label }} {{ form.dental_brushing_gt_twice() }}
+                            {{ form.dental_brushing_other.label }} {{ form.dental_brushing_other() }}
+                    </td><td></td></tr>
+                    <tr><td>
+                            {{ form.fluoride_toothpaste.label }}
+                    </td><td class="success col-md-2">
+                            {{ form.fluoride_toothpaste() }}
+                    </td></tr>
+                    <tr><td>
+                            {{ form.dental_floss.label }}
+                            {{ form.dental_floss_equip.label }}
+                            {{ form.dental_floss_equip() }}
+                    </td><td class="success col-md-2">
+                            {{ form.dental_floss() }}
+                    </td></tr>
+                    <tr><td class="active">
+                            <strong>ประเมินสภาวะเสี่ยงต่อการเกิดโรคในปาก</strong>
+                    </td><td class="active"></td></tr>
+                    <tr><td>
+                            {{ form.smoke_ten_cig.label }}
+                    </td><td class="success">
+                            {{ form.smoke_ten_cig() }}
+                    </td></tr>
+                    <tr><td>
+                            {{ form.chew_gum.label }}
+                    </td><td class="success">
+                            {{ form.chew_gum() }}
+                    </td></tr>
+                </table>
+                <h4>ส่วนที่ 2</h4>
+                <br>
+                <table class="table table-hover">
+                    <tr class="active">
+                        <td>ข้อ</td><td>คำถาม</td><td>คะแนน</td><td>การติดตามผล</td></tr>
+                    <tbody>
+                    <tr>
+                        <td>1</td><td>{{ form.dental_part_two_one.label }}</td>
+                        <td>{{ form.dental_part_two_one() }}</td>
+                        <td>{{ form.dental_part_two_one_follow_up.label }} {{ form.dental_part_two_one_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.dental_part_two_two.label }}</td>
+                        <td>{{ form.dental_part_two_two() }}</td>
+                        <td>{{ form.dental_part_two_two_follow_up.label }} {{ form.dental_part_two_two_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>{{ form.dental_part_two_three.label }}</td>
+                        <td>{{ form.dental_part_two_three() }}</td>
+                        <td>{{ form.dental_part_two_three_follow_up.label }} {{ form.dental_part_two_three_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>{{ form.dental_part_two_four.label }}</td>
+                        <td>{{ form.dental_part_two_four() }}</td>
+                        <td>{{ form.dental_part_two_four_follow_up.label }} {{ form.dental_part_two_four_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>{{ form.dental_part_two_five.label }}</td>
+                        <td>{{ form.dental_part_two_five() }}</td>
+                        <td>{{ form.dental_part_two_five_follow_up.label }} {{ form.dental_part_two_five_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>6</td><td>{{ form.dental_part_two_six.label }}</td>
+                        <td>{{ form.dental_part_two_six() }}</td>
+                        <td>{{ form.dental_part_two_six_follow_up.label }} {{ form.dental_part_two_six_follow_up() }}</td>
+                    </tr>
+                    <tr>
+                        <td>7</td><td>{{ form.dental_part_two_seven.label }}</td>
+                        <td>{{ form.dental_part_two_seven() }}</td>
+                        <td>{{ form.dental_part_two_seven_follow_up.label }} {{ form.dental_part_two_seven_follow_up() }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h4>ส่วนที่ 3 แผนการส่งต่อ</h4>
+                {{ form.dental_transfer.label }} {{ form.dental_transfer() }}
+            </div>
+        </div>
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
