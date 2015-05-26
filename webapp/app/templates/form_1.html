@@ -606,6 +606,100 @@ $(function() {
                 </table>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองโรคซึมเศร้าด้วย 2 คำถาม (2Q)</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr>
+                        <td>ข้อ</td><td>คำถาม</td><td>มี</td>
+                    </tr>
+                    <tbody>
+                    <tr>
+                        <td>1</td><td>{{ form.q2_one.label }}</td><td class="success col-md-2"> {{ form.q2_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.q2_two.label }}</td><td class="success col-md-2"> {{ form.q2_two() }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองโรคซึมเศร้าด้วย 9 คำถาม (9Q)</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tr class="active">
+                        <td>ข้อ</td><td>คำถาม</td><td></td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>{{ form.q9_one.label }}</td><td>{{ form.q9_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.q9_two.label }}</td><td>{{ form.q9_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>{{ form.q9_three.label }}</td><td>{{ form.q9_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>{{ form.q9_four.label }}</td><td>{{ form.q9_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>{{ form.q9_five.label }}</td><td>{{ form.q9_five() }}</td>
+                    </tr>
+                    <tr>
+                        <td>6</td><td>{{ form.q9_six.label }}</td><td>{{ form.q9_six() }}</td>
+                    </tr>
+                    <tr>
+                        <td>7</td><td>{{ form.q9_seven.label }}</td><td>{{ form.q9_seven() }}</td>
+                    </tr>
+                    <tr>
+                        <td>8</td><td>{{ form.q9_eight.label }}</td><td>{{ form.q9_eight() }}</td>
+                    </tr>
+                    <tr>
+                        <td>9</td><td>{{ form.q9_nine.label }}</td><td>{{ form.q9_nine() }}</td>
+                    </tr>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองโรคข้อเข่าเสื่อม</strong></h4></div>
+            <div class="panel-body">
+                {{ form.knee_pain.label }} {{ form.knee_pain() }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองโรคข้อเข่าเสื่อมทางคลินิก</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <td>ข้อ</td><td>คำถาม</td><td class="success col-md-2">ใช่</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>{{ form.knee_pain_clinic_one.label }}</td>
+                        <td class="success col-md-2">{{ form.knee_pain_clinic_one() }}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>{{ form.knee_pain_clinic_two.label }}</td>
+                        <td class="success col-md-2">{{ form.knee_pain_clinic_two() }}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>{{ form.knee_pain_clinic_three.label }}</td>
+                        <td class="success col-md-2">{{ form.knee_pain_clinic_three() }}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>{{ form.knee_pain_clinic_four.label }}</td>
+                        <td class="success col-md-2">{{ form.knee_pain_clinic_four() }}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>{{ form.knee_pain_clinic_five.label }}</td>
+                        <td class="success col-md-2">{{ form.knee_pain_clinic_five() }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
