@@ -144,7 +144,7 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>แบบสัมภาษณ์ข้อมูลส่วนบุคคล</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover table-bordered">
+                <table class="table table-striped table-bordered">
                     <tr><td>
                         {{ form.gender.label }} {{ form.gender() }}
                         {{ form.marital.label }} {{ form.marital() }}
@@ -196,7 +196,7 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ค่าความดันโลหิต</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr><td>
                             {{ form.systolic.label }} {{ form.systolic() }}
                     </td></tr>
@@ -209,40 +209,40 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การคัดกรองความเสี่ยงต่อโรคหัวใจและหลอดเลือดสมอง</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr><td>
                         {{ form.smoke_screening.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.smoke_screening() }}
                     </td></tr>
                     <tr><td>
                         {{ form.bp.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.bp() }}
                     </td></tr>
                     <tr><td>
                         {{ form.fpg.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.fpg() }}
                     </td></tr>
                     <tr><td>
                         {{ form.abnormal_lipid.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.abnormal_lipid() }}
                     </td></tr>
                     <tr><td>
                         {{ form.waist.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.waist() }}
                     </td></tr>
                     <tr><td>
                         {{ form.infarction.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.infarction() }}
                     </td></tr>
                     <tr><td>
                         {{ form.family_infarction.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                         {{ form.family_infarction() }}
                     </td></tr>
                 </table>
@@ -253,7 +253,7 @@ $(function() {
             <div class="panel-body">
                 <h4>ส่วนที่ 1 ประเมินพฤฒิกรรมเสี่ยงต่อสุขภาพช่องปาก</h4>
                 <br>
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr><td class="active">
                             <strong>ประเมินพฤฒิกรรมการทำความสะอาดช่องปาก</strong>
                     </td><td class="active"></td></tr>
@@ -264,14 +264,14 @@ $(function() {
                     </td><td></td></tr>
                     <tr><td>
                             {{ form.fluoride_toothpaste.label }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                             {{ form.fluoride_toothpaste() }}
                     </td></tr>
                     <tr><td>
                             {{ form.dental_floss.label }}
                             {{ form.dental_floss_equip.label }}
                             {{ form.dental_floss_equip() }}
-                    </td><td class="success col-md-2">
+                    </td><td class="col-md-2">
                             {{ form.dental_floss() }}
                     </td></tr>
                     <tr><td class="active">
@@ -279,18 +279,18 @@ $(function() {
                     </td><td class="active"></td></tr>
                     <tr><td>
                             {{ form.smoke_ten_cig.label }}
-                    </td><td class="success">
+                    </td><td>
                             {{ form.smoke_ten_cig() }}
                     </td></tr>
                     <tr><td>
                             {{ form.chew_gum.label }}
-                    </td><td class="success">
+                    </td><td>
                             {{ form.chew_gum() }}
                     </td></tr>
                 </table>
                 <h4>ส่วนที่ 2</h4>
                 <br>
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr class="active">
                         <td>ข้อ</td><td>คำถาม</td><td>คะแนน</td><td>การติดตามผล</td></tr>
                     <tbody>
@@ -338,34 +338,34 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การคัดกรองสุขภาพทางตา</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr>
                         <td>ข้อ</td><td>คำถาม</td><td>ใช่</td><td>ระบุตา</td>
                     </tr>
                     <tbody>
                     <tr>
                         <td>1</td><td>{{ form.eye_exam_one.label }}</td>
-                        <td class="success"> {{ form.eye_exam_one() }}</td>
+                        <td> {{ form.eye_exam_one() }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>2</td><td>{{ form.eye_exam_two.label }}</td>
-                        <td class="success"> {{ form.eye_exam_two() }}</td>
+                        <td> {{ form.eye_exam_two() }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>3</td><td>{{ form.eye_exam_three.label }}</td>
-                        <td class="success"> {{ form.eye_exam_three() }}</td>
+                        <td> {{ form.eye_exam_three() }}</td>
                         <td>{{ form.eye_exam_three_side() }}</td>
                     </tr>
                     <tr>
                         <td>4</td><td>{{ form.eye_exam_four.label }}</td>
-                        <td class="success"> {{ form.eye_exam_four() }}</td>
+                        <td> {{ form.eye_exam_four() }}</td>
                         <td>{{ form.eye_exam_four_side() }}</td>
                     </tr>
                     <tr>
                         <td>5</td><td>{{ form.eye_exam_five.label }}</td>
-                        <td class="success"> {{ form.eye_exam_five() }}</td>
+                        <td> {{ form.eye_exam_five() }}</td>
                         <td>{{ form.eye_exam_five_side() }}</td>
                     </tr>
                     </tbody>
@@ -383,50 +383,50 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การทดสอบสภาพสมอง: Abbreviated Mental Test (AMT)</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr>
                         <td>ข้อ</td><td>คำถาม</td><td>ถูก</td>
                     </tr>
                     <tbody>
                     <tr>
                         <td>1</td><td>{{ form.amt_one.label }}</td>
-                        <td class="success">{{ form.amt_one() }}</td>
+                        <td>{{ form.amt_one() }}</td>
                     </tr>
                     <tr>
                         <td>2</td><td>{{ form.amt_two.label }}</td>
-                        <td class="success">{{ form.amt_two() }}</td>
+                        <td>{{ form.amt_two() }}</td>
                     </tr>
                     <tr>
                         <td>3</td><td>{{ form.amt_three.label }}</td>
-                        <td class="success">{{ form.amt_three() }}</td>
+                        <td>{{ form.amt_three() }}</td>
                     </tr>
                     <tr>
                         <td>4</td><td>{{ form.amt_four.label }}</td>
-                        <td class="success">{{ form.amt_four() }}</td>
+                        <td>{{ form.amt_four() }}</td>
                     </tr>
                     <tr>
                         <td>5</td><td>{{ form.amt_five.label }}</td>
-                        <td class="success">{{ form.amt_five() }}</td>
+                        <td>{{ form.amt_five() }}</td>
                     </tr>
                     <tr>
                         <td>6</td><td>{{ form.amt_six.label }}</td>
-                        <td class="success">{{ form.amt_six() }}</td>
+                        <td>{{ form.amt_six() }}</td>
                     </tr>
                     <tr>
                         <td>7</td><td>{{ form.amt_seven.label }}</td>
-                        <td class="success">{{ form.amt_seven() }}</td>
+                        <td>{{ form.amt_seven() }}</td>
                     </tr>
                     <tr>
                         <td>8</td><td>{{ form.amt_eight.label }}</td>
-                        <td class="success">{{ form.amt_eight() }}</td>
+                        <td>{{ form.amt_eight() }}</td>
                     </tr>
                     <tr>
                         <td>9</td><td>{{ form.amt_nine.label }}</td>
-                        <td class="success">{{ form.amt_nine() }}</td>
+                        <td>{{ form.amt_nine() }}</td>
                     </tr>
                     <tr>
                         <td>10</td><td>{{ form.amt_ten.label }}</td>
-                        <td class="success">{{ form.amt_ten() }}</td>
+                        <td>{{ form.amt_ten() }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -435,29 +435,29 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การทดสอบสภาพสมองเบื้องต้นฉบับภาษาไทย MMSE-Thai 2002</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr class="active">
                         <td><strong>1. Orientation for time: ทดสอบการรับรู้เกี่ยวกับเวลาในปัจจุบัน (5 คะแนน)</strong></td><td></td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_one_one.label }}</td>
-                        <td class="success">{{ form.mmse_one_one() }}</td>
+                        <td>{{ form.mmse_one_one() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_one_two.label }}</td>
-                        <td class="success">{{ form.mmse_one_two() }}</td>
+                        <td>{{ form.mmse_one_two() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_one_three.label }}</td>
-                        <td class="success">{{ form.mmse_one_three() }}</td>
+                        <td>{{ form.mmse_one_three() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_one_four.label }}</td>
-                        <td class="success">{{ form.mmse_one_four() }}</td>
+                        <td>{{ form.mmse_one_four() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_one_five.label }}</td>
-                        <td class="success">{{ form.mmse_one_five() }}</td>
+                        <td>{{ form.mmse_one_five() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>2. Orientation for place: ทดสอบการรับรู้เกี่ยวกับที่อยู่ในปัจจุบัน (5 คะแนน)</strong></td><td></td>
@@ -467,46 +467,46 @@ $(function() {
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_one_one.label }}</td>
-                        <td class="success">{{ form.mmse_two_one_one() }}</td>
+                        <td>{{ form.mmse_two_one_one() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_one_two.label }}</td>
-                        <td class="success">{{ form.mmse_two_one_two() }}</td>
+                        <td>{{ form.mmse_two_one_two() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_one_three.label }}</td>
-                        <td class="success">{{ form.mmse_two_one_three() }}</td>
+                        <td>{{ form.mmse_two_one_three() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_one_four.label }}</td>
-                        <td class="success">{{ form.mmse_two_one_four() }}</td>
+                        <td>{{ form.mmse_two_one_four() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_one_five.label }}</td>
-                        <td class="success">{{ form.mmse_two_one_five() }}</td>
+                        <td>{{ form.mmse_two_one_five() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>2.2 กรณีอยู่บ้านของผู้ถูกทดสอบ</strong></td><td></td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_two_one.label }}</td>
-                        <td class="success">{{ form.mmse_two_two_one() }}</td>
+                        <td>{{ form.mmse_two_two_one() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_two_two.label }}</td>
-                        <td class="success">{{ form.mmse_two_two_two() }}</td>
+                        <td>{{ form.mmse_two_two_two() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_two_three.label }}</td>
-                        <td class="success">{{ form.mmse_two_two_three() }}</td>
+                        <td>{{ form.mmse_two_two_three() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_two_four.label }}</td>
-                        <td class="success">{{ form.mmse_two_two_four() }}</td>
+                        <td>{{ form.mmse_two_two_four() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_two_two_five.label }}</td>
-                        <td class="success">{{ form.mmse_two_two_five() }}</td>
+                        <td>{{ form.mmse_two_two_five() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>3. Registration: ทดสอบการบันทึกความจำโดยให้จำของชื่อ 3 อย่าง</strong></td><td></td>
@@ -531,11 +531,11 @@ $(function() {
                     </tr>
                     <tr>
                         <td>{{ form.mmse_four_one.label }}</td>
-                        <td class="success">{{ form.mmse_four_one() }}</td>
+                        <td>{{ form.mmse_four_one() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_four_two.label }}</td>
-                        <td class="success">{{ form.mmse_four_two() }}</td>
+                        <td>{{ form.mmse_four_two() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>5. Recall: ทดสอบการความจำระยะสั้นของชื่อสิ่ง 3 อย่าง (3 คะแนน)</strong></td><td></td>
@@ -560,18 +560,18 @@ $(function() {
                     </tr>
                     <tr>
                         <td>{{ form.mmse_six_one.label }}</td>
-                        <td class="success">{{ form.mmse_six_one() }}</td>
+                        <td>{{ form.mmse_six_one() }}</td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_six_two.label }}</td>
-                        <td class="success">{{ form.mmse_six_two() }}</td>
+                        <td>{{ form.mmse_six_two() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>7. Repetition: ทดสอบการพูดซ้ำคำที่ได้ยิน (1 คะแนน)</strong></td><td></td>
                     </tr>
                     <tr>
                         <td>{{ form.mmse_seven_one.label }}</td>
-                        <td class="success">{{ form.mmse_seven_one() }}</td>
+                        <td>{{ form.mmse_seven_one() }}</td>
                     </tr>
                     <tr class="active">
                         <td><strong>8. Verbal command: ทดสอบการเข้าใจความหมายและคำสั่ง (3 คะแนน)</strong></td><td></td>
@@ -609,16 +609,16 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การคัดกรองโรคซึมเศร้าด้วย 2 คำถาม (2Q)</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr>
                         <td>ข้อ</td><td>คำถาม</td><td>มี</td>
                     </tr>
                     <tbody>
                     <tr>
-                        <td>1</td><td>{{ form.q2_one.label }}</td><td class="success col-md-2"> {{ form.q2_one() }}</td>
+                        <td>1</td><td>{{ form.q2_one.label }}</td><td class="col-md-2"> {{ form.q2_one() }}</td>
                     </tr>
                     <tr>
-                        <td>2</td><td>{{ form.q2_two.label }}</td><td class="success col-md-2"> {{ form.q2_two() }}</td>
+                        <td>2</td><td>{{ form.q2_two.label }}</td><td class="col-md-2"> {{ form.q2_two() }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -627,7 +627,7 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การคัดกรองโรคซึมเศร้าด้วย 9 คำถาม (9Q)</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tr class="active">
                         <td>ข้อ</td><td>คำถาม</td><td></td>
                     </tr>
@@ -671,35 +671,318 @@ $(function() {
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>การคัดกรองโรคข้อเข่าเสื่อมทางคลินิก</strong></h4></div>
             <div class="panel-body">
-                <table class="table table-hover">
+                <table class="table table-striped table-bordered">
                     <tbody>
                     <tr>
-                        <td>ข้อ</td><td>คำถาม</td><td class="success col-md-2">ใช่</td>
+                        <td>ข้อ</td><td>คำถาม</td><td class="col-md-2">ใช่</td>
                     </tr>
                     <tr>
                         <td>1</td><td>{{ form.knee_pain_clinic_one.label }}</td>
-                        <td class="success col-md-2">{{ form.knee_pain_clinic_one() }}</td>
+                        <td class="col-md-2">{{ form.knee_pain_clinic_one() }}</td>
                     </tr>
                     <tr>
                         <td>2</td><td>{{ form.knee_pain_clinic_two.label }}</td>
-                        <td class="success col-md-2">{{ form.knee_pain_clinic_two() }}</td>
+                        <td class="col-md-2">{{ form.knee_pain_clinic_two() }}</td>
                     </tr>
                     <tr>
                         <td>3</td><td>{{ form.knee_pain_clinic_three.label }}</td>
-                        <td class="success col-md-2">{{ form.knee_pain_clinic_three() }}</td>
+                        <td class="col-md-2">{{ form.knee_pain_clinic_three() }}</td>
                     </tr>
                     <tr>
                         <td>4</td><td>{{ form.knee_pain_clinic_four.label }}</td>
-                        <td class="success col-md-2">{{ form.knee_pain_clinic_four() }}</td>
+                        <td class="col-md-2">{{ form.knee_pain_clinic_four() }}</td>
                     </tr>
                     <tr>
                         <td>5</td><td>{{ form.knee_pain_clinic_five.label }}</td>
-                        <td class="success col-md-2">{{ form.knee_pain_clinic_five() }}</td>
+                        <td class="col-md-2">{{ form.knee_pain_clinic_five() }}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองภาวะหกล้ม Timed Up and Go Test (TUGT)</strong></h4></div>
+            <div class="panel-body">
+                {% for subfield in form.tugt %}
+                    {{ subfield }} {{ subfield.label }}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองภาวะกลั้นปัสสาวะ</strong></h4></div>
+            <div class="panel-body">
+                {% for subfield in form.urine_holding %}
+                    {{ subfield }} {{ subfield.label }}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองภาวะโภชนาการ: ดัชนีมวลกาย (BMI: Body Mass Index)</strong></h4></div>
+            <div class="panel-body">
+                {{ form.bmi.label }} {{ form.bmi() }}
+            </div>
+        </div>
+    <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การประเมินภาวะทุพโภชนาการ</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td class="col-md-6">
+                            {{ form.malnutrition_one.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_one %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.malnutrition_two.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_two %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.malnutrition_three.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_three %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.malnutrition_four.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_four %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.malnutrition_five.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_five %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.malnutrition_six.label() }}
+                        </td>
+                        <td>
+                            {% for subfield in form.malnutrition_six %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การประเมินปัญหาการนอน</strong></h4></div>
+            <div class="panel-body">
+                {{ form.sleeping_one.label() }} {{ form.sleeping_one() }}
+                <br/>
+                {{ form.insomnia.label() }} {{ form.insomnia() }}
+                {{ form.oversleep.label() }} {{ form.oversleep() }}
+                {{ form.snore.label() }} {{ form.snore() }}
+                {{ form.dreamwalk.label() }} {{ form.dreamwalk() }}
+                {{ form.sleeping_other.label() }} {{ form.sleeping_other() }}
+                <br/>
+                <br/>
+                {{ form.fatique.label() }} {{ form.fatique() }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การประเมินความสามารถในการใช้ชีวิตประจำวัน</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_one.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_one %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_two.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_two %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_three.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_three %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_four.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_four %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_five.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_five %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_six.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_six %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_seven.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_seven %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_eight.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_eight %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_nine.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_nine %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.routine_ten.label() }}
+                        </td><td>
+                            {% for subfield in form.routine_ten %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>การคัดกรองผู้สูงอายุที่ต้องได้รับการดูแลระยะยาว</strong></h4></div>
+            <div class="panel-body">
+                <h4>ด้านที่ 1 สังคม</h4>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_one_one.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_one_one %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_one_two.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_one_two %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_one_three.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_one_three %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+                <h4>ด้านที่ 2 ความสามารถในการมองเห็นและได้ยิน</h4>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_two_one.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_two_one %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_two_two.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_two_two %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+                <h4>ด้านที่ 3 ภาวะหลงลืมและซึมเศร้า</h4>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <td class="col-md-5">
+                            {{ form.long_term_care_three_one.label() }}
+                        </td><td>
+                            {% for subfield in form.long_term_care_three_one %}
+                                {{ subfield }} {{ subfield.label }}<br/>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-5">
+                            ในสองสัปดาห์ที่ผ่านมารวมวันนี้ ท่านมีความรู้สึก
+                        </td><td>
+                            {{ form.long_term_care_three_two_one() }}
+                            {{ form.long_term_care_three_two_one.label() }}
+                            <br/>
+                            {{ form.long_term_care_three_two_two() }}
+                            {{ form.long_term_care_three_two_two.label() }}
+                            <br/>
+                            TODO: Need to add up scores here.
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     {% else %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
