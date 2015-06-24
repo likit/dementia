@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}บัญชีของคุณ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr><td class="col-md-2"><strong>ลงทะเบียนเข้าใช้ครั้งล่าสุด</strong></td><td>{{ user.last_login[-1].strftime('%d-%m-%Y %H:%M') }}</td></tr>
+                    <tr><td class="col-md-2"><strong>รหัสบัตรประชาชน</strong></td><td>{{ user.username }}</td></tr>
+                    <tr><td class="col-md-2"><strong>ชื่อ</strong></td><td>{{ user.title }} {{ user.name }} {{ user.lastname }}</td></tr>
+                    <tr><td class="col-md-2"><strong>ตำแหน่ง</strong></td><td>{{ user.position }}</td></tr>
+                    <tr><td class="col-md-2"><strong>โทรศัพท์</td><td></strong>{{ user.phone }}</td></tr>
+                    <tr><td class="col-md-2"><strong>มือถือ</td><td></strong>{{user.cell }}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>ข้อมูลต้นสังกัด</strong></h4></div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr><td class="col-md-2"><strong>องค์กร</strong></td><td>{{ user.org }}</td></tr>
+                    <tr><td class="col-md-2"><strong>เลขที่</strong></td><td> {{ user.org_address }}</td></tr>
+                    <tr><td class="col-md-2"><strong>หมู่</strong></td><td>{{ user.mhoo}}</td></tr>
+                    <tr><td class="col-md-2"><strong>ตำบล</strong></td><td> {{ user.tambon }}</td></tr>
+                    <tr><td class="col-md-2"><strong>อำเภอ</strong></td><td>{{ user.district }}</td></tr>
+                    <tr><td class="col-md-2"><strong>จังหวัด</strong></td><td>{{ user.province }}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel panel-heading"><h4><strong>สถานะบัญชี</strong></h4></div>
+            <div class="panel-body">
+                {% if user.verified %}
+                <strong>ใช้งานได้</strong>
+                {% else %}
+                <strong>ยังไม่สามารถใช้งานได้</strong>
+                {% endif %}
+            </div>
+        </div>
+</div>
+{% endblock %}
