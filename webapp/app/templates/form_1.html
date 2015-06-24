@@ -6,118 +6,155 @@
 <script src="{{ url_for("static", filename="jquery-ui/datepicker-th.js") }}"></script>
 <script>
 $(function() {
-        $("#datepicker").datepicker($.datepicker.regional['th']);
-        $('label[for=smoke_freq], select#smoke_freq').hide();
-        $('label[for=smoke_per_week], input#smoke_per_week').hide();
-        $('label[for=smoke_per_day], input#smoke_per_day').hide();
-        $('label[for=smoke_years], input#smoke_years').hide();
-        $('label[for=quit_smoke_years], input#quit_smoke_years').hide()
-        $('label[for=congenital_dis_years], input#congenital_dis_years').hide();
-        $('label[for=drink_per_day], input#drink_per_day').hide();
-        $('label[for=drink_years], input#drink_years').hide();
-        $('label[for=quit_drink_years], input#quit_drink_years').hide();
+        $("#datepicker").datepicker($.datepicker.regional["th"]);
+        $("label[for=smoke_freq], select#smoke_freq").hide();
+        $("label[for=smoke_per_week], input#smoke_per_week").hide();
+        $("label[for=smoke_per_day], input#smoke_per_day").hide();
+        $("label[for=smoke_years], input#smoke_years").hide();
+        $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+        $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
+        $("label[for=drink_per_day], input#drink_per_day").hide();
+        $("label[for=drink_years], input#drink_years").hide();
+        $("label[for=quit_drink_years], input#quit_drink_years").hide();
 
-        $('#congenital_dis_other').prop('disabled', true);
-        $('#marital').change(function() {
-            if ($(this).val() === 'other') {
-                $('#marital_other').prop('disabled', false).prop('required', true)
+        $("#congenital_dis_other").prop("disabled", true);
+        $("#marital").change(function() {
+            if ($(this).val() === "other") {
+                $("#marital_other").prop("disabled", false).prop("required", true)
                 } else {
-                $('#marital_other').prop('disabled', true).prop('required', false)
+                $("#marital_other").prop("disabled", true).prop("required", false)
                 }
             });
-        $('#edu').change(function() {
-            if ($(this).val() === 'other') {
-                $('#edu_other').prop('disabled', false).prop('required', true)
-                $('#edu_years').prop('disabled', false).prop('required', true)
+
+        $("#edu").change(function() {
+            if ($(this).val() === "other") {
+                $("#edu_other").prop("disabled", false).prop("required", true)
+                $("#edu_years").prop("disabled", false).prop("required", true)
                 }
-            else if ($(this).val() === 'none') {
-                $('#edu_years').prop('disabled', true).prop('required', false)
-                $('#edu_other').prop('disabled', true).prop('required', false)
+            else if ($(this).val() === "none") {
+                $("#edu_years").prop("disabled", true).prop("required", false)
+                $("#edu_other").prop("disabled", true).prop("required", false)
                 }
             else {
-                $('#edu_years').prop('disabled', false).prop('required', true)
+                $("#edu_years").prop("disabled", false).prop("required", true)
                 }
             });
-        $('#living').change(function() {
+
+        $("#living").change(function() {
                 if ($(this).val() === 'caregiver') {
-                    $('#living_caregiver').prop('disabled', false).prop('required', true)
-                    $('#living_other').prop('disabled', true).prop('required', false)
+                    $("#living_caregiver").prop("disabled", false).prop("required", true)
+                    $("#living_other").prop("disabled", true).prop("required", false)
                 }
-                else if ($(this).val() === 'other') {
-                    $('#living_caregiver').prop('disabled', true).prop('required', false)
-                    $('#living_other').prop('disabled', false).prop('required', true)
+                else if ($(this).val() === "other") {
+                    $("#living_caregiver").prop("disabled", true).prop("required", false)
+                    $("#living_other").prop("disabled", false).prop("required", true)
                 }
                 else {
-                    $('#living_caregiver').prop('disabled', true).prop('required', false)
-                    $('#living_other').prop('disabled', true).prop('required', false)
+                    $("#living_caregiver").prop("disabled", true).prop("required", false)
+                    $("#living_other").prop("disabled", true).prop("required", false)
                 }
             });
-        $('#smoking').change(function() {
+        $("#smoking").change(function() {
                 console.log($(this).val())
                 if($(this).val() === 'yes') {
-                    $('label[for=smoke_freq], select#smoke_freq').show();
-                    $('label[for=smoke_per_week], input#smoke_per_week').show();
+                    $("label[for=smoke_freq], select#smoke_freq").show();
+                    $("label[for=smoke_per_week], input#smoke_per_week").show();
 
-                    $('label[for=smoke_years], input#smoke_years').hide();
-                    $('label[for=quit_smoke_years], input#quit_smoke_years').hide()
+                    $("label[for=smoke_years], input#smoke_years").hide();
+                    $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+
+                    // reset some values
+                    $("#smoke_screening").prop('checked', true)
+                    $("#smoke_years").val("");
+                    $("#quit_smoke_years").val("");
+                    $("#smoke_per_day").val("");
                 } else if ($(this).val() === 'quit') {
-                    $('label[for=smoke_freq], select#smoke_freq').hide();
-                    $('label[for=smoke_per_week], input#smoke_per_week').hide();
+                    $("label[for=smoke_freq], select#smoke_freq").hide();
+                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
 
-                    $('label[for=smoke_per_day], input#smoke_per_day').show();
-                    $('label[for=smoke_years], input#smoke_years').show();
-                    $('label[for=quit_smoke_years], input#quit_smoke_years').show()
+                    $("label[for=smoke_per_day], input#smoke_per_day").show();
+                    $("label[for=smoke_years], input#smoke_years").show();
+                    $("label[for=quit_smoke_years], input#quit_smoke_years").show()
+
+                    // reset some values
+                    $("#smoke_per_week").val("");
+                    $("#smoke_per_day").val("");
                 } else {
-                    $('label[for=smoke_freq], select#smoke_freq').hide();
-                    $('label[for=smoke_per_day], input#smoke_per_day').hide();
-                    $('label[for=smoke_per_week], input#smoke_per_week').hide();
+                    $("label[for=smoke_freq], select#smoke_freq").hide();
+                    $("label[for=smoke_per_day], input#smoke_per_day").hide();
+                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
 
-                    $('label[for=smoke_years], input#smoke_years').hide();
-                    $('label[for=quit_smoke_years], input#quit_smoke_years').hide()
+                    $("label[for=smoke_years], input#smoke_years").hide();
+                    $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+
+                    // reset some values
+                    $("#smoke_years").val("");
+                    $("#quit_smoke_years").val("");
+                    $("#smoke_per_day").val("");
+                    $("#smoke_per_week").val("");
                 }
             });
-        $('#smoke_freq').change(function() {
-                if($(this).val() === 'sometimes') {
-                    $('label[for=smoke_per_week], input#smoke_per_week').show();
-                    $('label[for=smoke_per_day], input#smoke_per_day').hide();
+        $("#smoke_freq").change(function() {
+                if($(this).val() === "sometimes") {
+                    $("label[for=smoke_per_week], input#smoke_per_week").show();
+                    $("label[for=smoke_per_day], input#smoke_per_day").hide();
+                    $("#smoke_per_day").val("");
                 } else {
-                    $('label[for=smoke_per_week], input#smoke_per_week').hide();
-                    $('label[for=smoke_per_day], input#smoke_per_day').show();
+                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
+                    $("label[for=smoke_per_day], input#smoke_per_day").show();
+                    $("#smoke_per_week").val("");
                 }
             });
-        $('#alcohol').change(function() {
-                if($(this).val() === 'daily') {
-                    $('label[for=drink_per_day], input#drink_per_day').show();
-                    $('label[for=drink_years], input#drink_years').hide();
-                    $('label[for=quit_drink_years], input#quit_drink_years').hide();
+
+        $("#quit_smoke_year").change(function() {
+            if (parseFloat($(this).val()) <= 1) {
+                $("#smoke_screening").prop("checked", true)
+            }
+        });
+
+
+        $("#smoke_per_day").change(function() {
+            if (parseFloat($(this).val()) >= 10) {
+                $("#smoke_ten_cig").prop("checked", true);
+            }
+        });
+
+        $("#alcohol").change(function() {
+                if($(this).val() === "daily") {
+                    $("label[for=drink_per_day], input#drink_per_day").show();
+                    $("label[for=drink_years], input#drink_years").hide();
+                    $("label[for=quit_drink_years], input#quit_drink_years").hide();
                 } else if ($(this).val() === 'quit') {
-                    $('label[for=drink_per_day], input#drink_per_day').show();
-                    $('label[for=drink_years], input#drink_years').show();
-                    $('label[for=quit_drink_years], input#quit_drink_years').show();
+                    $("label[for=drink_per_day], input#drink_per_day").show();
+                    $("label[for=drink_years], input#drink_years").show();
+                    $("label[for=quit_drink_years], input#quit_drink_years").show();
                 } else {
-                    $('label[for=drink_per_day], input#drink_per_day').hide();
-                    $('label[for=drink_years], input#drink_years').hide();
-                    $('label[for=quit_drink_years], input#quit_drink_years').hide();
+                    $("label[for=drink_per_day], input#drink_per_day").hide();
+                    $("label[for=drink_years], input#drink_years").hide();
+                    $("label[for=quit_drink_years], input#quit_drink_years").hide();
+                    $("#drink_per_day").val("");
+                    $("#drink_years").val("");
+                    $("#quit_drink_years").val("");
                 }
             });
-        $('#congenital_disease').change(function() {
-                if ($(this).val() === 'other') {
-                    $('#congenital_dis_other').prop('disabled', false);
-                    $('#fpg').prop('checked', false);
-                    $('#bp').prop('checked', false);
-                } else if ($(this).val() === 'diabetes') {
-                    $('#fpg').prop('checked', true);
-                    $('#bp').prop('checked', false);
-                } else if ($(this).val() === 'hypertension') {
-                    $('#fpg').prop('checked', false);
-                    $('#bp').prop('checked', true);
+        $("#congenital_disease").change(function() {
+                if ($(this).val() === "other") {
+                    $("#congenital_dis_other").prop("disabled", false);
+                    $("#fpg").prop("checked", false);
+                    $("#bp").prop("checked", false);
+                } else if ($(this).val() === "diabetes") {
+                    $("#fpg").prop("checked", true);
+                    $("#bp").prop("checked", false);
+                } else if ($(this).val() === "hypertension") {
+                    $("#fpg").prop("checked", false);
+                    $("#bp").prop("checked", true);
                 } else {
-                        $('#congenital_dis_other').prop('disabled', true);
+                        $("#congenital_dis_other").prop("disabled", true);
                 }
-                if ($(this).val() === 'none') {
-                    $('label[for=congenital_dis_years], input#congenital_dis_years').hide();
+                if ($(this).val() === "none") {
+                    $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
                 } else {
-                    $('label[for=congenital_dis_years], input#congenital_dis_years').show();
+                    $("label[for=congenital_dis_years], input#congenital_dis_years").show();
                 }
             });
         });
