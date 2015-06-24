@@ -164,6 +164,52 @@ $(function() {
                 event: "click hoverintent",
                 collapsible: true
         });
+
+        $("#dental_part_two_one").change(function() {
+                // TODO: the following line is a hack
+                if ($("input[name='dental_part_two_one']:checked").val() === "1") {
+                    $("#dental_transfer_tissue").prop("checked", true);
+                } else {
+                    $("#dental_transfer_tissue").prop("checked", false);
+                }
+            });
+
+        $("#dental_part_two_two").change(function() {
+                // TODO: the following line is a hack
+                if ($("input[name='dental_part_two_two']:checked").val() === "1") {
+                    $("#dental_transfer_gum").prop("checked", true);
+                } else {
+                    $("#dental_transfer_gum").prop("checked", false);
+                }
+            });
+
+        $("#dental_part_two_three").change(function() {
+                // TODO: the following line is a hack
+                if ($("input[name='dental_part_two_three']:checked").val() === "1") {
+                    $("#dental_transfer_cavity").prop("checked", true);
+                } else {
+                    $("#dental_transfer_cavity").prop("checked", false);
+                }
+            });
+
+        $("#dental_part_two_four").change(function() {
+                // TODO: the following line is a hack
+                if ($("input[name='dental_part_two_four']:checked").val() === "1") {
+                    $("#dental_transfer_swallow").prop("checked", true);
+                } else {
+                    $("#dental_transfer_swallow").prop("checked", false);
+                }
+            });
+
+        $("#dental_part_two_five").change(function() {
+                // TODO: the following line is a hack
+                if ($("input[name='dental_part_two_five']:checked").val() === "1") {
+                    $("#dental_transfer_denture").prop("checked", true);
+                } else {
+                    $("#dental_transfer_denture").prop("checked", false);
+                }
+            });
+
 </script>
 {% endblock %}
 
@@ -398,7 +444,15 @@ $(function() {
                         </tbody>
                     </table>
                     <h4>ส่วนที่ 3 แผนการส่งต่อ</h4>
-                    {{ form.dental_transfer.label }} {{ form.dental_transfer() }}
+                    {{ form.dental_transfer_tissue.label() }} {{ form.dental_transfer_tissue() }}
+                    <br/>
+                    {{ form.dental_transfer_gum.label() }} {{ form.dental_transfer_gum() }}
+                    <br/>
+                    {{ form.dental_transfer_cavity.label() }} {{ form.dental_transfer_cavity() }}
+                    <br/>
+                    {{ form.dental_transfer_swallow.label() }} {{ form.dental_transfer_swallow() }}
+                    <br/>
+                    {{ form.dental_transfer_denture.label() }} {{ form.dental_transfer_denture() }}
                 </div>
             </div>
         </div>

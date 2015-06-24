@@ -138,19 +138,19 @@ class Form1(Form):
     chew_gum = BooleanField(u'เคี้ยวหมากเป็นประจำ')
 
     dental_part_two_one = RadioField(u'<u>เนื้อเยื่อในช่องปาก</u><br>บริเวณริมฝีปาก แก้ม ลิ้น มีปุ่ม ก้อนเนื้อ มีแผลเรื้อรังหรือไม่',
-            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int, default=0)
     dental_part_two_two = RadioField(u'<u>เหงือกและอวัยวะปริทันต์</u><br>บริเวณเหงือกมีเลือดออก มีฝีหนอง ฟันโยกหรือไม่',
-            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int, default=0)
     dental_part_two_three = RadioField(u'<u>ฟันผุ</u><br>มีฟันผุเป็นรู เสียวฟัน ฟันหัก ฟันแตกเหลือแต่ตอฟันหรือไม่',
-            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int, default=0)
     dental_part_two_four = RadioField(u'<u>ปัญหาการเคี้ยวอาหาร/การกลืน</u><br>มีปัญหาการเคี้ยวอาหารการกลืนหรือไม่',
-            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int)
+            choices=[(0, u'ปกติ'), (1, u'ผิดปกติ')], coerce=int, default=0)
     dental_part_two_five = RadioField(u'<u>ฟันเทียม</u><br>จำเป็นต้องใส่ฟันเทียมหรือทำฟันเทียมหรือไม่',
-            choices=[(0, u'จำเป็น'), (1, u'ไม่จำเป็น')], coerce=int)
+            choices=[(1, u'จำเป็น'), (0, u'ไม่จำเป็น')], coerce=int, default=0)
     dental_part_two_six = RadioField(u'<u>การได้รับการตรวจหรือรักษาจากทันตบุคลากร</u><br>ท่านเคยได้รับการตรวจหรือรักษาจากทันตบุคลากรหรือไม่',
-            choices=[(0, u'เคย'), (1, u'ไม่เคย')], coerce=int)
+            choices=[(0, u'เคย'), (1, u'ไม่เคย')], coerce=int, default=0)
     dental_part_two_seven = RadioField(u'<u>ความต้องการการรักษาทางทันตกรรม</u><br>ปัจจุบันท่านต้องการการรักษาหรือไม่',
-            choices=[(0, u'ต้องการ'), (1, u'ไม่ต้องการ')], coerce=int)
+            choices=[(1, u'ต้องการ'), (0, u'ไม่ต้องการ')], coerce=int, default=0)
 
     dental_part_two_one_follow_up = BooleanField(u'ใช่')
     dental_part_two_two_follow_up = BooleanField(u'ใช่')
@@ -160,14 +160,11 @@ class Form1(Form):
     dental_part_two_six_follow_up = BooleanField(u'ใช่')
     dental_part_two_seven_follow_up = BooleanField(u'ใช่')
 
-    dental_transfer = SelectField(u'', validators=[Required()],
-            choices=[
-                ('tissue', u'เนื้อเยื่อในช่องปาก'),
-                ('gum', u'เหงือกและอวัยวะปริทันต์'),
-                ('cavity', u'ฟันผุ'),
-                ('swallow', u'ปัญหาการเคี้ยวอาหาร/การกลืน'),
-                ('denture', u'ฟันเทียม'),
-                ])
+    dental_transfer_tissue = BooleanField(u'เนื้อเยื่อในช่องปาก', validators=[Required()])
+    dental_transfer_gum = BooleanField(u'เหงือกและอวัยวะปริทันต์', validators=[Required()])
+    dental_transfer_cavity = BooleanField(u'ฟันผุ', validators=[Required()])
+    dental_transfer_swallow = BooleanField(u'ปัญหาการเคี้ยวอาหาร/การกลืน', validators=[Required()])
+    dental_transfer_denture = BooleanField(u'ฟันเทียม', validators=[Required()])
 
     eye_exam_one = BooleanField(u'นับนิ้วในระยะสามเมตรได้ถูกต้อง<u>น้อยกว่า 3 ใน 4 ครั้ง</u>')
     eye_exam_two = BooleanField(u'อ่านหนังสือพิมพ์หน้าหนึ่งในระยะหนึ่งฟุต<u>ไม่ได้</u>')
