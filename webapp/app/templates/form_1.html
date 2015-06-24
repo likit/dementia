@@ -210,6 +210,61 @@ $(function() {
                 }
             });
 
+        var amt_score = 0;
+        var set_amt_score = function() {
+                if ($(this).is(":checked")) {
+                    amt_score = amt_score + 1;
+                    $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
+                } else {
+                    amt_score = amt_score - 1;
+                    $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
+                }
+                if (amt_score < 8) {
+                    $("#amt_score_badge").removeClass();
+                    $("#amt_score_badge").addClass("badge alert-danger");
+                } else {
+                    $("#amt_score_badge").removeClass();
+                    $("#amt_score_badge").addClass("badge alert-success");
+                }
+        }
+
+        $("#amt_one").change(set_amt_score);
+        $("#amt_two").change(set_amt_score);
+        $("#amt_three").change(set_amt_score);
+        $("#amt_four").change(set_amt_score);
+        $("#amt_five").change(set_amt_score);
+        $("#amt_six").change(set_amt_score);
+        $("#amt_seven").change(set_amt_score);
+        $("#amt_eight").change(set_amt_score);
+        $("#amt_nine").change(set_amt_score);
+        $("#amt_ten").change(set_amt_score);
+
+        var cardiac_score = 0;
+        var set_cardiac_score = function() {
+                if ($(this).is(":checked")) {
+                    cardiac_score = cardiac_score + 1;
+                    $("#cardiac_score_badge").text("ข้อที่เลือก " + cardiac_score);
+                } else {
+                    cardiac_score = cardiac_score - 1;
+                    $("#cardiac_score_badge").text("ข้อที่เลือก " + cardiac_score);
+                }
+                if (cardiac_score < 3) {
+                    $("#cardiac_score_badge").removeClass();
+                    $("#cardiac_score_badge").addClass("badge alert-success");
+                } else {
+                    $("#cardiac_score_badge").removeClass();
+                    $("#cardiac_score_badge").addClass("badge alert-danger");
+                }
+        }
+
+        $("#bp").change(set_cardiac_score);
+        $("#fpg").change(set_cardiac_score);
+        $("#smoke_screening").change(set_cardiac_score);
+        $("#abnormal_lipid").change(set_cardiac_score);
+        $("#waist").change(set_cardiac_score);
+        $("#infarction").change(set_cardiac_score);
+        $("#family_infarction").change(set_cardiac_score);
+
 </script>
 {% endblock %}
 
@@ -314,10 +369,16 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การคัดกรองความเสี่ยงต่อโรคหัวใจและหลอดเลือดสมอง</strong></h4>
+        <h4><strong>การคัดกรองความเสี่ยงต่อโรคหัวใจและหลอดเลือดสมอง</strong>
+        <span id="cardiac_score_badge" class="badge"></span></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="alert alert-warning">
+                        <p>ตอบใช่น้อยกว่าหรือเท่ากับ 2 ข้อ มีความเสี่ยง</p>
+                        <p>ตอบใช่ 3-4 ข้อ มีความเสี่ยงสูง</p>
+                        <p>ตอบใช่มากกว่าหรือเท่ากับ 5 ข้อ มีความเสี่ยงสูงมาก</p>
+                    </div>
                     <table class="table table-striped table-bordered">
                         <tr><td>
                             {{ form.smoke_screening.label }}
@@ -508,10 +569,13 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การทดสอบสภาพสมอง: Abbreviated Mental Test (AMT)</strong></h4>
+        <h4><strong>การทดสอบสภาพสมอง: Abbreviated Mental Test (AMT) <span id="amt_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="alert alert-warning">
+                        <p>ตอบถูกน้อยกวา 8 ข้อแสดงว่าการรู้คิดผิดปกติ (abnormal cognitive function)</p>
+                    </div>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <td>ข้อ</td><td>คำถาม</td><td>ถูก</td>
