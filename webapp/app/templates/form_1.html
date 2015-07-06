@@ -290,6 +290,23 @@ $(function() {
         $('#eye_exam_four').change(set_eye_exam_score);
         $('#eye_exam_five').change(set_eye_exam_score);
 
+        var snellen_score = 0
+        var set_snellen_score = function() {
+            var left_score = parseInt(snellen_left.value);
+            var right_score = parseInt(snellen_right.value);
+            if (left_score + right_score === 14) {
+                $('#snellen_score_badge').removeClass();
+                $('#snellen_score_badge').addClass("badge alert-success");
+                $('#snellen_score_badge').text("ปกติ")
+            } else {
+                $('#snellen_score_badge').removeClass();
+                $('#snellen_score_badge').addClass("badge alert-danger");
+                $('#snellen_score_badge').text("ผิดปกติ")
+            }
+        }
+        $('#snellen_left').change(set_snellen_score);
+        $('#snellen_right').change(set_snellen_score);
+
 </script>
 {% endblock %}
 
@@ -543,7 +560,7 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การคัดกรองสุขภาพทางตา<span id="eye_exam_score_badge" class="badge"></span></strong></h4>
+        <h4><strong>การคัดกรองสุขภาพทางตา <span id="eye_exam_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -583,7 +600,7 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การประเมินการมองเห็น</strong></h4>
+        <h4><strong>การประเมินการมองเห็น <span id="snellen_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
