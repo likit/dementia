@@ -265,6 +265,31 @@ $(function() {
         $("#infarction").change(set_cardiac_score);
         $("#family_infarction").change(set_cardiac_score);
 
+        var eye_exam_score = 0;
+        var set_eye_exam_score = function() {
+            if ($(this).is(":checked")) {
+                eye_exam_score = eye_exam_score + 1;
+                $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
+            }
+            else {
+                eye_exam_score = eye_exam_score - 1;
+                $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
+            }
+            if (eye_exam_score < 1) {
+                $("#eye_exam_score_badge").removeClass();
+                $("#eye_exam_score_badge").addClass("badge alert-success");
+            } else {
+                $("#eye_exam_score_badge").removeClass();
+                $("#eye_exam_score_badge").addClass("badge alert-danger");
+            }
+        }
+
+        $('#eye_exam_one').change(set_eye_exam_score);
+        $('#eye_exam_two').change(set_eye_exam_score);
+        $('#eye_exam_three').change(set_eye_exam_score);
+        $('#eye_exam_four').change(set_eye_exam_score);
+        $('#eye_exam_five').change(set_eye_exam_score);
+
 </script>
 {% endblock %}
 
@@ -518,7 +543,7 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การคัดกรองสุขภาพทางตา</strong></h4>
+        <h4><strong>การคัดกรองสุขภาพทางตา<span id="eye_exam_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
