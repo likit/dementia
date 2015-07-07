@@ -22,14 +22,14 @@ class Form1(Form):
                 ('other', u'อื่นๆ')])
     marital_other = StringField(u'อื่นๆ โปรดระบุ')
     edu = SelectField(u'', validators=[Required()],
-            choices=[('none', u'ไม่ได้รับการศึกษา'),
-                ('elementary', u'ประถมศึกษา'),
-                ('middleschool', u'มัธยมศึกษาตอนต้น'),
-                ('highschool', u'มัธยมศึกษาตอนปลาย'),
-                ('diploma', u'อนุปริญญา'),
-                ('bachelor', u'ปริญญาตรี'),
-                ('higherbachelor', u'สูงกว่าปริญญาตรี'),
-                ('other', u'อื่นๆ')])
+            choices=[('0', u'ไม่ได้รับการศึกษา'),
+                ('1', u'ประถมศึกษา'),
+                ('2', u'มัธยมศึกษาตอนต้น'),
+                ('3', u'มัธยมศึกษาตอนปลาย'),
+                ('4', u'อนุปริญญา'),
+                ('5', u'ปริญญาตรี'),
+                ('6', u'สูงกว่าปริญญาตรี'),
+                ('7', u'อื่นๆ')])
     edu_other = StringField(u'อื่นๆ โปรดระบุ')
     edu_years = IntegerField(u'รวมจำนวนปีที่ได้รับการศึกษา')
     living = SelectField(u'การพักอาศัย', validators=[Required()],

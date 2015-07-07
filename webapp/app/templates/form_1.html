@@ -27,13 +27,18 @@ $(function() {
             });
 
         $("#edu").change(function() {
-            if ($(this).val() === "other") {
-                $("#edu_other").prop("disabled", false).prop("required", true)
-                $("#edu_years").prop("disabled", false).prop("required", true)
+            set_mmse_score_badge();
+            if ($(this).val() === "7") {
+                $("#edu_other").prop("disabled", false).prop("required", true);
+                $("#edu_years").prop("disabled", false).prop("required", true);
                 }
-            else if ($(this).val() === "none") {
-                $("#edu_years").prop("disabled", true).prop("required", false)
-                $("#edu_other").prop("disabled", true).prop("required", false)
+            else if ($(this).val() === "0") {
+                $("#edu_years").prop("disabled", true).prop("required", false);
+                $("#edu_other").prop("disabled", true).prop("required", false);
+                $("#mmse_nine_one").prop("disabled", true);
+                $("#mmse_ten_one").prop("disabled", true);
+                $("input[name=mmse_four_one]").prop("disabled", true);
+                $("input[name=mmse_four_two]").prop("disabled", true);
                 }
             else {
                 $("#edu_years").prop("disabled", false).prop("required", true)
@@ -306,6 +311,125 @@ $(function() {
         }
         $('#snellen_left').change(set_snellen_score);
         $('#snellen_right').change(set_snellen_score);
+
+        var mmse_score = 0;
+        var mmse_radio_values = [];
+        var set_mmse_radio_score = function(event) {
+            var value = $(this).filter(":checked").val();
+            var previous_val = mmse_radio_values[event.data.i] || 0;
+            console.log('data', event.data.i);
+            console.log(value);
+            if (value === 'correct') {
+                mmse_score = mmse_score + 1;
+                mmse_radio_values[event.data.i] = 1;
+            } else {
+                if (previous_val === 1) {
+                    mmse_score = mmse_score - 1;
+                    mmse_radio_values[event.data.i] = 0;
+                }
+            }
+            $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
+            set_mmse_score_badge();
+        }
+
+        var set_mmse_checkbox_score = function() {
+            if ($(this).is(":checked")) {
+                mmse_score = mmse_score + 1;
+            }
+            else {
+                mmse_score = mmse_score - 1;
+            }
+            $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
+            set_mmse_score_badge();
+        }
+
+        var set_mmse_score_badge = function() {
+            var edu_level = parseInt($('#edu').val());
+            if (edu_level === 0 && mmse_score <= 14) {
+                $('#mmse_score_badge').removeClass();
+                $('#mmse_score_badge').addClass('badge alert-danger');
+            } else if (edu_level === 1 && mmse_score > 18 ) {
+                $('#mmse_score_badge').removeClass();
+                $('#mmse_score_badge').addClass('badge alert-success');
+            } else if (edu_level > 1 && mmse_score > 23 ) {
+                $('#mmse_score_badge').removeClass();
+                $('#mmse_score_badge').addClass('badge alert-success');
+            } else {
+                $('#mmse_score_badge').removeClass();
+                $('#mmse_score_badge').addClass('badge alert-danger');
+            }
+        }
+
+
+        $('input[name=mmse_one_one]').bind("change", {i:0},
+                    set_mmse_radio_score);
+        $('input[name=mmse_one_two]').bind("change", {i:1},
+                    set_mmse_radio_score);
+        $('input[name=mmse_one_three]').bind("change", {i:2},
+                    set_mmse_radio_score);
+        $('input[name=mmse_one_four]').bind("change", {i:3},
+                    set_mmse_radio_score);
+        $('input[name=mmse_one_five]').bind("change", {i:4},
+                    set_mmse_radio_score);
+
+        $('input[name=mmse_two_one_one]').bind("change", {i:5},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_one_two]').bind("change", {i:6},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_one_three]').bind("change", {i:7},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_one_four]').bind("change", {i:8},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_one_five]').bind("change", {i:9},
+                    set_mmse_radio_score);
+
+        $('input[name=mmse_two_two_one]').bind("change", {i:10},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_two_two]').bind("change", {i:11},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_two_three]').bind("change", {i:12},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_two_four]').bind("change", {i:13},
+                    set_mmse_radio_score);
+        $('input[name=mmse_two_two_five]').bind("change", {i:14},
+                    set_mmse_radio_score);
+
+        $('input[name=mmse_four_one]').bind("change", {i:15},
+                    set_mmse_radio_score);
+        $('input[name=mmse_four_two]').bind("change", {i:16},
+                    set_mmse_radio_score);
+
+        $('input[name=mmse_six_one]').bind("change", {i:17},
+                    set_mmse_radio_score);
+        $('input[name=mmse_six_two]').bind("change", {i:18},
+                    set_mmse_radio_score);
+
+        $('input[name=mmse_seven_one]').bind("change", {i:19},
+                    set_mmse_radio_score);
+
+        $('#mmse_three_flower').change(set_mmse_checkbox_score);
+        $('#mmse_three_river').change(set_mmse_checkbox_score);
+        $('#mmse_three_train').change(set_mmse_checkbox_score);
+
+        $('#mmse_three_tree').change(set_mmse_checkbox_score);
+        $('#mmse_three_sea').change(set_mmse_checkbox_score);
+        $('#mmse_three_car').change(set_mmse_checkbox_score);
+
+        $('#mmse_five_flower').change(set_mmse_checkbox_score);
+        $('#mmse_five_river').change(set_mmse_checkbox_score);
+        $('#mmse_five_train').change(set_mmse_checkbox_score);
+
+        $('#mmse_five_tree').change(set_mmse_checkbox_score);
+        $('#mmse_five_sea').change(set_mmse_checkbox_score);
+        $('#mmse_five_car').change(set_mmse_checkbox_score);
+
+        $('#mmse_eight_one').change(set_mmse_checkbox_score);
+        $('#mmse_eight_two').change(set_mmse_checkbox_score);
+        $('#mmse_eight_three').change(set_mmse_checkbox_score);
+
+        $('#mmse_nine_one').change(set_mmse_checkbox_score);
+        $('#mmse_ten_one').change(set_mmse_checkbox_score);
+        $('#mmse_eleven_one').change(set_mmse_checkbox_score);
 
 </script>
 {% endblock %}
@@ -669,7 +793,7 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การทดสอบสภาพสมองเบื้องต้นฉบับภาษาไทย MMSE-Thai 2002</strong></h4>
+        <h4><strong>การทดสอบสภาพสมองเบื้องต้นฉบับภาษาไทย MMSE-Thai 2002 <span id="mmse_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
