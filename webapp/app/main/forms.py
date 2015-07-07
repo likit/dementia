@@ -413,9 +413,9 @@ class Form1(Form):
     knee_pain_clinic_five = BooleanField(u'ไม่พบข้ออุ่น (no palpable warmth)')
 
     tugt = RadioField(u'', choices=[
-        ('<30s', u'<30 วินาที'),
-        ('>=30s', u'>=30 วินาที'),
-        ('fail', u'เดินไม่ได้'),
+        ('0', u'<30 วินาที'),
+        ('1', u'>=30 วินาที'),
+        ('2', u'เดินไม่ได้'),
         ])
 
     urine_holding = RadioField(u'ผู้สูงอายุมีภาวะ <u>"ปัสสาวะเล็ด"</u> หรือ <u>"ปัสสาวะราด"</u> จนทำให้เกิดปัญหาในการใช้ชีวิตประจำวัน',
