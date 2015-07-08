@@ -317,8 +317,6 @@ $(function() {
         var set_mmse_radio_score = function(event) {
             var value = $(this).filter(":checked").val();
             var previous_val = mmse_radio_values[event.data.i] || 0;
-            console.log('data', event.data.i);
-            console.log(value);
             if (value === 'correct') {
                 mmse_score = mmse_score + 1;
                 mmse_radio_values[event.data.i] = 1;
@@ -522,6 +520,94 @@ $(function() {
                 $('#tugt_badge').text('')
             }
         });
+
+        var malnutrition_score = 0;
+        var malnutrition_radio_values = [];
+        var set_malnutrition_radio_score = function(event) {
+            var value = parseInt($(this).filter(":checked").val());
+            var previous_val = malnutrition_radio_values[event.data.i] || 0;
+            malnutrition_score = malnutrition_score - previous_val;
+            malnutrition_score = malnutrition_score + value;
+            malnutrition_radio_values[event.data.i] = value;
+            $("#malnutrition_score_badge").text('คะแนนรวม ' + malnutrition_score);
+            if (malnutrition_score > 7) {
+                $('#malnutrition_score_badge').removeClass();
+                $('#malnutrition_score_badge').addClass('badge alert-success');
+            } else {
+                $('#malnutrition_score_badge').removeClass();
+                $('#malnutrition_score_badge').addClass('badge alert-danger');
+            }
+        }
+
+        $('input[name=malnutrition_one]').bind("change", {i:0},
+                    set_malnutrition_radio_score);
+        $('input[name=malnutrition_two]').bind("change", {i:1},
+                    set_malnutrition_radio_score);
+        $('input[name=malnutrition_three]').bind("change", {i:2},
+                    set_malnutrition_radio_score);
+        $('input[name=malnutrition_four]').bind("change", {i:3},
+                    set_malnutrition_radio_score);
+        $('input[name=malnutrition_five]').bind("change", {i:4},
+                    set_malnutrition_radio_score);
+        $('input[name=malnutrition_six]').bind("change", {i:5},
+                    set_malnutrition_radio_score);
+
+        $('input[name=sleeping_one]').change(function() {
+            if ($(this).filter(':checked').val() === '0') {
+                $('#insomnia').prop('disabled', true);
+                $('#oversleep').prop('disabled', true);
+                $('#dreamwalk').prop('disabled', true);
+                $('#snore').prop('disabled', true);
+                $('#sleeping_other').prop('disabled', true);
+                $('#sleeping_period_year').prop('disabled', true);
+                $('#sleeping_period_month').prop('disabled', true);
+                $('#sleeping_avg_hours').prop('disabled', true);
+                $('#sleeping_trouble_badge').text('');
+            } else {
+                $('#insomnia').prop('disabled', false);
+                $('#oversleep').prop('disabled', false);
+                $('#dreamwalk').prop('disabled', false);
+                $('#snore').prop('disabled', false);
+                $('#sleeping_other').prop('disabled', false);
+                $('#sleeping_period_year').prop('disabled', false);
+                $('#sleeping_period_month').prop('disabled', false);
+                $('#sleeping_avg_hours').prop('disabled', false);
+                $('#sleeping_trouble_badge').text('มีปัญหา');
+            }
+        });
+
+        var routine_score = 0;
+        var routine_previous_scores = [];
+        var set_routine_score = function(event) {
+            var score = parseInt($(this).filter(':checked').val());
+            var prev_score = routine_previous_scores[event.data.i] || 0;
+            routine_score = routine_score - prev_score;
+            routine_score = routine_score + score;
+            routine_previous_scores[event.data.i] = score;
+            $('#routine_score_badge').text(routine_score);
+            set_routine_score_badge();
+        }
+
+        var set_routine_score_badge = function() {
+            if (routine_score >= 5) {
+                $('#routine_score_badge').removeClass();
+                $('#routine_score_badge').addClass('badge alert-success');
+            } else {
+                $('#routine_score_badge').removeClass();
+                $('#routine_score_badge').addClass('badge alert-danger');
+            }
+        }
+
+        $('input[name=routine_one]').bind('change', {i:0}, set_routine_score);
+        $('input[name=routine_two]').bind('change', {i:1}, set_routine_score);
+        $('input[name=routine_three]').bind('change', {i:2}, set_routine_score);
+        $('input[name=routine_four]').bind('change', {i:3}, set_routine_score);
+        $('input[name=routine_five]').bind('change', {i:4}, set_routine_score);
+        $('input[name=routine_six]').bind('change', {i:5}, set_routine_score);
+        $('input[name=routine_seven]').bind('change', {i:6}, set_routine_score);
+        $('input[name=routine_eight]').bind('change', {i:7}, set_routine_score);
+        $('input[name=routine_nine]').bind('change', {i:8}, set_routine_score);
+        $('input[name=routine_ten]').bind('change', {i:9}, set_routine_score);
 
 </script>
 {% endblock %}
@@ -1215,10 +1301,15 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การประเมินภาวะทุพโภชนาการ</strong></h4>
+        <h4><strong>การประเมินภาวะทุพโภชนาการ <span id="malnutrition_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="alert-warning">
+                        <p>คะแนนรวม 12-14 แสดงว่า มีโภชนาการปกติ</p>
+                        <p>คะแนนรวม 8-11 แสดงว่า มีความเสี่ยงต่อการขาดสารอาหาร</p>
+                        <p>คะแนนรวม 0-7 แสดงว่า มีภาวะขาดสารอาหาร</p>
+                    </div>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <td class="col-md-6">
@@ -1285,17 +1376,22 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การประเมินปัญหาการนอน</strong></h4>
+        <h4><strong>การประเมินปัญหาการนอน <span id="sleeping_trouble_badge" class="badge alert-danger"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     {{ form.sleeping_one.label() }} {{ form.sleeping_one() }}
                     <br/>
-                    {{ form.insomnia.label() }} {{ form.insomnia() }}
-                    {{ form.oversleep.label() }} {{ form.oversleep() }}
-                    {{ form.snore.label() }} {{ form.snore() }}
-                    {{ form.dreamwalk.label() }} {{ form.dreamwalk() }}
-                    {{ form.sleeping_other.label() }} {{ form.sleeping_other() }}
+                    {{ form.insomnia(disabled=True) }} {{ form.insomnia.label() }} 
+                    {{ form.oversleep(disabled=True) }} {{ form.oversleep.label() }} 
+                    {{ form.snore(disabled=True) }} {{ form.snore.label() }} 
+                    {{ form.dreamwalk(disabled=True) }} {{ form.dreamwalk.label() }} 
+                    {{ form.sleeping_other.label() }} {{ form.sleeping_other(disabled=True) }}
+                    <br/>
+                    {{ form.sleeping_period_year.label() }} {{ form.sleeping_period_year(disabled=True) }}
+                    {{ form.sleeping_period_month.label() }} {{ form.sleeping_period_month(disabled=True) }}
+                    <br/>
+                    {{ form.sleeping_avg_hours.label() }} {{ form.sleeping_avg_hours(disabled=True) }}
                     <br/>
                     <br/>
                     {{ form.fatique.label() }} {{ form.fatique() }}
@@ -1303,7 +1399,7 @@ $(function() {
             </div>
         </div>
 
-        <h4><strong>การประเมินความสามารถในการใช้ชีวิตประจำวัน</strong></h4>
+        <h4><strong>การประเมินความสามารถในการใช้ชีวิตประจำวัน <span id="routine_score_badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">

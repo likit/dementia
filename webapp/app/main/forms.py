@@ -440,7 +440,7 @@ class Form1(Form):
                                         (1, u'ลุกจากเตียงหรือรถเข็นได้บ้าง แต่ไม่สามารถไปข้างนอกได้เอง'),
                                         (2, u'เดินและเคลื่อนไหวได้ปกติ')])
     malnutrition_four = RadioField(u'ในสามเดือนที่ผ่านมามีความเครียดรุนแรงหรือป่วยเฉียบพลันหรือไม่',
-                            choices=[(0, u'มี'), (1, u'ไม่มี')])
+                            choices=[(0, u'มี'), (2, u'ไม่มี')])
     malnutrition_five = RadioField(u'มีปัญหาทางจิตประสาทหรืิอไม่',
                             choices=[(0,u'ความจำเสื่อมหรือซึมเศร้าอย่างรุนแรง'),
                                         (1, u'ความจำเสื่อมเล็กน้อย'),
@@ -450,14 +450,14 @@ class Form1(Form):
                                         (2, u'BMI ตั้งแต่ 21 แต่น้อยกว่า 23'), (3, u'BMI มากกว่า 23')])
 
     sleeping_one = RadioField(u'ผู้สูงอายุมีปัญหาในการนอนหรือไม่',
-                        choices=[(False, u'ไม่มีปัญหา'), (True, u'มีปัญหา')])
+                        choices=[('0', u'ไม่มีปัญหา'), ('1', u'มีปัญหา')])
     insomnia = BooleanField(u'นอนไม่หลับ')
     oversleep = BooleanField(u'นอนมากไป')
     snore = BooleanField(u'นอนกรน')
     dreamwalk = BooleanField(u'นอนละเมอ')
     sleeping_other = StringField(u'อื่นๆ โปรดระบุ')
-    sleeping_period_year = IntegerField()
-    sleeping_period_month = IntegerField()
+    sleeping_period_year = IntegerField(u"ระยะเวลาที่มีปัญหาในการนนอนหลับ ปี")
+    sleeping_period_month = IntegerField(u"เดือน")
     sleeping_avg_hours = IntegerField(u'โดยเฉลี่ยผู้สูงอายุได้นอนหลับคืนละ')
     fatique = BooleanField(u'ผู้สูงอายุมีอาการอ่อนเพลียตอนกลางวันหรือไม่')
 
