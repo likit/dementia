@@ -12,16 +12,24 @@ from wtforms import (StringField,
 
 class Form1(Form):
     # Personal info part
-    age = IntegerField(u'อายุ', validators=[Required(), NumberRange(1,130)])
-    gender = SelectField(u'เพศ', validators=[Required(),],
+    firstname = StringField(u'ชื่อ', validators=[])
+    lastname = StringField(u'นามสกุล', validators=[])
+    pid = StringField(u'รหัสบัตรประชาชน', validators=[])
+    street_number = StringField(u'บ้านเลขที่', validators=[])
+    district_number = StringField(u'หมู่', validators=[])
+    province = SelectField(u'จังหวัด')
+    amphur = SelectField(u'อำเภอ')
+    district = SelectField(u'ตำบล')
+    age = IntegerField(u'อายุ', validators=[NumberRange(1,130)])
+    gender = SelectField(u'เพศ', validators=[],
             choices=[('male',u'ชาย'),
-                ('female', u'หญิง'), ('none', u'ไม่ระบุ')])
-    marital = SelectField(u'สถานภาพสมรส', validators=[Required(),],
+                ('female', u'หญิง'), ('none', u'ไม่ระบุ')], default='male')
+    marital = SelectField(u'สถานภาพสมรส', validators=[],
             choices=[('married', u'แต่งงานแล้ว'), ('widow', u'หม้าย'),
                 ('divorce', u'หย่าร้าง'), ('single', u'โสด'),
-                ('other', u'อื่นๆ')])
+                ('other', u'อื่นๆ')], default='married')
     marital_other = StringField(u'อื่นๆ โปรดระบุ')
-    edu = SelectField(u'', validators=[Required()],
+    edu = SelectField(u'', validators=[],
             choices=[('0', u'ไม่ได้รับการศึกษา'),
                 ('1', u'ประถมศึกษา'),
                 ('2', u'มัธยมศึกษาตอนต้น'),
@@ -29,52 +37,52 @@ class Form1(Form):
                 ('4', u'อนุปริญญา'),
                 ('5', u'ปริญญาตรี'),
                 ('6', u'สูงกว่าปริญญาตรี'),
-                ('7', u'อื่นๆ')])
+                ('7', u'อื่นๆ')], default='0')
     edu_other = StringField(u'อื่นๆ โปรดระบุ')
     edu_years = IntegerField(u'รวมจำนวนปีที่ได้รับการศึกษา')
-    living = SelectField(u'การพักอาศัย', validators=[Required()],
+    living = SelectField(u'การพักอาศัย', validators=[],
             choices=[('single', u'โสด'),
                 ('couple', u'กับคู่ครอง'),
                 ('family', u'กับครอบครัว'),
                 ('caregiver', u'กับผู้ดูแล'),
                 ('other', u'อื่นๆ'),
-                ])
+                ], default='couple')
     living_caregiver = StringField(u'มีผู้ดูแลโปรดระบุ')
     living_other = StringField(u'อื่นๆ โปรดระบุ')
     income = SelectField(u'ท่านคิดว่ามีรายได้เพียงพอในครอบครัว',
-            validators=[Required()],
+            validators=[],
             choices=[
                 ('excess', u'เหลือเก็บ'),
                 ('enough', u'กำลังพอดี'),
                 ('notenough', u'ไม่เพียงพอ'),
-                ])
+                ], default='excess')
 
     elder_club = SelectField(u'การเป็นสมาชิกชมรมผู้สูงอายุ/อื่นๆ',
-            validators=[Required()],
-            choices=[('yes', u'เป็น'), ('no', u'ไม่เป็น')])
+            validators=[],
+            choices=[('yes', u'เป็น'), ('no', u'ไม่เป็น')], default='yes')
 
     health_status = SelectField(u'ความรู้สึกต่อสุขภาพตนเองโดยรวม',
-            validators=[Required()],
+            validators=[],
             choices=[
                 ('excellent', u'ดีเยี่ยม'),
                 ('verygood', u'ดีมาก'),
                 ('good', u'ดี'),
                 ('bad', u'แย่'),
                 ('verybad', u'แย่มาก'),
-                ])
+                ], default='excellent')
 
-    smoking = SelectField(u'การสูบบุหรี่/ยาสูบ', validators=[Required()],
+    smoking = SelectField(u'การสูบบุหรี่/ยาสูบ', validators=[],
             choices=[
                 ('no', u'ไม่เคยสูบเลย'),
                 ('yes', u'ปัจจุบันยังสูบ'),
                 ('quit', u'เคยสูบ (ตอนนี้เลิกแล้ว)'),
-                ])
+                ], default='no')
 
     smoke_freq = SelectField(u'ความถี่',
             choices=[
                 ('sometimes', u'บ่อยครั้ง'),
                 ('daily', u'ทุกวัน'),
-                ])
+                ], default='sometimes')
 
     smoke_per_week = IntegerField(u'จำนวนมวนต่อสัปดาห์')
     smoke_per_day = IntegerField(u'จำนวนมวนต่อวัน')
@@ -82,19 +90,19 @@ class Form1(Form):
     smoke_years = IntegerField(u'เป็นเวลา (ปี)')
     quit_smoke_years = IntegerField(u'เลิกมา (ปี)')
 
-    alcohol = SelectField(u'ดื่มแอลกอฮอล์', validators=[Required()],
+    alcohol = SelectField(u'ดื่มแอลกอฮอล์', validators=[],
             choices=[
-                ('none', u'ไม่เคยดื่ม'),
+                ('no', u'ไม่เคยดื่ม'),
                 ('sometimes', u'บางครั้ง'),
                 ('daily', u'ทุกวัน'),
                 ('quit', u'เคยดื่ม'),
-                ])
+                ], default='no')
 
     drink_per_day = IntegerField(u'จำนวนแก้ว (ต่อวัน)')
     drink_years = IntegerField(u'เป็นเวลา (ปี)')
     quit_drink_years = IntegerField(u'เลิกมา (ปี)')
 
-    congenital_disease = SelectField(u'โรคประจำตัว', validators=[Required()],
+    congenital_disease = SelectField(u'โรคประจำตัว', validators=[],
             choices=[
                 ('none', u'ไม่มีโรคประจำตัว'),
                 ('diabetes', u'โรคเบาหวาน'),
@@ -104,14 +112,14 @@ class Form1(Form):
                 ('cancer', u'โรคมะเร็ง'),
                 ('obstructive-lung-disease', u'โรคปอดอุดกั้นเรื้อรัง'),
                 ('other', u'อื่นๆ'),
-                ])
+                ], default='none')
 
     congenital_dis_other = StringField(u'อื่นๆ โปรดระบุ')
     congenital_dis_years = IntegerField(u'เป็นมาเป็นเวลา (ปี)')
 
     # Other parts
-    systolic = IntegerField(u'ความดันโลหิตตัวบน หรือซิสโตลิค (SBP)', validators=[Required()])
-    diastolic = IntegerField(u'ความดันโลหิตตัวล่าง หรือไดแอสโตลิค (DBP)', validators=[Required()])
+    systolic = IntegerField(u'ความดันโลหิตตัวบน หรือซิสโตลิค (SBP)', validators=[])
+    diastolic = IntegerField(u'ความดันโลหิตตัวล่าง หรือไดแอสโตลิค (DBP)', validators=[])
     smoke_screening = BooleanField(u'ยังคงสูบบุหรี่ ยาเส้น ยาสูบ บุหรี่ซิกาแรต บุหรี่ซิการ์ หรือหยุดสูบไม่เกิน 1 ปี')
     bp = BooleanField(u'ระดับความดันโลหิต >=130/85 มม.ปรอท และ/หรือ เคยได้รับการวินิจฉัยจากแพทย์ว่าเป็นความดันโลหิตสูง')
     fpg = BooleanField(u'ระดับน้ำตาลในเลือด (FPG) >=100 มก./ดล. และ/หรือ เคยได้รับการวินิจฉัยจากแพทย์ว่าเป็นโรคเบาหวาน')
@@ -119,19 +127,19 @@ class Form1(Form):
     waist = BooleanField(u'เส้นรอบเอวมากกว่าส่วนสูง (ซม.) หาร 2')
     infarction = BooleanField(u'เคยได้รับการวินิจฉัยจากแพทย์ว่าเป็นโรคหัวใจขาดเลือด หรืออัมพฤกษ์ อัมพาต')
     family_infarction = BooleanField(u'มีญาติสายตรง (พ่อ แม่ พี่หรือน้องท้องเดียวกัน) ที่แพทย์วินิจฉัยว่าเป็นโรคหัวใจขาดเลือด หรืออัมพฤกษ์ อัมพาต (ผู้ชายเป็นก่อนอายุ 55 ปี ผู้หญิงเป็นก่อนอายุ 65 ปี)')
-    dental_brushing = SelectField(u'', validators=[Required()],
+    dental_brushing = SelectField(u'', validators=[],
             choices=[
                 ('none', u'ไม่ได้แปรง/ไม่ได้ใช้แปรงสีฟัน'),
                 ('bedtime', u'แปรงวันละ 1 ครั้ง ก่อนนอน'),
                 ('twice', u'แปรงวันละ 2 ครั้ง เช้าและก่อนนอน'),
                 ('many', u'แปรงมากกว่าวันละ 2 ครั้ง'),
                 ('other', u'อื่นๆ'),
-                ])
+                ], default='twice')
     dental_brushing_gt_twice = IntegerField(u'ระบุ')
     dental_brushing_other = StringField(u'อื่นๆ โปรดระบุ')
 
     fluoride_toothpaste = BooleanField(u'การใช้ยาสีฟันผสมฟลูโอไรด์ทุกวัน',
-            validators=[Required()])
+            validators=[])
     dental_floss = BooleanField(u'การทำความสะอาดซอกฟันทุกวัน')
     dental_floss_equip = StringField(u'ใช้อุปกรณ์ได้แก่')
     smoke_ten_cig = BooleanField(u'สูบบุหรี่มากกว่า 10 มวนต่อวัน')
@@ -160,11 +168,11 @@ class Form1(Form):
     dental_part_two_six_follow_up = BooleanField(u'ใช่')
     dental_part_two_seven_follow_up = BooleanField(u'ใช่')
 
-    dental_transfer_tissue = BooleanField(u'เนื้อเยื่อในช่องปาก', validators=[Required()])
-    dental_transfer_gum = BooleanField(u'เหงือกและอวัยวะปริทันต์', validators=[Required()])
-    dental_transfer_cavity = BooleanField(u'ฟันผุ', validators=[Required()])
-    dental_transfer_swallow = BooleanField(u'ปัญหาการเคี้ยวอาหาร/การกลืน', validators=[Required()])
-    dental_transfer_denture = BooleanField(u'ฟันเทียม', validators=[Required()])
+    dental_transfer_tissue = BooleanField(u'เนื้อเยื่อในช่องปาก', validators=[])
+    dental_transfer_gum = BooleanField(u'เหงือกและอวัยวะปริทันต์', validators=[])
+    dental_transfer_cavity = BooleanField(u'ฟันผุ', validators=[])
+    dental_transfer_swallow = BooleanField(u'ปัญหาการเคี้ยวอาหาร/การกลืน', validators=[])
+    dental_transfer_denture = BooleanField(u'ฟันเทียม', validators=[])
 
     eye_exam_one = BooleanField(u'นับนิ้วในระยะสามเมตรได้ถูกต้อง<u>น้อยกว่า 3 ใน 4 ครั้ง</u>')
     eye_exam_two = BooleanField(u'อ่านหนังสือพิมพ์หน้าหนึ่งในระยะหนึ่งฟุต<u>ไม่ได้</u>')
@@ -193,7 +201,7 @@ class Form1(Form):
         ('5', '20/40'),
         ('6', '20/30'),
         ('7', '20/20'),
-        ])
+        ], default='7')
 
     snellen_right = SelectField(u'ตาขวา', choices=[
         ('1', '20/200'),
@@ -203,7 +211,7 @@ class Form1(Form):
         ('5', '20/40'),
         ('6', '20/30'),
         ('7', '20/20'),
-        ])
+        ], default='7')
 
     amt_one = BooleanField(u'อายุเท่าไหร่')
     amt_two = BooleanField(u'ขณะนี้เวลาอะไร')
@@ -220,79 +228,79 @@ class Form1(Form):
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_one_two = RadioField(u'วันนี้ วันอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_one_three = RadioField(u'เดือนนี้ เดือนอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_one_four = RadioField(u'ปีนี้ ปีอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_one_five = RadioField(u'ฤดูนี้ ฤดูอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_two_one_one = RadioField(u'สถานที่ตรงนี้เรียกว่าอะไรและชื่อว่าอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_one_two = RadioField(u'ขณะนี้อยู่ชั้นที่เท่าไหร่ของตัวอาคาร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_one_three = RadioField(u'ที่นี่อยู่ในอำเภออะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_one_four = RadioField(u'ที่นี่จังหวัดอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_one_five = RadioField(u'ที่นี่ภาคอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_two_two_one = RadioField(u'สถานที่ตรงนี้เรียกว่าอะไร และเลขที่เท่าไหร่', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_two_two = RadioField(u'ที่นี่หมู่บ้าน (หรือละแวก คุ้ม ย่าน ถนน) อะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_two_three = RadioField(u'ที่นี่อำเภอ หรือเขตอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_two_four = RadioField(u'ที่นี่จังหวัดอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_two_two_five = RadioField(u'ที่นี่ภาคอะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_three_flower = BooleanField(u'ดอกไม้')
     mmse_three_river = BooleanField(u'แม่น้ำ')
@@ -305,13 +313,13 @@ class Form1(Form):
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_four_two = RadioField(u'สะกดคำว่ามะนาวถอยหลัง', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_five_flower = BooleanField(u'ดอกไม้')
     mmse_five_river = BooleanField(u'แม่น้ำ')
@@ -324,18 +332,18 @@ class Form1(Form):
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
     mmse_six_two = RadioField(u'ชี้นาฬิกาข้อมือให้ผู้ถูกทดสอบดูแล้วถามว่านี่คืออะไร', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_seven_one = RadioField(u'พูดตามคำว่า "ใครใคร่ขายไข่ไก่"', choices=[
         ('correct', u'ถูกต้อง'),
         ('wrong', u'ผิด'),
         ('na', u'ไม่ได้ทำ'),
-        ])
+        ], default='na')
 
     mmse_eight_one = BooleanField(u'รับด้วยมือขวา')
     mmse_eight_two = BooleanField(u'พับครึ่งด้วยมือสองข้าง')
@@ -353,58 +361,58 @@ class Form1(Form):
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_two = SelectField(u'ไม่สบายใจ ซึมเศร้า ท้อแท้', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_three = SelectField(u'หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_four = SelectField(u'เหนื่อยง่าย หรือไม่ค่อยมีแรง', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_five = SelectField(u'เบื่ออาหาร หรือกินมากเกินไป', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_six = SelectField(u'รู้สึกไม่ดีกับตัวเอง คิดว่าตัวเองล้มเหลว หรือทำให้ตัวเองหรือครอบครัวผิดหวัง', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_seven = SelectField(u'สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงานที่ต้องใช้ความตั้งใจ', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_eight = SelectField(u'พูดช้า ทำอะไรช้าลงจนคนอื่นสังเกตเห็นได้ หรือกระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นทุกวัน'),
-        ])
+        ], default=0)
     q9_nine = SelectField(u'คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี', choices=[
         (0, u'ไม่มีเลย'),
         (1, u'เป็นบางวัน (1-7 วัน)'),
         (2, u'เป็นบ่อย (>7 วัน)'),
         (3, u'เป็นุกวัน'),
-        ])
+        ], default=0)
 
     knee_pain = RadioField(u'ผู้สูงอายุมีอาการปวดเข่า',
-            choices=[(False, u'ไม่ปวดเข่า'), (True, u'ปวดเข่า')])
+            choices=[(False, u'ไม่ปวดเข่า'), (True, u'ปวดเข่า')], default=False)
 
     knee_pain_clinic_one = BooleanField(u'ข้อเข่าฝืดตึงหลังตื่นนอนตอนเช้านาน <30 นาที (stiffness)')
     knee_pain_clinic_two = BooleanField(u'เสียงดังกรอบแกรบในข้อเข่าขณะเคลื่นไหว (crepitus)')
@@ -416,18 +424,18 @@ class Form1(Form):
         ('0', u'<30 วินาที'),
         ('1', u'>=30 วินาที'),
         ('2', u'เดินไม่ได้'),
-        ])
+        ], default='0')
 
     urine_holding = RadioField(u'ผู้สูงอายุมีภาวะ <u>"ปัสสาวะเล็ด"</u> หรือ <u>"ปัสสาวะราด"</u> จนทำให้เกิดปัญหาในการใช้ชีวิตประจำวัน',
-                        choices=[(False, u'ไม่มี'), (True, u'มี')])
+                        choices=[(False, u'ไม่มี'), (True, u'มี')], default=False)
 
     bmi = SelectField(u'ค่า BMI ', choices=[
-        ('<18.5', '<18.5'),
-        ('18.5-22.9', '18.5-22.9'),
-        ('23.0-24.9', '23.0-24.9'),
-        ('25.0-29.9', '25.0-29.9'),
-        ('>=30', '>=30'),
-        ])
+        ('0', '<18.5'),
+        ('1', '18.5-22.9'),
+        ('2', '23.0-24.9'),
+        ('3', '25.0-29.9'),
+        ('4', '>=30'),
+        ], default='0')
 
     malnutrition_one = RadioField(u'ในช่วงเวลาที่ผ่านมารับประทานอาหารได้น้อยลง เนื่องจากความอยากอาหารลดลง มีปัญหาการย่อย การเคี้ยวหรือการกลืน หรือไม่',
                             choices=[(0,u'ความอยากอาหารลดลงอย่างมาก'), (1, u'ความอยากอาหารลดลงปานกลาง'),
@@ -450,7 +458,7 @@ class Form1(Form):
                                         (2, u'BMI ตั้งแต่ 21 แต่น้อยกว่า 23'), (3, u'BMI มากกว่า 23')])
 
     sleeping_one = RadioField(u'ผู้สูงอายุมีปัญหาในการนอนหรือไม่',
-                        choices=[('0', u'ไม่มีปัญหา'), ('1', u'มีปัญหา')])
+                        choices=[('0', u'ไม่มีปัญหา'), ('1', u'มีปัญหา')], default='0')
     insomnia = BooleanField(u'นอนไม่หลับ')
     oversleep = BooleanField(u'นอนมากไป')
     snore = BooleanField(u'นอนกรน')
