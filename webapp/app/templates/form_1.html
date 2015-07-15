@@ -5,6 +5,11 @@
 {{ super() }}
 <script src="{{ url_for("static", filename="jquery-ui/datepicker-th.js") }}"></script>
 <script>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+var amphur_list =  {{ amphurs | safe }};
+var district_list =  {{ districts | safe }};
+
 $(document).ready(function() {
     $('#amphur').empty();
     $('#district').empty();
@@ -14,8 +19,8 @@ $(document).ready(function() {
 
     (function set_province() {
         $('#province').empty();
-        $('#province').append('<option>Select province</option>')
         var provinces = {{ provinces | safe }};
+        $('#province').append('<option>Select province</option>')
         for (i in provinces) {
             $('#province').append('<option value=' + provinces[i] + '>' + provinces[i] + '</option>')
         };
@@ -31,7 +36,7 @@ $(document).ready(function() {
 
     function change_district() {
         var districts = get_district($('#amphur').val());
-        $('#district').empty()
+        $('#district').empty();
         for (i in districts.sort()) {
             $('#district').append("<option value=" + districts[i] + ">" + districts[i] + "</option>");
         };
@@ -39,7 +44,9 @@ $(document).ready(function() {
 
     $('#province').change(function(){
         var amphurs = get_amphur($(this).val());
-        $('#amphur').empty()
+        $('#amphur').empty();
+        $('#disdtrict').empty();
+        console.log('Amphurs', amphurs)
         for (i in amphurs.sort()) {
             $('#amphur').append("<option value=" + amphurs[i] + ">" + amphurs[i] + "</option>");
         };
@@ -47,688 +54,709 @@ $(document).ready(function() {
     });
 
     $('#amphur').change(change_district);
-});
 
-$(function() {
-        $('input[type=submit]').button();
-        $("#datepicker").datepicker($.datepicker.regional["th"]);
-        $('#datepicker').on('change', function() {
-                $('#datepicker-badge').text($(this).val());
+    $('#pid-search').button().bind('click', function(event) {
+        event.preventDefault();
+        $.getJSON($SCRIPT_ROOT + '/searchpid', {
+            pid: $('#pid').val(),
+            }, function(data) {
+            if (data.result === 'found') {
+                $('#pid-search-badge').removeClass();
+                $('#pid-search-badge').addClass('glyphicon glyphicon-ok').text('พบในฐานข้อมูล');
+                $('#firstname').val(data.firstname);
+                $('#lastname').val(data.lastname);
+                $('#district').val(data.district);
+                $('#amphur').val(data.amphur);
+                $('#province').val(data.province);
+                $('#age').val(data.age);
+            } else {
+                $('#pid-search-badge').removeClass();
+                $('#pid-search-badge').addClass('glyphicon glyphicon-remove').text('ไม่พบในฐานข้อมูล');
+            }
             });
-        $("label[for=smoke_freq], select#smoke_freq").hide();
-        $("label[for=smoke_per_week], input#smoke_per_week").hide();
-        $("label[for=smoke_per_day], input#smoke_per_day").hide();
-        $("label[for=smoke_years], input#smoke_years").hide();
-        $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
-        $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
-        $("label[for=drink_per_day], input#drink_per_day").hide();
-        $("label[for=drink_years], input#drink_years").hide();
-        $("label[for=quit_drink_years], input#quit_drink_years").hide();
+        });
 
-        $("#congenital_dis_other").prop("disabled", true);
-        $("#marital").change(function() {
+    $('input[type=submit]').button();
+    $("#datepicker").datepicker($.datepicker.regional["th"]);
+    $('#datepicker').on('change', function() {
+            $('#datepicker-badge').text($(this).val());
+        });
+    $("label[for=smoke_freq], select#smoke_freq").hide();
+    $("label[for=smoke_per_week], input#smoke_per_week").hide();
+    $("label[for=smoke_per_day], input#smoke_per_day").hide();
+    $("label[for=smoke_years], input#smoke_years").hide();
+    $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+    $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
+    $("label[for=drink_per_day], input#drink_per_day").hide();
+    $("label[for=drink_years], input#drink_years").hide();
+    $("label[for=quit_drink_years], input#quit_drink_years").hide();
+
+    $("#congenital_dis_other").prop("disabled", true);
+    $("#marital").change(function() {
+        if ($(this).val() === "other") {
+            {# $("#marital_other").prop("disabled", false).prop("required", true) #}
+            $("#marital_other").prop("disabled", false).prop("required", false)
+            } else {
+            $("#marital_other").prop("disabled", true).prop("required", false)
+            }
+        });
+
+    $("#edu").change(function() {
+        set_mmse_score_badge();
+        if ($(this).val() === "7") {
+            $("#edu_other").prop("disabled", false).prop("required", false);
+            {# $("#edu_other").prop("disabled", false).prop("required", true); #}
+            $("#edu_years").prop("disabled", false).prop("required", true);
+            }
+        else if ($(this).val() === "0") {
+            $("#edu_years").prop("disabled", true).prop("required", false);
+            $("#edu_other").prop("disabled", true).prop("required", false);
+            $("#mmse_nine_one").prop("disabled", true);
+            $("#mmse_ten_one").prop("disabled", true);
+            $("input[name=mmse_four_one]").prop("disabled", true);
+            $("input[name=mmse_four_two]").prop("disabled", true);
+            }
+        else {
+            {# $("#edu_years").prop("disabled", false).prop("required", true) #}
+            $("#edu_years").prop("disabled", false).prop("required", false)
+            }
+        });
+
+    $("#living").change(function() {
+            if ($(this).val() === 'caregiver') {
+                {# $("#living_caregiver").prop("disabled", false).prop("required", true) #}
+                $("#living_caregiver").prop("disabled", false).prop("required", false)
+                $("#living_other").prop("disabled", true).prop("required", false)
+            }
+            else if ($(this).val() === "other") {
+                $("#living_caregiver").prop("disabled", true).prop("required", false)
+                {# $("#living_other").prop("disabled", false).prop("required", true) #}
+                $("#living_other").prop("disabled", false).prop("required", false)
+            }
+            else {
+                $("#living_caregiver").prop("disabled", true).prop("required", false)
+                $("#living_other").prop("disabled", true).prop("required", false)
+            }
+        });
+    $("#smoking").change(function() {
+            console.log($(this).val())
+            if($(this).val() === 'yes') {
+                $("label[for=smoke_freq], select#smoke_freq").show();
+                $("label[for=smoke_per_week], input#smoke_per_week").show();
+
+                $("label[for=smoke_years], input#smoke_years").hide();
+                $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+
+                // reset some values
+                $("#smoke_screening").prop('checked', true)
+                $("#smoke_years").val("");
+                $("#quit_smoke_years").val("");
+                $("#smoke_per_day").val("");
+            } else if ($(this).val() === 'quit') {
+                $("label[for=smoke_freq], select#smoke_freq").hide();
+                $("label[for=smoke_per_week], input#smoke_per_week").hide();
+
+                $("label[for=smoke_per_day], input#smoke_per_day").show();
+                $("label[for=smoke_years], input#smoke_years").show();
+                $("label[for=quit_smoke_years], input#quit_smoke_years").show()
+
+                // reset some values
+                $("#smoke_per_week").val("");
+                $("#smoke_per_day").val("");
+            } else {
+                $("label[for=smoke_freq], select#smoke_freq").hide();
+                $("label[for=smoke_per_day], input#smoke_per_day").hide();
+                $("label[for=smoke_per_week], input#smoke_per_week").hide();
+
+                $("label[for=smoke_years], input#smoke_years").hide();
+                $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
+
+                // reset some values
+                $("#smoke_years").val("");
+                $("#quit_smoke_years").val("");
+                $("#smoke_per_day").val("");
+                $("#smoke_per_week").val("");
+            }
+        });
+    $("#smoke_freq").change(function() {
+            if($(this).val() === "sometimes") {
+                $("label[for=smoke_per_week], input#smoke_per_week").show();
+                $("label[for=smoke_per_day], input#smoke_per_day").hide();
+                $("#smoke_per_day").val("");
+            } else {
+                $("label[for=smoke_per_week], input#smoke_per_week").hide();
+                $("label[for=smoke_per_day], input#smoke_per_day").show();
+                $("#smoke_per_week").val("");
+            }
+        });
+
+    $("#quit_smoke_year").change(function() {
+        if (parseFloat($(this).val()) <= 1) {
+            $("#smoke_screening").prop("checked", true)
+        }
+    });
+
+
+    $("#smoke_per_day").change(function() {
+        if (parseFloat($(this).val()) >= 10) {
+            $("#smoke_ten_cig").prop("checked", true);
+        }
+    });
+
+    $("#alcohol").change(function() {
+            if($(this).val() === "daily") {
+                $("label[for=drink_per_day], input#drink_per_day").show();
+                $("label[for=drink_years], input#drink_years").hide();
+                $("label[for=quit_drink_years], input#quit_drink_years").hide();
+            } else if ($(this).val() === 'quit') {
+                $("label[for=drink_per_day], input#drink_per_day").show();
+                $("label[for=drink_years], input#drink_years").show();
+                $("label[for=quit_drink_years], input#quit_drink_years").show();
+            } else {
+                $("label[for=drink_per_day], input#drink_per_day").hide();
+                $("label[for=drink_years], input#drink_years").hide();
+                $("label[for=quit_drink_years], input#quit_drink_years").hide();
+                $("#drink_per_day").val("");
+                $("#drink_years").val("");
+                $("#quit_drink_years").val("");
+            }
+        });
+    $("#congenital_disease").change(function() {
             if ($(this).val() === "other") {
-                $("#marital_other").prop("disabled", false).prop("required", true)
-                } else {
-                $("#marital_other").prop("disabled", true).prop("required", false)
-                }
-            });
+                $("#congenital_dis_other").prop("disabled", false);
+                $("#fpg").prop("checked", false);
+                $("#bp").prop("checked", false);
+            } else if ($(this).val() === "diabetes") {
+                $("#fpg").prop("checked", true);
+                $("#bp").prop("checked", false);
+            } else if ($(this).val() === "hypertension") {
+                $("#fpg").prop("checked", false);
+                $("#bp").prop("checked", true);
+            } else {
+                    $("#congenital_dis_other").prop("disabled", true);
+            }
+            if ($(this).val() === "none") {
+                $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
+            } else {
+                $("label[for=congenital_dis_years], input#congenital_dis_years").show();
+            }
+        });
+    $("#accordian").accordion({
+            heightStyle: "content",
+            event: "click hoverintent",
+            collapsible: true
+    });
 
-        $("#edu").change(function() {
-            set_mmse_score_badge();
-            if ($(this).val() === "7") {
-                $("#edu_other").prop("disabled", false).prop("required", true);
-                $("#edu_years").prop("disabled", false).prop("required", true);
-                }
-            else if ($(this).val() === "0") {
-                $("#edu_years").prop("disabled", true).prop("required", false);
-                $("#edu_other").prop("disabled", true).prop("required", false);
-                $("#mmse_nine_one").prop("disabled", true);
-                $("#mmse_ten_one").prop("disabled", true);
-                $("input[name=mmse_four_one]").prop("disabled", true);
-                $("input[name=mmse_four_two]").prop("disabled", true);
-                }
-            else {
-                $("#edu_years").prop("disabled", false).prop("required", true)
-                }
-            });
-
-        $("#living").change(function() {
-                if ($(this).val() === 'caregiver') {
-                    $("#living_caregiver").prop("disabled", false).prop("required", true)
-                    $("#living_other").prop("disabled", true).prop("required", false)
-                }
-                else if ($(this).val() === "other") {
-                    $("#living_caregiver").prop("disabled", true).prop("required", false)
-                    $("#living_other").prop("disabled", false).prop("required", true)
-                }
-                else {
-                    $("#living_caregiver").prop("disabled", true).prop("required", false)
-                    $("#living_other").prop("disabled", true).prop("required", false)
-                }
-            });
-        $("#smoking").change(function() {
-                console.log($(this).val())
-                if($(this).val() === 'yes') {
-                    $("label[for=smoke_freq], select#smoke_freq").show();
-                    $("label[for=smoke_per_week], input#smoke_per_week").show();
-
-                    $("label[for=smoke_years], input#smoke_years").hide();
-                    $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
-
-                    // reset some values
-                    $("#smoke_screening").prop('checked', true)
-                    $("#smoke_years").val("");
-                    $("#quit_smoke_years").val("");
-                    $("#smoke_per_day").val("");
-                } else if ($(this).val() === 'quit') {
-                    $("label[for=smoke_freq], select#smoke_freq").hide();
-                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
-
-                    $("label[for=smoke_per_day], input#smoke_per_day").show();
-                    $("label[for=smoke_years], input#smoke_years").show();
-                    $("label[for=quit_smoke_years], input#quit_smoke_years").show()
-
-                    // reset some values
-                    $("#smoke_per_week").val("");
-                    $("#smoke_per_day").val("");
-                } else {
-                    $("label[for=smoke_freq], select#smoke_freq").hide();
-                    $("label[for=smoke_per_day], input#smoke_per_day").hide();
-                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
-
-                    $("label[for=smoke_years], input#smoke_years").hide();
-                    $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
-
-                    // reset some values
-                    $("#smoke_years").val("");
-                    $("#quit_smoke_years").val("");
-                    $("#smoke_per_day").val("");
-                    $("#smoke_per_week").val("");
-                }
-            });
-        $("#smoke_freq").change(function() {
-                if($(this).val() === "sometimes") {
-                    $("label[for=smoke_per_week], input#smoke_per_week").show();
-                    $("label[for=smoke_per_day], input#smoke_per_day").hide();
-                    $("#smoke_per_day").val("");
-                } else {
-                    $("label[for=smoke_per_week], input#smoke_per_week").hide();
-                    $("label[for=smoke_per_day], input#smoke_per_day").show();
-                    $("#smoke_per_week").val("");
-                }
-            });
-
-        $("#quit_smoke_year").change(function() {
-            if (parseFloat($(this).val()) <= 1) {
-                $("#smoke_screening").prop("checked", true)
+    $("#dental_part_two_one").change(function() {
+            // TODO: the following line is a hack
+            if ($("input[name='dental_part_two_one']:checked").val() === "1") {
+                $("#dental_transfer_tissue").prop("checked", true);
+            } else {
+                $("#dental_transfer_tissue").prop("checked", false);
             }
         });
 
-
-        $("#smoke_per_day").change(function() {
-            if (parseFloat($(this).val()) >= 10) {
-                $("#smoke_ten_cig").prop("checked", true);
+    $("#dental_part_two_two").change(function() {
+            // TODO: the following line is a hack
+            if ($("input[name='dental_part_two_two']:checked").val() === "1") {
+                $("#dental_transfer_gum").prop("checked", true);
+            } else {
+                $("#dental_transfer_gum").prop("checked", false);
             }
         });
 
-        $("#alcohol").change(function() {
-                if($(this).val() === "daily") {
-                    $("label[for=drink_per_day], input#drink_per_day").show();
-                    $("label[for=drink_years], input#drink_years").hide();
-                    $("label[for=quit_drink_years], input#quit_drink_years").hide();
-                } else if ($(this).val() === 'quit') {
-                    $("label[for=drink_per_day], input#drink_per_day").show();
-                    $("label[for=drink_years], input#drink_years").show();
-                    $("label[for=quit_drink_years], input#quit_drink_years").show();
-                } else {
-                    $("label[for=drink_per_day], input#drink_per_day").hide();
-                    $("label[for=drink_years], input#drink_years").hide();
-                    $("label[for=quit_drink_years], input#quit_drink_years").hide();
-                    $("#drink_per_day").val("");
-                    $("#drink_years").val("");
-                    $("#quit_drink_years").val("");
-                }
-            });
-        $("#congenital_disease").change(function() {
-                if ($(this).val() === "other") {
-                    $("#congenital_dis_other").prop("disabled", false);
-                    $("#fpg").prop("checked", false);
-                    $("#bp").prop("checked", false);
-                } else if ($(this).val() === "diabetes") {
-                    $("#fpg").prop("checked", true);
-                    $("#bp").prop("checked", false);
-                } else if ($(this).val() === "hypertension") {
-                    $("#fpg").prop("checked", false);
-                    $("#bp").prop("checked", true);
-                } else {
-                        $("#congenital_dis_other").prop("disabled", true);
-                }
-                if ($(this).val() === "none") {
-                    $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
-                } else {
-                    $("label[for=congenital_dis_years], input#congenital_dis_years").show();
-                }
-            });
+    $("#dental_part_two_three").change(function() {
+            // TODO: the following line is a hack
+            if ($("input[name='dental_part_two_three']:checked").val() === "1") {
+                $("#dental_transfer_cavity").prop("checked", true);
+            } else {
+                $("#dental_transfer_cavity").prop("checked", false);
+            }
         });
 
-        $("#accordian").accordion({
-                heightStyle: "content",
-                event: "click hoverintent",
-                collapsible: true
+    $("#dental_part_two_four").change(function() {
+            // TODO: the following line is a hack
+            if ($("input[name='dental_part_two_four']:checked").val() === "1") {
+                $("#dental_transfer_swallow").prop("checked", true);
+            } else {
+                $("#dental_transfer_swallow").prop("checked", false);
+            }
         });
 
-        $("#dental_part_two_one").change(function() {
-                // TODO: the following line is a hack
-                if ($("input[name='dental_part_two_one']:checked").val() === "1") {
-                    $("#dental_transfer_tissue").prop("checked", true);
-                } else {
-                    $("#dental_transfer_tissue").prop("checked", false);
-                }
-            });
+    $("#dental_part_two_five").change(function() {
+            // TODO: the following line is a hack
+            if ($("input[name='dental_part_two_five']:checked").val() === "1") {
+                $("#dental_transfer_denture").prop("checked", true);
+            } else {
+                $("#dental_transfer_denture").prop("checked", false);
+            }
+        });
 
-        $("#dental_part_two_two").change(function() {
-                // TODO: the following line is a hack
-                if ($("input[name='dental_part_two_two']:checked").val() === "1") {
-                    $("#dental_transfer_gum").prop("checked", true);
-                } else {
-                    $("#dental_transfer_gum").prop("checked", false);
-                }
-            });
-
-        $("#dental_part_two_three").change(function() {
-                // TODO: the following line is a hack
-                if ($("input[name='dental_part_two_three']:checked").val() === "1") {
-                    $("#dental_transfer_cavity").prop("checked", true);
-                } else {
-                    $("#dental_transfer_cavity").prop("checked", false);
-                }
-            });
-
-        $("#dental_part_two_four").change(function() {
-                // TODO: the following line is a hack
-                if ($("input[name='dental_part_two_four']:checked").val() === "1") {
-                    $("#dental_transfer_swallow").prop("checked", true);
-                } else {
-                    $("#dental_transfer_swallow").prop("checked", false);
-                }
-            });
-
-        $("#dental_part_two_five").change(function() {
-                // TODO: the following line is a hack
-                if ($("input[name='dental_part_two_five']:checked").val() === "1") {
-                    $("#dental_transfer_denture").prop("checked", true);
-                } else {
-                    $("#dental_transfer_denture").prop("checked", false);
-                }
-            });
-
-        var amt_score = 0;
-        var set_amt_score = function() {
-                if ($(this).is(":checked")) {
-                    amt_score = amt_score + 1;
-                    $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
-                } else {
-                    amt_score = amt_score - 1;
-                    $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
-                }
-                if (amt_score < 8) {
-                    $("#amt_score_badge").removeClass();
-                    $("#amt_score_badge").addClass("badge alert-danger");
-                } else {
-                    $("#amt_score_badge").removeClass();
-                    $("#amt_score_badge").addClass("badge alert-success");
-                }
-        }
-
-        $("#amt_one").change(set_amt_score);
-        $("#amt_two").change(set_amt_score);
-        $("#amt_three").change(set_amt_score);
-        $("#amt_four").change(set_amt_score);
-        $("#amt_five").change(set_amt_score);
-        $("#amt_six").change(set_amt_score);
-        $("#amt_seven").change(set_amt_score);
-        $("#amt_eight").change(set_amt_score);
-        $("#amt_nine").change(set_amt_score);
-        $("#amt_ten").change(set_amt_score);
-
-        var cardiac_score = 0;
-        var set_cardiac_score = function() {
-                if ($(this).is(":checked")) {
-                    cardiac_score = cardiac_score + 1;
-                } else {
-                    cardiac_score = cardiac_score - 1;
-                }
-                $("#cardiac_score_badge").text("จำนวนข้อที่เลือก " + cardiac_score);
-                if (cardiac_score < 3) {
-                    $("#cardiac_score_badge").removeClass();
-                    $("#cardiac_score_badge").addClass("badge alert-success");
-                } else {
-                    $("#cardiac_score_badge").removeClass();
-                    $("#cardiac_score_badge").addClass("badge alert-danger");
-                }
-        }
-
-        $("#bp").change(set_cardiac_score);
-        $("#fpg").change(set_cardiac_score);
-        $("#smoke_screening").change(set_cardiac_score);
-        $("#abnormal_lipid").change(set_cardiac_score);
-        $("#waist").change(set_cardiac_score);
-        $("#infarction").change(set_cardiac_score);
-        $("#family_infarction").change(set_cardiac_score);
-
-        var eye_exam_score = 0;
-        var set_eye_exam_score = function() {
+    var amt_score = 0;
+    var set_amt_score = function() {
             if ($(this).is(":checked")) {
-                eye_exam_score = eye_exam_score + 1;
-                $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
-            }
-            else {
-                eye_exam_score = eye_exam_score - 1;
-                $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
-            }
-            if (eye_exam_score < 1) {
-                $("#eye_exam_score_badge").removeClass();
-                $("#eye_exam_score_badge").addClass("badge alert-success");
+                amt_score = amt_score + 1;
+                $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
             } else {
-                $("#eye_exam_score_badge").removeClass();
-                $("#eye_exam_score_badge").addClass("badge alert-danger");
+                amt_score = amt_score - 1;
+                $("#amt_score_badge").text("ข้อที่ตอบถูก " + amt_score);
             }
-        }
-
-        $('#eye_exam_one').change(set_eye_exam_score);
-        $('#eye_exam_two').change(set_eye_exam_score);
-        $('#eye_exam_three').change(set_eye_exam_score);
-        $('#eye_exam_four').change(set_eye_exam_score);
-        $('#eye_exam_five').change(set_eye_exam_score);
-
-        var snellen_score = 0
-        var set_snellen_score = function() {
-            var left_score = parseInt(snellen_left.value);
-            var right_score = parseInt(snellen_right.value);
-            if (left_score + right_score === 14) {
-                $('#snellen_score_badge').removeClass();
-                $('#snellen_score_badge').addClass("badge alert-success");
-                $('#snellen_score_badge').text("ปกติ")
+            if (amt_score < 8) {
+                $("#amt_score_badge").removeClass();
+                $("#amt_score_badge").addClass("badge alert-danger");
             } else {
-                $('#snellen_score_badge').removeClass();
-                $('#snellen_score_badge').addClass("badge alert-danger");
-                $('#snellen_score_badge').text("ผิดปกติ")
+                $("#amt_score_badge").removeClass();
+                $("#amt_score_badge").addClass("badge alert-success");
             }
-        }
-        $('#snellen_left').change(set_snellen_score);
-        $('#snellen_right').change(set_snellen_score);
+    }
 
-        var mmse_score = 0;
-        var mmse_radio_values = [];
-        var set_mmse_radio_score = function(event) {
-            var value = $(this).filter(":checked").val();
-            var previous_val = mmse_radio_values[event.data.i] || 0;
-            if (value === 'correct') {
-                mmse_score = mmse_score + 1;
-                mmse_radio_values[event.data.i] = 1;
-            } else {
-                if (previous_val === 1) {
-                    mmse_score = mmse_score - 1;
-                    mmse_radio_values[event.data.i] = 0;
-                }
-            }
-            $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
-            set_mmse_score_badge();
-        }
+    $("#amt_one").change(set_amt_score);
+    $("#amt_two").change(set_amt_score);
+    $("#amt_three").change(set_amt_score);
+    $("#amt_four").change(set_amt_score);
+    $("#amt_five").change(set_amt_score);
+    $("#amt_six").change(set_amt_score);
+    $("#amt_seven").change(set_amt_score);
+    $("#amt_eight").change(set_amt_score);
+    $("#amt_nine").change(set_amt_score);
+    $("#amt_ten").change(set_amt_score);
 
-        var set_mmse_checkbox_score = function() {
+    var cardiac_score = 0;
+    var set_cardiac_score = function() {
             if ($(this).is(":checked")) {
-                mmse_score = mmse_score + 1;
+                cardiac_score = cardiac_score + 1;
+            } else {
+                cardiac_score = cardiac_score - 1;
             }
-            else {
+            $("#cardiac_score_badge").text("จำนวนข้อที่เลือก " + cardiac_score);
+            if (cardiac_score < 3) {
+                $("#cardiac_score_badge").removeClass();
+                $("#cardiac_score_badge").addClass("badge alert-success");
+            } else {
+                $("#cardiac_score_badge").removeClass();
+                $("#cardiac_score_badge").addClass("badge alert-danger");
+            }
+    }
+
+    $("#bp").change(set_cardiac_score);
+    $("#fpg").change(set_cardiac_score);
+    $("#smoke_screening").change(set_cardiac_score);
+    $("#abnormal_lipid").change(set_cardiac_score);
+    $("#waist").change(set_cardiac_score);
+    $("#infarction").change(set_cardiac_score);
+    $("#family_infarction").change(set_cardiac_score);
+
+    var eye_exam_score = 0;
+    var set_eye_exam_score = function() {
+        if ($(this).is(":checked")) {
+            eye_exam_score = eye_exam_score + 1;
+            $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
+        }
+        else {
+            eye_exam_score = eye_exam_score - 1;
+            $("#eye_exam_score_badge").text("ข้อที่เลือก " + eye_exam_score);
+        }
+        if (eye_exam_score < 1) {
+            $("#eye_exam_score_badge").removeClass();
+            $("#eye_exam_score_badge").addClass("badge alert-success");
+        } else {
+            $("#eye_exam_score_badge").removeClass();
+            $("#eye_exam_score_badge").addClass("badge alert-danger");
+        }
+    }
+
+    $('#eye_exam_one').change(set_eye_exam_score);
+    $('#eye_exam_two').change(set_eye_exam_score);
+    $('#eye_exam_three').change(set_eye_exam_score);
+    $('#eye_exam_four').change(set_eye_exam_score);
+    $('#eye_exam_five').change(set_eye_exam_score);
+
+    var snellen_score = 0
+    var set_snellen_score = function() {
+        var left_score = parseInt(snellen_left.value);
+        var right_score = parseInt(snellen_right.value);
+        if (left_score + right_score === 14) {
+            $('#snellen_score_badge').removeClass();
+            $('#snellen_score_badge').addClass("badge alert-success");
+            $('#snellen_score_badge').text("ปกติ")
+        } else {
+            $('#snellen_score_badge').removeClass();
+            $('#snellen_score_badge').addClass("badge alert-danger");
+            $('#snellen_score_badge').text("ผิดปกติ")
+        }
+    }
+    $('#snellen_left').change(set_snellen_score);
+    $('#snellen_right').change(set_snellen_score);
+
+    var mmse_score = 0;
+    var mmse_radio_values = [];
+    var set_mmse_radio_score = function(event) {
+        var value = $(this).filter(":checked").val();
+        var previous_val = mmse_radio_values[event.data.i] || 0;
+        if (value === 'correct') {
+            mmse_score = mmse_score + 1;
+            mmse_radio_values[event.data.i] = 1;
+        } else {
+            if (previous_val === 1) {
                 mmse_score = mmse_score - 1;
+                mmse_radio_values[event.data.i] = 0;
             }
-            $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
-            set_mmse_score_badge();
         }
+        $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
+        set_mmse_score_badge();
+    }
 
-        var set_mmse_score_badge = function() {
-            var edu_level = parseInt($('#edu').val());
-            if (edu_level === 0 && mmse_score <= 14) {
-                $('#mmse_score_badge').removeClass();
-                $('#mmse_score_badge').addClass('badge alert-danger');
-            } else if (edu_level === 1 && mmse_score > 18 ) {
-                $('#mmse_score_badge').removeClass();
-                $('#mmse_score_badge').addClass('badge alert-success');
-            } else if (edu_level > 1 && mmse_score > 23 ) {
-                $('#mmse_score_badge').removeClass();
-                $('#mmse_score_badge').addClass('badge alert-success');
+    var set_mmse_checkbox_score = function() {
+        if ($(this).is(":checked")) {
+            mmse_score = mmse_score + 1;
+        }
+        else {
+            mmse_score = mmse_score - 1;
+        }
+        $("#mmse_score_badge").text('คะแนนรวม ' + mmse_score);
+        set_mmse_score_badge();
+    }
+
+    var set_mmse_score_badge = function() {
+        var edu_level = parseInt($('#edu').val());
+        if (edu_level === 0 && mmse_score <= 14) {
+            $('#mmse_score_badge').removeClass();
+            $('#mmse_score_badge').addClass('badge alert-danger');
+        } else if (edu_level === 1 && mmse_score > 18 ) {
+            $('#mmse_score_badge').removeClass();
+            $('#mmse_score_badge').addClass('badge alert-success');
+        } else if (edu_level > 1 && mmse_score > 23 ) {
+            $('#mmse_score_badge').removeClass();
+            $('#mmse_score_badge').addClass('badge alert-success');
+        } else {
+            $('#mmse_score_badge').removeClass();
+            $('#mmse_score_badge').addClass('badge alert-danger');
+        }
+    }
+
+
+    $('input[name=mmse_one_one]').bind("change", {i:0},
+                set_mmse_radio_score);
+    $('input[name=mmse_one_two]').bind("change", {i:1},
+                set_mmse_radio_score);
+    $('input[name=mmse_one_three]').bind("change", {i:2},
+                set_mmse_radio_score);
+    $('input[name=mmse_one_four]').bind("change", {i:3},
+                set_mmse_radio_score);
+    $('input[name=mmse_one_five]').bind("change", {i:4},
+                set_mmse_radio_score);
+
+    $('input[name=mmse_two_one_one]').bind("change", {i:5},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_one_two]').bind("change", {i:6},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_one_three]').bind("change", {i:7},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_one_four]').bind("change", {i:8},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_one_five]').bind("change", {i:9},
+                set_mmse_radio_score);
+
+    $('input[name=mmse_two_two_one]').bind("change", {i:10},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_two_two]').bind("change", {i:11},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_two_three]').bind("change", {i:12},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_two_four]').bind("change", {i:13},
+                set_mmse_radio_score);
+    $('input[name=mmse_two_two_five]').bind("change", {i:14},
+                set_mmse_radio_score);
+
+    $('input[name=mmse_four_one]').bind("change", {i:15},
+                set_mmse_radio_score);
+    $('input[name=mmse_four_two]').bind("change", {i:16},
+                set_mmse_radio_score);
+
+    $('input[name=mmse_six_one]').bind("change", {i:17},
+                set_mmse_radio_score);
+    $('input[name=mmse_six_two]').bind("change", {i:18},
+                set_mmse_radio_score);
+
+    $('input[name=mmse_seven_one]').bind("change", {i:19},
+                set_mmse_radio_score);
+
+    $('#mmse_three_flower').change(set_mmse_checkbox_score);
+    $('#mmse_three_river').change(set_mmse_checkbox_score);
+    $('#mmse_three_train').change(set_mmse_checkbox_score);
+
+    $('#mmse_three_tree').change(set_mmse_checkbox_score);
+    $('#mmse_three_sea').change(set_mmse_checkbox_score);
+    $('#mmse_three_car').change(set_mmse_checkbox_score);
+
+    $('#mmse_five_flower').change(set_mmse_checkbox_score);
+    $('#mmse_five_river').change(set_mmse_checkbox_score);
+    $('#mmse_five_train').change(set_mmse_checkbox_score);
+
+    $('#mmse_five_tree').change(set_mmse_checkbox_score);
+    $('#mmse_five_sea').change(set_mmse_checkbox_score);
+    $('#mmse_five_car').change(set_mmse_checkbox_score);
+
+    $('#mmse_eight_one').change(set_mmse_checkbox_score);
+    $('#mmse_eight_two').change(set_mmse_checkbox_score);
+    $('#mmse_eight_three').change(set_mmse_checkbox_score);
+
+    $('#mmse_nine_one').change(set_mmse_checkbox_score);
+    $('#mmse_ten_one').change(set_mmse_checkbox_score);
+    $('#mmse_eleven_one').change(set_mmse_checkbox_score);
+
+    var q2_score = 0;
+    var set_q2_score = function() {
+        if ($(this).is(":checked")) {
+            q2_score = q2_score + 1;
+        }
+        else {
+            q2_score = q2_score - 1;
+        }
+        $("#q2_score_badge").text('คะแนนรวม ' + q2_score);
+        if (q2_score === 2) {
+            $('#q2_score_badge').removeClass();
+            $('#q2_score_badge').addClass('badge alert-danger');
+        } else {
+            $('#q2_score_badge').removeClass();
+            $('#q2_score_badge').addClass('badge alert-success');
+        }
+    }
+
+    $('#q2_one').change(set_q2_score);
+    $('#q2_two').change(set_q2_score);
+
+    var q9_score = 0;
+    var q9_previous_scores = [];
+    var set_q9_score = function(event) {
+        var prevscore = q9_previous_scores[event.data.i] || 0;
+        q9_score = q9_score - prevscore;
+        new_score = parseInt($(this).val());
+        q9_score = q9_score + new_score;
+        q9_previous_scores[event.data.i] = new_score;
+
+        $("#q9_score_badge").text('คะแนนรวม ' + q9_score);
+        if (q9_score <= 7) {
+            $('#q9_score_badge').removeClass();
+            $('#q9_score_badge').addClass('badge alert-success');
+        } else {
+            $('#q9_score_badge').removeClass();
+            $('#q9_score_badge').addClass('badge alert-danger');
+        }
+    }
+
+    $('#q9_one').bind('change', {i:0}, set_q9_score);
+    $('#q9_two').bind('change', {i:1}, set_q9_score);
+    $('#q9_three').bind('change', {i:2}, set_q9_score);
+    $('#q9_four').bind('change', {i:3}, set_q9_score);
+    $('#q9_five').bind('change', {i:4}, set_q9_score);
+    $('#q9_six').bind('change', {i:5}, set_q9_score);
+    $('#q9_seven').bind('change', {i:6}, set_q9_score);
+    $('#q9_eight').bind('change', {i:7}, set_q9_score);
+    $('#q9_nine').bind('change', {i:8}, set_q9_score);
+
+
+    $('input[name=knee_pain]').change(function(event) {
+            console.log('knee pain', $(this).filter(':checked').val())
+            if ($(this).filter(":checked").val() === 'True') {
+                $('#knee_pain_badge').text('ปวดเข่า');
+                console.log('so painful')
             } else {
-                $('#mmse_score_badge').removeClass();
-                $('#mmse_score_badge').addClass('badge alert-danger');
+                $('#knee_pain_badge').text('');
             }
+        });
+
+    var knee_pain_clinic_score = 0;
+    var set_knee_pain_clinic_score = function() {
+        if ($(this).is(":checked")) {
+            knee_pain_clinic_score = knee_pain_clinic_score + 1;
+        } else {
+            knee_pain_clinic_score = knee_pain_clinic_score - 1;
         }
+        $('#knee_pain_clinic_score_badge').text('จำนวนข้อที่ตอบใช่ ' + knee_pain_clinic_score);
+        if (knee_pain_clinic_score >= 2) {
+            $('#knee_pain_clinic_score_badge').removeClass();
+            $('#knee_pain_clinic_score_badge').addClass('badge alert-danger');
+        } else {
+            $('#knee_pain_clinic_score_badge').removeClass();
+            $('#knee_pain_clinic_score_badge').addClass('badge alert-success');
+        }
+    }
 
+    $('#knee_pain_clinic_one').change(set_knee_pain_clinic_score);
+    $('#knee_pain_clinic_two').change(set_knee_pain_clinic_score);
+    $('#knee_pain_clinic_three').change(set_knee_pain_clinic_score);
+    $('#knee_pain_clinic_four').change(set_knee_pain_clinic_score);
+    $('#knee_pain_clinic_five').change(set_knee_pain_clinic_score);
 
-        $('input[name=mmse_one_one]').bind("change", {i:0},
-                    set_mmse_radio_score);
-        $('input[name=mmse_one_two]').bind("change", {i:1},
-                    set_mmse_radio_score);
-        $('input[name=mmse_one_three]').bind("change", {i:2},
-                    set_mmse_radio_score);
-        $('input[name=mmse_one_four]').bind("change", {i:3},
-                    set_mmse_radio_score);
-        $('input[name=mmse_one_five]').bind("change", {i:4},
-                    set_mmse_radio_score);
+    $('input[name=tugt]').change(function() {
+        if($(this).filter(':checked').val() === '1') {
+            $('#tugt_badge').text('เสียง')
+        } else {
+            $('#tugt_badge').text('')
+        }
+    });
 
-        $('input[name=mmse_two_one_one]').bind("change", {i:5},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_one_two]').bind("change", {i:6},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_one_three]').bind("change", {i:7},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_one_four]').bind("change", {i:8},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_one_five]').bind("change", {i:9},
-                    set_mmse_radio_score);
+    var malnutrition_score = 0;
+    var malnutrition_radio_values = [];
+    var set_malnutrition_radio_score = function(event) {
+        var value = parseInt($(this).filter(":checked").val());
+        var previous_val = malnutrition_radio_values[event.data.i] || 0;
+        malnutrition_score = malnutrition_score - previous_val;
+        malnutrition_score = malnutrition_score + value;
+        malnutrition_radio_values[event.data.i] = value;
+        $("#malnutrition_score_badge").text('คะแนนรวม ' + malnutrition_score);
+        if (malnutrition_score > 7) {
+            $('#malnutrition_score_badge').removeClass();
+            $('#malnutrition_score_badge').addClass('badge alert-success');
+        } else {
+            $('#malnutrition_score_badge').removeClass();
+            $('#malnutrition_score_badge').addClass('badge alert-danger');
+        }
+    }
 
-        $('input[name=mmse_two_two_one]').bind("change", {i:10},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_two_two]').bind("change", {i:11},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_two_three]').bind("change", {i:12},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_two_four]').bind("change", {i:13},
-                    set_mmse_radio_score);
-        $('input[name=mmse_two_two_five]').bind("change", {i:14},
-                    set_mmse_radio_score);
+    $('input[name=malnutrition_one]').bind("change", {i:0},
+                set_malnutrition_radio_score);
+    $('input[name=malnutrition_two]').bind("change", {i:1},
+                set_malnutrition_radio_score);
+    $('input[name=malnutrition_three]').bind("change", {i:2},
+                set_malnutrition_radio_score);
+    $('input[name=malnutrition_four]').bind("change", {i:3},
+                set_malnutrition_radio_score);
+    $('input[name=malnutrition_five]').bind("change", {i:4},
+                set_malnutrition_radio_score);
+    $('input[name=malnutrition_six]').bind("change", {i:5},
+                set_malnutrition_radio_score);
 
-        $('input[name=mmse_four_one]').bind("change", {i:15},
-                    set_mmse_radio_score);
-        $('input[name=mmse_four_two]').bind("change", {i:16},
-                    set_mmse_radio_score);
+    $('input[name=sleeping_one]').change(function() {
+        if ($(this).filter(':checked').val() === '0') {
+            $('#insomnia').prop('disabled', true);
+            $('#oversleep').prop('disabled', true);
+            $('#dreamwalk').prop('disabled', true);
+            $('#snore').prop('disabled', true);
+            $('#sleeping_other').prop('disabled', true);
+            $('#sleeping_period_year').prop('disabled', true);
+            $('#sleeping_period_month').prop('disabled', true);
+            $('#sleeping_avg_hours').prop('disabled', true);
+            $('#sleeping_trouble_badge').text('');
+        } else {
+            $('#insomnia').prop('disabled', false);
+            $('#oversleep').prop('disabled', false);
+            $('#dreamwalk').prop('disabled', false);
+            $('#snore').prop('disabled', false);
+            $('#sleeping_other').prop('disabled', false);
+            $('#sleeping_period_year').prop('disabled', false);
+            $('#sleeping_period_month').prop('disabled', false);
+            $('#sleeping_avg_hours').prop('disabled', false);
+            $('#sleeping_trouble_badge').text('มีปัญหา');
+        }
+    });
 
-        $('input[name=mmse_six_one]').bind("change", {i:17},
-                    set_mmse_radio_score);
-        $('input[name=mmse_six_two]').bind("change", {i:18},
-                    set_mmse_radio_score);
+    var routine_score = 0;
+    var routine_previous_scores = [];
+    var set_routine_score = function(event) {
+        var score = parseInt($(this).filter(':checked').val());
+        var prev_score = routine_previous_scores[event.data.i] || 0;
+        routine_score = routine_score - prev_score;
+        routine_score = routine_score + score;
+        routine_previous_scores[event.data.i] = score;
+        set_routine_score_badge();
+    }
 
-        $('input[name=mmse_seven_one]').bind("change", {i:19},
-                    set_mmse_radio_score);
+    var set_routine_score_badge = function() {
+        $('#routine_score_badge').text('คะแนนรวม ' + routine_score);
+        if (routine_score >= 5) {
+            $('#routine_score_badge').removeClass();
+            $('#routine_score_badge').addClass('badge alert-success');
+        } else {
+            $('#routine_score_badge').removeClass();
+            $('#routine_score_badge').addClass('badge alert-danger');
+        }
+    }
 
-        $('#mmse_three_flower').change(set_mmse_checkbox_score);
-        $('#mmse_three_river').change(set_mmse_checkbox_score);
-        $('#mmse_three_train').change(set_mmse_checkbox_score);
+    $('input[name=routine_one]').bind('change', {i:0}, set_routine_score);
+    $('input[name=routine_two]').bind('change', {i:1}, set_routine_score);
+    $('input[name=routine_three]').bind('change', {i:2}, set_routine_score);
+    $('input[name=routine_four]').bind('change', {i:3}, set_routine_score);
+    $('input[name=routine_five]').bind('change', {i:4}, set_routine_score);
+    $('input[name=routine_six]').bind('change', {i:5}, set_routine_score);
+    $('input[name=routine_seven]').bind('change', {i:6}, set_routine_score);
+    $('input[name=routine_eight]').bind('change', {i:7}, set_routine_score);
+    $('input[name=routine_nine]').bind('change', {i:8}, set_routine_score);
+    $('input[name=routine_ten]').bind('change', {i:9}, set_routine_score);
 
-        $('#mmse_three_tree').change(set_mmse_checkbox_score);
-        $('#mmse_three_sea').change(set_mmse_checkbox_score);
-        $('#mmse_three_car').change(set_mmse_checkbox_score);
+    var long_term_care_score = 0;
+    var long_term_care_previous_scores = [];
+    var set_long_term_care_score = function(event) {
+        var score = parseInt($(this).filter(':checked').val());
+        var prev_score = long_term_care_previous_scores[event.data.i] || 0;
+        long_term_care_score = long_term_care_score - prev_score;
+        long_term_care_score = long_term_care_score + score;
+        long_term_care_previous_scores[event.data.i] = score;
+        set_long_term_care_score_badge();
+    }
+    var set_long_term_care_score_badge = function() {
+        $('#long_term_care_score_badge').text('คะแนนรวม ' + long_term_care_score);
+        {# if (long_term_care_score < 17) { #}
+        {#     $('#long_term_care_score_badge').removeClass(); #}
+        {#     $('#long_term_care_score_badge').addClass('badge alert-success'); #}
+        {# } else { #}
+        {#     $('#long_term_care_score_badge').removeClass(); #}
+        {#     $('#long_term_care_score_badge').addClass('badge alert-danger'); #}
+        {# } #}
+    }
 
-        $('#mmse_five_flower').change(set_mmse_checkbox_score);
-        $('#mmse_five_river').change(set_mmse_checkbox_score);
-        $('#mmse_five_train').change(set_mmse_checkbox_score);
+    var set_long_term_care_score_checkbox = function() {
+        if ($(this).is(":checked")) {
+            long_term_care_score = long_term_care_score + 1;
+        }
+        else {
+            long_term_care_score = long_term_care_score - 1;
+        }
+        set_long_term_care_score_badge();
+    };
 
-        $('#mmse_five_tree').change(set_mmse_checkbox_score);
-        $('#mmse_five_sea').change(set_mmse_checkbox_score);
-        $('#mmse_five_car').change(set_mmse_checkbox_score);
+    $('input[name=long_term_care_one_one]').bind('change', {i:0}, set_long_term_care_score);
+    $('input[name=long_term_care_one_two]').bind('change', {i:1}, set_long_term_care_score);
+    $('input[name=long_term_care_one_three]').bind('change', {i:2}, set_long_term_care_score);
 
-        $('#mmse_eight_one').change(set_mmse_checkbox_score);
-        $('#mmse_eight_two').change(set_mmse_checkbox_score);
-        $('#mmse_eight_three').change(set_mmse_checkbox_score);
+    $('input[name=long_term_care_two_one]').bind('change', {i:3}, set_long_term_care_score);
+    $('input[name=long_term_care_two_two]').bind('change', {i:4}, set_long_term_care_score);
 
-        $('#mmse_nine_one').change(set_mmse_checkbox_score);
-        $('#mmse_ten_one').change(set_mmse_checkbox_score);
-        $('#mmse_eleven_one').change(set_mmse_checkbox_score);
+    $('input[name=long_term_care_three_one]').bind('change', {i:5}, set_long_term_care_score);
 
-        var q2_score = 0;
-        var set_q2_score = function() {
+    $('input[name=long_term_care_three_two_one]').change(function() {
             if ($(this).is(":checked")) {
-                q2_score = q2_score + 1;
-            }
-            else {
-                q2_score = q2_score - 1;
-            }
-            $("#q2_score_badge").text('คะแนนรวม ' + q2_score);
-            if (q2_score === 2) {
-                $('#q2_score_badge').removeClass();
-                $('#q2_score_badge').addClass('badge alert-danger');
-            } else {
-                $('#q2_score_badge').removeClass();
-                $('#q2_score_badge').addClass('badge alert-success');
-            }
-        }
-
-        $('#q2_one').change(set_q2_score);
-        $('#q2_two').change(set_q2_score);
-
-        var q9_score = 0;
-        var q9_previous_scores = [];
-        var set_q9_score = function(event) {
-            var prevscore = q9_previous_scores[event.data.i] || 0;
-            q9_score = q9_score - prevscore;
-            new_score = parseInt($(this).val());
-            q9_score = q9_score + new_score;
-            q9_previous_scores[event.data.i] = new_score;
-
-            $("#q9_score_badge").text('คะแนนรวม ' + q9_score);
-            if (q9_score <= 7) {
-                $('#q9_score_badge').removeClass();
-                $('#q9_score_badge').addClass('badge alert-success');
-            } else {
-                $('#q9_score_badge').removeClass();
-                $('#q9_score_badge').addClass('badge alert-danger');
-            }
-        }
-
-        $('#q9_one').bind('change', {i:0}, set_q9_score);
-        $('#q9_two').bind('change', {i:1}, set_q9_score);
-        $('#q9_three').bind('change', {i:2}, set_q9_score);
-        $('#q9_four').bind('change', {i:3}, set_q9_score);
-        $('#q9_five').bind('change', {i:4}, set_q9_score);
-        $('#q9_six').bind('change', {i:5}, set_q9_score);
-        $('#q9_seven').bind('change', {i:6}, set_q9_score);
-        $('#q9_eight').bind('change', {i:7}, set_q9_score);
-        $('#q9_nine').bind('change', {i:8}, set_q9_score);
-
-
-        $('input[name=knee_pain]').change(function(event) {
-                console.log('knee pain', $(this).filter(':checked').val())
-                if ($(this).filter(":checked").val() === 'True') {
-                    $('#knee_pain_badge').text('ปวดเข่า');
-                    console.log('so painful')
-                } else {
-                    $('#knee_pain_badge').text('');
+                if(!$('#long_term_care_three_two_two').is(":checked")) {
+                    long_term_care_score = long_term_care_score + 1;
                 }
-            });
-
-        var knee_pain_clinic_score = 0;
-        var set_knee_pain_clinic_score = function() {
-            if ($(this).is(":checked")) {
-                knee_pain_clinic_score = knee_pain_clinic_score + 1;
             } else {
-                knee_pain_clinic_score = knee_pain_clinic_score - 1;
+                if(!$('#long_term_care_three_two_two').is(":checked")) {
+                    long_term_care_score = long_term_care_score - 1;
+                }
             }
-            $('#knee_pain_clinic_score_badge').text('จำนวนข้อที่ตอบใช่ ' + knee_pain_clinic_score);
-            if (knee_pain_clinic_score >= 2) {
-                $('#knee_pain_clinic_score_badge').removeClass();
-                $('#knee_pain_clinic_score_badge').addClass('badge alert-danger');
-            } else {
-                $('#knee_pain_clinic_score_badge').removeClass();
-                $('#knee_pain_clinic_score_badge').addClass('badge alert-success');
-            }
-        }
-
-        $('#knee_pain_clinic_one').change(set_knee_pain_clinic_score);
-        $('#knee_pain_clinic_two').change(set_knee_pain_clinic_score);
-        $('#knee_pain_clinic_three').change(set_knee_pain_clinic_score);
-        $('#knee_pain_clinic_four').change(set_knee_pain_clinic_score);
-        $('#knee_pain_clinic_five').change(set_knee_pain_clinic_score);
-
-        $('input[name=tugt]').change(function() {
-            if($(this).filter(':checked').val() === '1') {
-                $('#tugt_badge').text('เสียง')
-            } else {
-                $('#tugt_badge').text('')
-            }
-        });
-
-        var malnutrition_score = 0;
-        var malnutrition_radio_values = [];
-        var set_malnutrition_radio_score = function(event) {
-            var value = parseInt($(this).filter(":checked").val());
-            var previous_val = malnutrition_radio_values[event.data.i] || 0;
-            malnutrition_score = malnutrition_score - previous_val;
-            malnutrition_score = malnutrition_score + value;
-            malnutrition_radio_values[event.data.i] = value;
-            $("#malnutrition_score_badge").text('คะแนนรวม ' + malnutrition_score);
-            if (malnutrition_score > 7) {
-                $('#malnutrition_score_badge').removeClass();
-                $('#malnutrition_score_badge').addClass('badge alert-success');
-            } else {
-                $('#malnutrition_score_badge').removeClass();
-                $('#malnutrition_score_badge').addClass('badge alert-danger');
-            }
-        }
-
-        $('input[name=malnutrition_one]').bind("change", {i:0},
-                    set_malnutrition_radio_score);
-        $('input[name=malnutrition_two]').bind("change", {i:1},
-                    set_malnutrition_radio_score);
-        $('input[name=malnutrition_three]').bind("change", {i:2},
-                    set_malnutrition_radio_score);
-        $('input[name=malnutrition_four]').bind("change", {i:3},
-                    set_malnutrition_radio_score);
-        $('input[name=malnutrition_five]').bind("change", {i:4},
-                    set_malnutrition_radio_score);
-        $('input[name=malnutrition_six]').bind("change", {i:5},
-                    set_malnutrition_radio_score);
-
-        $('input[name=sleeping_one]').change(function() {
-            if ($(this).filter(':checked').val() === '0') {
-                $('#insomnia').prop('disabled', true);
-                $('#oversleep').prop('disabled', true);
-                $('#dreamwalk').prop('disabled', true);
-                $('#snore').prop('disabled', true);
-                $('#sleeping_other').prop('disabled', true);
-                $('#sleeping_period_year').prop('disabled', true);
-                $('#sleeping_period_month').prop('disabled', true);
-                $('#sleeping_avg_hours').prop('disabled', true);
-                $('#sleeping_trouble_badge').text('');
-            } else {
-                $('#insomnia').prop('disabled', false);
-                $('#oversleep').prop('disabled', false);
-                $('#dreamwalk').prop('disabled', false);
-                $('#snore').prop('disabled', false);
-                $('#sleeping_other').prop('disabled', false);
-                $('#sleeping_period_year').prop('disabled', false);
-                $('#sleeping_period_month').prop('disabled', false);
-                $('#sleeping_avg_hours').prop('disabled', false);
-                $('#sleeping_trouble_badge').text('มีปัญหา');
-            }
-        });
-
-        var routine_score = 0;
-        var routine_previous_scores = [];
-        var set_routine_score = function(event) {
-            var score = parseInt($(this).filter(':checked').val());
-            var prev_score = routine_previous_scores[event.data.i] || 0;
-            routine_score = routine_score - prev_score;
-            routine_score = routine_score + score;
-            routine_previous_scores[event.data.i] = score;
-            set_routine_score_badge();
-        }
-
-        var set_routine_score_badge = function() {
-            $('#routine_score_badge').text('คะแนนรวม ' + routine_score);
-            if (routine_score >= 5) {
-                $('#routine_score_badge').removeClass();
-                $('#routine_score_badge').addClass('badge alert-success');
-            } else {
-                $('#routine_score_badge').removeClass();
-                $('#routine_score_badge').addClass('badge alert-danger');
-            }
-        }
-
-        $('input[name=routine_one]').bind('change', {i:0}, set_routine_score);
-        $('input[name=routine_two]').bind('change', {i:1}, set_routine_score);
-        $('input[name=routine_three]').bind('change', {i:2}, set_routine_score);
-        $('input[name=routine_four]').bind('change', {i:3}, set_routine_score);
-        $('input[name=routine_five]').bind('change', {i:4}, set_routine_score);
-        $('input[name=routine_six]').bind('change', {i:5}, set_routine_score);
-        $('input[name=routine_seven]').bind('change', {i:6}, set_routine_score);
-        $('input[name=routine_eight]').bind('change', {i:7}, set_routine_score);
-        $('input[name=routine_nine]').bind('change', {i:8}, set_routine_score);
-        $('input[name=routine_ten]').bind('change', {i:9}, set_routine_score);
-
-        var long_term_care_score = 0;
-        var long_term_care_previous_scores = [];
-        var set_long_term_care_score = function(event) {
-            var score = parseInt($(this).filter(':checked').val());
-            var prev_score = long_term_care_previous_scores[event.data.i] || 0;
-            long_term_care_score = long_term_care_score - prev_score;
-            long_term_care_score = long_term_care_score + score;
-            long_term_care_previous_scores[event.data.i] = score;
             set_long_term_care_score_badge();
-        }
-        var set_long_term_care_score_badge = function() {
-            $('#long_term_care_score_badge').text('คะแนนรวม ' + long_term_care_score);
-            {# if (long_term_care_score < 17) { #}
-            {#     $('#long_term_care_score_badge').removeClass(); #}
-            {#     $('#long_term_care_score_badge').addClass('badge alert-success'); #}
-            {# } else { #}
-            {#     $('#long_term_care_score_badge').removeClass(); #}
-            {#     $('#long_term_care_score_badge').addClass('badge alert-danger'); #}
-            {# } #}
-        }
+    });
 
-        var set_long_term_care_score_checkbox = function() {
+    $('input[name=long_term_care_three_two_two]').change(function() {
             if ($(this).is(":checked")) {
-                long_term_care_score = long_term_care_score + 1;
-            }
-            else {
-                long_term_care_score = long_term_care_score - 1;
+                if(!$('#long_term_care_three_two_one').is(":checked")) {
+                    long_term_care_score = long_term_care_score + 1;
+                }
+            } else {
+                if(!$('#long_term_care_three_two_one').is(":checked")) {
+                    long_term_care_score = long_term_care_score - 1;
+                }
             }
             set_long_term_care_score_badge();
-        };
+    });
 
-        $('input[name=long_term_care_one_one]').bind('change', {i:0}, set_long_term_care_score);
-        $('input[name=long_term_care_one_two]').bind('change', {i:1}, set_long_term_care_score);
-        $('input[name=long_term_care_one_three]').bind('change', {i:2}, set_long_term_care_score);
-
-        $('input[name=long_term_care_two_one]').bind('change', {i:3}, set_long_term_care_score);
-        $('input[name=long_term_care_two_two]').bind('change', {i:4}, set_long_term_care_score);
-
-        $('input[name=long_term_care_three_one]').bind('change', {i:5}, set_long_term_care_score);
-
-        $('input[name=long_term_care_three_two_one]').change(function() {
-                if ($(this).is(":checked")) {
-                    if(!$('#long_term_care_three_two_two').is(":checked")) {
-                        long_term_care_score = long_term_care_score + 1;
-                    }
-                } else {
-                    if(!$('#long_term_care_three_two_two').is(":checked")) {
-                        long_term_care_score = long_term_care_score - 1;
-                    }
-                }
-                set_long_term_care_score_badge();
-        });
-
-        $('input[name=long_term_care_three_two_two]').change(function() {
-                if ($(this).is(":checked")) {
-                    if(!$('#long_term_care_three_two_one').is(":checked")) {
-                        long_term_care_score = long_term_care_score + 1;
-                    }
-                } else {
-                    if(!$('#long_term_care_three_two_one').is(":checked")) {
-                        long_term_care_score = long_term_care_score - 1;
-                    }
-                }
-                set_long_term_care_score_badge();
-        });
-
-        $('input[name=long_term_care_four_one]').change(set_long_term_care_score_checkbox);
-        $('input[name=long_term_care_four_two]').change(set_long_term_care_score_checkbox);
-        $('input[name=long_term_care_four_three]').change(set_long_term_care_score_checkbox);
-        $('input[name=long_term_care_four_four]').change(set_long_term_care_score_checkbox);
-        $('input[name=long_term_care_four_five]').change(set_long_term_care_score_checkbox);
-
-
+    $('input[name=long_term_care_four_one]').change(set_long_term_care_score_checkbox);
+    $('input[name=long_term_care_four_two]').change(set_long_term_care_score_checkbox);
+    $('input[name=long_term_care_four_three]').change(set_long_term_care_score_checkbox);
+    $('input[name=long_term_care_four_four]').change(set_long_term_care_score_checkbox);
+    $('input[name=long_term_care_four_five]').change(set_long_term_care_score_checkbox);
+});
 </script>
 {% endblock %}
 
@@ -737,6 +765,11 @@ $(function() {
 {% block page_content %}
 <div class="container">
     {% if current_user.verified %}
+    <form id="mainform" method="post">
+        {{ form.hidden_tag() }}
+        {% if form.errors %}
+            {{ form.errors }}
+        {% endif %}
     <div class="page-header">
     <div>
         <div class="panel panel-primary">
@@ -769,8 +802,16 @@ $(function() {
                     <table class="table table-striped table-bordered">
                         <tr><td>
                             {{ form.pid.label }} {{ form.pid() }}
+                            {% if form.pid.errors %}
+                                {% for error in form.pid.errors %}
+                                    <div class="pid_error">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            <button id="pid-search">ค้นหา</button> <span id="pid-search-badge" class="badge"></span>
+                            <br/>
                             {{ form.firstname.label }} {{ form.firstname() }}
                             {{ form.lastname.label }} {{ form.lastname() }}
+                            {{ form.age.label }} {{ form.age() }}
                             {{ form.province.label }} {{ form.province() }}
                             {{ form.amphur.label }} {{ form.amphur() }}
                             {{ form.district.label }} {{ form.district() }}
@@ -1743,6 +1784,7 @@ $(function() {
     <br/>
     <br/>
     <center>{{ form.submit(value="ส่งข้อมูล") }}</center>
+    </form>
 
     {% else %}
         <div class="panel panel-default">

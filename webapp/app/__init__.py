@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
@@ -20,6 +21,8 @@ db = conn['data-dev']
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_STATIC = os.path.join(APP_ROOT, 'static')
 
 def create_app(config_name):
     app = Flask(__name__)

@@ -7,11 +7,25 @@
     <div class="page-header">
         <h2>Form 1 Report</h2>
         <table class="table table-striped table-bordered table-condensed">
-            <tr><td>No.<td>Title<td>Name<td>Age<td>District<td>Community<td>Weight<td>Height<td>Province</tr>
+            <tr><td>No.</td>
+                <td>PID</td>
+                <td>Name</td>
+                <td>Age</td>
+                <td>District</td>
+                <td>Amphur</td>
+                <td>Province</td>
+            </tr>
         {% for user in db.form1.find() %}
-        {% if user.locale == current_user.province %}
-        <tr><td>{{ loop.index }}<td>{{ user.title }}<td>{{ user.name }}<td>{{ user.age }}<td>{{ user.district }}<td>{{ user.community }}<td>{{ user.weight }}<td>{{ user.height }}<td>{{ user.province }}</tr>
-        {% endif %}
+        {# {% if user.locale == current_user.province %} #}
+        <tr><td>{{ loop.index }}</td>
+            <td>{{ user.pid }}</td>
+            <td>{{ user.firstname }} {{ user.lastname }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.district }}</td>
+            <td>{{ user.amphur }}</td>
+            <td>{{ user.province }}</td>
+        </tr>
+        {# {% endif %} #}
         {% endfor %}
         </table>
     </div>
