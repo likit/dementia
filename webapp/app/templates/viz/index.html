@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Visualization Page{% endblock %}
-
 {% block styles %}
 {{ super() }}
 <style>
     text {
-        font: 12px sans-serif;
+        font: 16px sans-serif;
     }
 
     svg {
@@ -21,7 +19,7 @@
         width: 300px;
     }
 
-    html, body, #chart1, svg {
+    html, body, #chart1, #chart2, svg {
         margin: 0px;
         padding: 0px;
         height: 100%;
@@ -75,21 +73,80 @@ var piedata = {{ piedata|tojson|safe }}
 </script>
 <script>
     var boxplotdata = {{ boxplotdata|tojson|safe }};
-    var sample = boxplotdata[0];
     nv.addGraph(function() {
-      var bpchart = nv.models.boxPlotChart()
-          .x(function(d) { return d.label })
-          .y(function(d) { return d.values.Q3 })
-          .width(700)
-          .staggerLabels(false)
-          .maxBoxWidth(75) // prevent boxes from being incredibly wide 
-          .yDomain([40, 100]);
+        var bpchart = nv.models.boxPlotChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.values.Q3 })
+            .width(700)
+            .staggerLabels(false)
+            .maxBoxWidth(75) // prevent boxes from being incredibly wide 
+            .yDomain([50, 100])
 
-      d3.select('#boxplot')
-          .datum(boxplotdata)
-          .call(bpchart);
-      nv.utils.windowResize(bpchart.update);
-      return bpchart;
+        bpchart.yAxis.axisLabel("อายุ").tickFormat(d3.format(',d'));
+
+        d3.select('#chart1 svg')
+            .datum(boxplotdata)
+            .attr('width', 800)
+            .attr('height', 400)
+            .call(bpchart);
+
+        nv.utils.windowResize(bpchart.update);
+        return bpchart;
+    });
+</script>
+<script>
+    var bardata = [
+            {
+              key: "Cumulative Return",
+              values: [
+                { 
+                  "label" : "A",
+                  "value" : 29
+                } , 
+                { 
+                  "label" : "B" , 
+                  "value" : 10
+                } , 
+                { 
+                  "label" : "C" , 
+                  "value" : 34
+                } , 
+                { 
+                  "label" : "D" , 
+                  "value" : 45
+                } , 
+                { 
+                  "label" : "E" ,
+                  "value" : 12
+                } , 
+                { 
+                  "label" : "F" , 
+                  "value" : 30
+                } , 
+              ]
+            }
+        ];
+    console.log(bardata);
+
+    nv.addGraph(function() {
+        var barchart = nv.models.discreteBarChart()
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .width(600)
+                    .height(400)
+                    .staggerLabels(true)
+                    .showValues(true);
+
+        barchart.tooltip.enabled(true);
+
+        d3.select('#chart2 svg')
+            .datum(bardata)
+            .attr('width', 600)
+            .attr('height', 400)
+            .call(barchart);
+
+        nv.utils.windowResize(barchart.update);
+        return barchart;
     });
 </script>
 {% endblock scripts %}
@@ -98,7 +155,6 @@ var piedata = {{ piedata|tojson|safe }}
 <div class="container">
     <div class="page-header">
         <h1>กราฟแสดงผลต่างๆ จากฐานข้อมูล</h1>
-        <p><h3></h3></p>
     </div>
     <div class="row">
         <h3>จำนวนผู้สูงอายุแบ่งตามเพศ</h3>
@@ -107,9 +163,11 @@ var piedata = {{ piedata|tojson|safe }}
     </div>
     <div class="row">
         <h3>ข้อมูลอายุแบ่งตามเพศ</h3>
-        <div class="gallery" id="chart1">
-            <svg id="boxplot"></svg>
-        </div>
+        <div class="gallery" id="chart1"><svg></svg></div>
+    </div>
+    <div class="row">
+        <h3>ผลตรวจทางสมอง</h3>
+        <div class="gallery" id="chart2"><svg></svg></div>
     </div>
 </div>
-{% endblock %}
+{% endblock page_content %}

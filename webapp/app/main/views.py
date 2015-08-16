@@ -139,27 +139,36 @@ def age_viz():
         iqr = upper_quartile - lower_quartile
         upper_whisker = data[data<=upper_quartile+1.5*iqr].max()
         lower_whisker = data[data>=lower_quartile-1.5*iqr].min()
+        outliers = data[data>upper_whisker]
+        outliers += data[data<lower_whisker]
 
         values = {
-                'Q1': upper_quartile,
+                'Q1': lower_quartile,
                 'Q2': median,
-                'Q3': lower_quartile,
+                'Q3': upper_quartile,
                 'whisker_high': upper_whisker,
                 'whisker_low': lower_whisker,
-                'outliers': [],
+                'outliers': list(outliers),
             }
         return values
 
     boxplotdata = [
             {
-                'label': 'male',
+                'label': 'เพศชาย',
                 'values': get_boxplot_params(male_ages)
                 },
             {
-                'label': 'female',
+                'label': 'เพศหญิง',
                 'values': get_boxplot_params(female_ages)
                 },
             ]
+    if other_ages:
+        boxplotdata.append(
+            {
+                'label': 'อื่นๆ',
+                'values': get_boxplot_params(other_ages)
+                },
+            )
 
     return render_template('viz/index.html', piedata=piedata,
             boxplotdata=boxplotdata)
