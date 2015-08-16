@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import os
+import numpy as np
 from flask import (render_template, session, redirect,
                         url_for, flash, jsonify, request)
 from bson import json_util
@@ -97,3 +100,66 @@ def form_1_view():
 def your_account_view():
     user = db.users.find_one({'username': current_user.username})
     return render_template('your_account.html', db=db, user=user)
+
+@main.route('/viz/')
+@login_required
+def age_viz():
+    '''Visualize ages in a pie chart.'''
+    males = 0
+    females = 0
+    others = 0
+    male_ages = []
+    female_ages = []
+    other_ages = []
+    for rec in db.form1.find():
+        if rec['firstname'].encode('utf8').startswith('นาย'):
+            males += 1
+            male_ages.append(rec['age'])
+        elif rec['firstname'].encode('utf8').startswith('นาง'):
+            females += 1
+            female_ages.append(rec['age'])
+        elif rec['firstname'].encode('utf8').startswith('น.ส.'):
+            females += 1
+            female_ages.append(rec['age'])
+        else:
+            others += 1
+            other_ages.append(rec['age'])
+
+    piedata = [{'key': 'เพศชาย', 'y': males},
+            {'key': 'เพศหญิง', 'y': females},
+            {'key': 'อืนๆ', 'y': others},
+            ]
+
+    def get_boxplot_params(data):
+        data = np.asarray(data)
+        median = np.median(data)
+        upper_quartile = np.percentile(data, 75)
+        lower_quartile = np.percentile(data, 25)
+
+        iqr = upper_quartile - lower_quartile
+        upper_whisker = data[data<=upper_quartile+1.5*iqr].max()
+        lower_whisker = data[data>=lower_quartile-1.5*iqr].min()
+
+        values = {
+                'Q1': upper_quartile,
+                'Q2': median,
+                'Q3': lower_quartile,
+                'whisker_high': upper_whisker,
+                'whisker_low': lower_whisker,
+                'outliers': [],
+            }
+        return values
+
+    boxplotdata = [
+            {
+                'label': 'male',
+                'values': get_boxplot_params(male_ages)
+                },
+            {
+                'label': 'female',
+                'values': get_boxplot_params(female_ages)
+                },
+            ]
+
+    return render_template('viz/index.html', piedata=piedata,
+            boxplotdata=boxplotdata)

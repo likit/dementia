@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Visualization Page{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+    text {
+        font: 12px sans-serif;
+    }
+
+    svg {
+        display: block;
+    }
+
+    .testBlock {
+        display: block;
+        float: left;
+        height: 300px;
+        width: 300px;
+    }
+
+    html, body, #chart1, svg {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+{% endblock styles %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+var piedata = {{ piedata|tojson|safe }}
+
+    var width = 300;
+    var height = 300;
+    nv.addGraph(function() {
+        var chart = nv.models.pie()
+                .x(function(d) { return d.key; })
+                .y(function(d) { return d.y; })
+                .width(width)
+                .height(height)
+                .labelType(function(d, i, values) {
+                    return values.key + ':' + values.value;
+                })
+                ;
+        d3.select("#test1")
+                .datum([piedata])
+                .transition().duration(1200)
+                .attr('width', width)
+                .attr('height', height)
+                .call(chart);
+        return chart;
+    });
+    nv.addGraph(function() {
+        var chart = nv.models.pie()
+                .x(function(d) { return d.key; })
+                .y(function(d) { return d.y; })
+                .width(width)
+                .height(height)
+                .labelType('percent')
+                .valueFormat(d3.format('%'))
+                .donut(true);
+        d3.select("#test2")
+                .datum([piedata])
+                .transition().duration(1200)
+                .attr('width', width)
+                .attr('height', height)
+                .call(chart);
+        return chart;
+    });
+</script>
+<script>
+    var boxplotdata = {{ boxplotdata|tojson|safe }};
+    var sample = boxplotdata[0];
+    nv.addGraph(function() {
+      var bpchart = nv.models.boxPlotChart()
+          .x(function(d) { return d.label })
+          .y(function(d) { return d.values.Q3 })
+          .width(700)
+          .staggerLabels(false)
+          .maxBoxWidth(75) // prevent boxes from being incredibly wide 
+          .yDomain([40, 100]);
+
+      d3.select('#boxplot')
+          .datum(boxplotdata)
+          .call(bpchart);
+      nv.utils.windowResize(bpchart.update);
+      return bpchart;
+    });
+</script>
+{% endblock scripts %}
+
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        <h1>กราฟแสดงผลต่างๆ จากฐานข้อมูล</h1>
+        <p><h3></h3></p>
+    </div>
+    <div class="row">
+        <h3>จำนวนผู้สูงอายุแบ่งตามเพศ</h3>
+        <div class="testBlock"><svg id="test1"></svg></div>
+        <div class="testBlock"><svg id="test2"></svg></div>
+    </div>
+    <div class="row">
+        <h3>ข้อมูลอายุแบ่งตามเพศ</h3>
+        <div class="gallery" id="chart1">
+            <svg id="boxplot"></svg>
+        </div>
+    </div>
+</div>
+{% endblock %}
