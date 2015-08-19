@@ -95,6 +95,31 @@ def form_1():
 def form_1_view():
     return render_template('form_1_report.html', db=db)
 
+@main.route('/get_all_data')
+@login_required
+def get_all_data():
+    # draw = int(request.args.get('draw')) or 1
+    # start = int(request.args.get('start')) or 0
+    # length = int(request.args.get('length')) or 10
+    # search = request.args.get('search') or None
+    data = []
+    no = 0
+    # no = start
+    for res in db.form1.find():
+        no += 1
+        result = [no,
+                    res['pid'],
+                    res['firstname'],
+                    res['lastname'],
+                    res['age'],
+                    res['district'],
+                    res['amphur'],
+                    res['province'],
+                ]
+        data.append(result)
+
+    return jsonify(data=data)
+
 @main.route('/your_account')
 @login_required
 def your_account_view():
