@@ -27,8 +27,8 @@ class UserForm(form.Form):
 
 class Form1View(ModelView):
     can_create = False
-    column_list = ('title', 'name', 'district', 'age', 'province')
-    column_sortable_list = ('name', 'district', 'province')
+    column_list = ('pid', 'firstname', 'lastname', 'district', 'age', 'province')
+    column_sortable_list = ('firstname', 'lastname', 'district', 'province')
 
     form = Form1
 
@@ -38,7 +38,7 @@ class Form1View(ModelView):
 
 
 class UserView(ModelView):
-    column_list = ('username', 'title', 'name', 'lastname', 'role', 'position', 'phone',
+    column_list = ('username', 'name', 'lastname', 'role', 'position', 'phone',
            'verified', 'org', 'org_address', 'mhoo',
            'province', 'district', 'tambon', 'create_date_time')
     column_sortable_list = ('verified', 'name', 'lastname', 'role',
