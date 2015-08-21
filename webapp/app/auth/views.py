@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 import copy
+import os
+import json
 
 from collections import defaultdict
 from bson import json_util
@@ -9,6 +11,7 @@ from flask import (render_template, redirect, request,
                         flash, url_for, current_app)
 from . import auth
 from .. import db
+from .. import APP_ROOT, APP_STATIC
 from datetime import datetime
 from flask.ext.login import login_user, login_required, logout_user
 from .forms import LoginForm, RegistrationForm
@@ -42,30 +45,22 @@ def logout():
     flash('You have been logged out!')
     return redirect(url_for('main.index'))
 
+
 @auth.route('/register', methods=('GET', 'POST'))
 def register():
-    form = RegistrationForm(request.form)
+    form = RegistrationForm()
+    provinces_json = json.load(open(os.path.join(APP_STATIC, 'provinces.json')))
+    amphurs_json = json.load(open(os.path.join(APP_STATIC, 'amphurs.json')))
+
     form.province.choices = [('', 'Select province')] + \
-            sorted([(x.get('province'), x.get('province'))
-            for x in db.provinces.find()], key=lambda x: x[0])
-    provinces = sorted([x.get('province')
-            for x in db.provinces.find()], key=lambda x: x[0])
+            [(p, p) for p in sorted(provinces_json)]
 
-    amphurs = {}
-    amphur_list = []
-    for prov in db.provinces.find():
-        amphurs[prov.get('province')] = prov.get('amphur').keys()
-        amphur_list += prov.get('amphur').keys()
+    districts_list = []
+    for t in amphurs_json.itervalues():
+        districts_list += t
 
-    tambons = {}
-    tambon_list = []
-    for prov in db.provinces.find():
-        for a, t in prov.get('amphur').iteritems():
-            tambons[a] = t
-            tambon_list += t
-
-    form.district.choices = [('', '')] + [(x,x) for x in amphur_list]
-    form.tambon.choices = [('', '')] + [(x,x) for x in tambon_list]
+    form.amphur.choices = [('', '')] + [(x,x) for x in amphurs_json.keys()]
+    form.district.choices = [('', '')] + [(x,x) for x in districts_list]
 
     if form.validate_on_submit():
         user_doc = {
@@ -85,7 +80,7 @@ def register():
                 'mhoo': form.mhoo.data,
                 'province': form.province.data,
                 'district': form.district.data,
-                'tambon': form.tambon.data,
+                'amphur': form.amphur.data,
                 'objective': form.objective.data,
                 'verified': False,
                 'create_date_time': datetime.today(),
@@ -104,9 +99,9 @@ def register():
         return redirect(url_for('auth.login'))
 
     return render_template('auth/register.html', form=form,
-                                provinces=json_util.dumps(provinces),
-                                amphurs=json_util.dumps(amphurs),
-                                tambons=json_util.dumps(tambons))
+            provinces=json_util.dumps(provinces_json),
+            provinces_list=json_util.dumps(provinces_json.keys()),
+            amphurs=json_util.dumps(amphurs_json))
 
 
 # @auth.route('/confirm')

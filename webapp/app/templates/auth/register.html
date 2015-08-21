@@ -4,6 +4,12 @@
 {% block title %}Sign Up{% endblock %}
 {% block scripts %}
 {{ super() }}
+<script>
+var amphurs =  {{ amphurs|safe }};
+var provinces = {{ provinces|safe }};
+var provinces_list = {{ provinces_list|safe }}.sort();
+</script>
+<script src="{{ url_for("static", filename="province.js") }}"></script>
 {% endblock scripts %}
 
 {% block page_content %}
@@ -39,9 +45,8 @@
                 {{ form.mhoo.label  }} {{ form.mhoo(size=5, maxlength=3) }}
                 <br>
                 {{ form.province.label }} {{ form.province }}
+                {{ form.amphur.label }} {{ form.amphur(style="display: none;") }}
                 {{ form.district.label }} {{ form.district(style="display: none;") }}
-                {{ form.tambon.label }} {{ form.tambon(style="display: none;") }}
-
             </div>
         </div>
         <div class="panel panel-default">

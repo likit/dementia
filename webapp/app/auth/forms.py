@@ -38,8 +38,8 @@ class RegistrationForm(Form):
     org_address = StringField(u'เลขที่', validators=[Required()])
     mhoo = StringField(u'หมู่', validators=[Required()])
     province = SelectField(u'จังหวัด')
-    district = SelectField(u'อำเภอ')
-    tambon = SelectField(u'ตำบล')
+    amphur = SelectField(u'อำเภอ')
+    district = SelectField(u'ตำบล')
     objective = TextAreaField(u'วัตถุประสงค์', validators=[Optional()])
 
     submit = SubmitField(u'ลงทะเบียน')

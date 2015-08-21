@@ -4,57 +4,14 @@
 {% block scripts %}
 {{ super() }}
 <script src="{{ url_for("static", filename="jquery-ui/datepicker-th.js") }}"></script>
+<script src="{{ url_for("static", filename="province.js") }}"></script>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-
-var amphur_list =  {{ amphurs | safe }};
-var district_list =  {{ districts | safe }};
+var amphurs =  {{ amphurs|safe }};
+var provinces = {{ provinces|safe }};
+var provinces_list = {{ provinces_list|safe }}.sort();
 
 $(document).ready(function() {
-    $('#amphur').empty();
-    $('#district').empty();
-
-    $('#amphur').show();
-    $('#district').show();
-
-    (function set_province() {
-        $('#province').empty();
-        var provinces = {{ provinces | safe }};
-        $('#province').append('<option>Select province</option>')
-        for (i in provinces) {
-            $('#province').append('<option value=' + provinces[i] + '>' + provinces[i] + '</option>')
-        };
-    })();
-
-    function get_amphur(province) {
-        return {{ amphurs | safe }}[province];
-    };
-
-    function get_district(amphur) {
-        return {{ districts | safe }}[amphur];
-    };
-
-    function change_district() {
-        var districts = get_district($('#amphur').val());
-        $('#district').empty();
-        for (i in districts.sort()) {
-            $('#district').append("<option value=" + districts[i] + ">" + districts[i] + "</option>");
-        };
-    };
-
-    $('#province').change(function(){
-        var amphurs = get_amphur($(this).val());
-        $('#amphur').empty();
-        $('#disdtrict').empty();
-        console.log('Amphurs', amphurs)
-        for (i in amphurs.sort()) {
-            $('#amphur').append("<option value=" + amphurs[i] + ">" + amphurs[i] + "</option>");
-        };
-        change_district();
-    });
-
-    $('#amphur').change(change_district);
-
     $('#pid-search').button().bind('click', function(event) {
         event.preventDefault();
         $.getJSON($SCRIPT_ROOT + '/searchpid', {

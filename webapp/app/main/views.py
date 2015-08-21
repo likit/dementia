@@ -14,7 +14,6 @@ from bson.objectid import ObjectId
 from flask.ext.login import login_required, current_user
 import json
 
-provinces_json = json.load(open(os.path.join(APP_STATIC, 'provinces.json')))
 
 @main.route('/', methods=['GET', 'POST'])
 @login_required
@@ -41,26 +40,18 @@ def searchpid():
 @login_required
 def form_1():
     form = Form1(request.form)
+    provinces_json = json.load(open(os.path.join(APP_STATIC, 'provinces.json')))
+    amphurs_json = json.load(open(os.path.join(APP_STATIC, 'amphurs.json')))
+
     form.province.choices = [('', 'Select province')] + \
-            sorted([(p.get('province'), p.get('province'))
-                for p in provinces_json])
-    provinces = sorted([x.get('province') for x in provinces_json])
+            [(p, p) for p in sorted(provinces_json)]
 
-    amphurs = {}
-    amphur_list = []
-    for p in provinces_json:
-        amphurs[p.get('province')] = p.get('amphur').keys()
-        amphur_list += p.get('amphur').keys()
+    districts_list = []
+    for t in amphurs_json.itervalues():
+        districts_list += t
 
-    districts = {}
-    district_list = []
-    for p in provinces_json:
-        for a, t in p.get('amphur').iteritems():
-            districts[a] = t
-            district_list += t
-
-    form.amphur.choices = [('', '')] + [(x,x) for x in amphur_list]
-    form.district.choices = [('', '')] + [(x,x) for x in district_list]
+    form.amphur.choices = [('', '')] + [(x,x) for x in amphurs_json.keys()]
+    form.district.choices = [('', '')] + [(x,x) for x in districts_list]
 
     if form.validate_on_submit():
         form_data = {
@@ -86,9 +77,9 @@ def form_1():
 
     return render_template('form_1.html', form=form,
             user=current_user,
-            districts=json_util.dumps(districts),
-            provinces=json_util.dumps(provinces),
-            amphurs=json_util.dumps(amphurs))
+            provinces=json_util.dumps(provinces_json),
+            provinces_list=json_util.dumps(provinces_json.keys()),
+            amphurs=json_util.dumps(amphurs_json))
 
 @main.route('/form_1_view', methods=['GET', 'POST'])
 @login_required
