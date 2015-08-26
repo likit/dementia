@@ -589,4 +589,57 @@ class Form1(Form):
     long_term_care_four_four = BooleanField(u'ใช้เวลา 7 นาทีขึ้นไป หรือไม่สามารถเดินได้', validators=[Optional()])
     long_term_care_four_five = BooleanField(u'ผู้สูงอายุมีความอ่อนแรงของกำลังมือและแขน ขา ชัดเจน', validators=[Optional()])
 
+    long_term_care_five_choices = [(1, u'ทำได้ด้วยตัวเองรวมใช้อุปกรณ์ช่วย'),
+                                (2, u'ทำด้วยตัวเองได้บ้าง ต้องมีคนช่วยจึงทำได้สำเร็จ'),
+                                (3, u'ทำด้วยตนเองไม่ได้เลย')]
+    long_term_care_five_one = RadioField(u'ลุกจากที่นอนหรือเตียง',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+
+    long_term_care_five_two = RadioField(u'ล้างหน้า แปรงฟัน หวีผม',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_three = RadioField(u'อาบน้ำ',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_four = RadioField(u'สวมใส่เสื้อผ้า',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_five = RadioField(u'ตักหรือหยิบอาหารทาน',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_six = RadioField(u'การใช้ห้องส้วมและทำความสะอาดหลังขับถ่าย',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_seven = RadioField(u'เดินหรือเคลื่อนที่ภายในบ้าน',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_eight = RadioField(u'ขึ้นลงบันได 1 ชั้น',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_nine = RadioField(u'กลั้นปัสสาวะ',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_ten = RadioField(u'กลั้นอุจจาระ',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_eleven = RadioField(u'เดินหรือเคลื่ิิอนที่นอกบ้าน',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_twelve = RadioField(u'ทำหรือเตรียมอาหาร',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_thirteen = RadioField(u'กวาด/ถูบ้านซักรีดผ้า',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_forteen = RadioField(u'การซื้อของ จ่ายตลาด',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_fifteen = RadioField(u'ใช้บริการระบบสาธารณะ เช่น รถโดยสาร รถเมล์ แท็กซี่ รถไฟ',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+    long_term_care_five_sixteen = RadioField(u'การรับประทานยาตามแพทย์สั่ง',
+                    choices=long_term_care_five_choices,
+                    coerce=int, validators=[Optional()])
+
     submit = SubmitField('Submit')
