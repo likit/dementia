@@ -12,6 +12,7 @@ from wtforms import (StringField,
 
 class Form1(Form):
     # Personal info part
+    collectdate = StringField(u'', validators=[Required()])
     firstname = StringField(u'ชื่อ', validators=[Optional()])
     lastname = StringField(u'นามสกุล', validators=[Optional()])
     pid = StringField(u'รหัสบัตรประชาชน', validators=[Optional()])

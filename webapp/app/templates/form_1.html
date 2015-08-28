@@ -34,10 +34,11 @@ $(document).ready(function() {
         });
 
     $('input[type=submit]').button();
-    $("#datepicker").datepicker($.datepicker.regional["th"]);
-    $('#datepicker').on('change', function() {
-            $('#datepicker-badge').text($(this).val());
+    $("#collectdate").datepicker($.datepicker.regional["th"]);
+    $('#collectdate').on('change', function() {
+            $('#collectdate-badge').text($(this).val());
         });
+
     $("label[for=smoke_freq], select#smoke_freq").hide();
     $("label[for=smoke_per_week], input#smoke_per_week").hide();
     $("label[for=smoke_per_day], input#smoke_per_day").hide();
@@ -742,12 +743,13 @@ $(document).ready(function() {
     </div>
 
     <div id="accordian">
-        <h4><strong>วันที่เก็บข้อมูล <span id="datepicker-badge" class="badge"></span></strong></h4>
+        <h4><strong>วันที่เก็บข้อมูล <span id="collectdate-badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <label class="control-label" for="datepicker">โปรดเลือกวันที่เก็บข้อมูล </label>
-                    <input type="text" id="datepicker">
+                    <label class="control-label" for="collectdate">โปรดเลือกวันที่เก็บข้อมูล </label>
+                    {# <input type="text" id="datepicker"> #}
+                    {{ form.collectdate() }}
                 </div>
             </div>
         </div>

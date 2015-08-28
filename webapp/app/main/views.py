@@ -39,7 +39,7 @@ def searchpid():
     else:
         return jsonify(result='notfound')
 
-@main.route('/form_1', methods=['POST', 'GET'])
+@main.route('/form_1/', methods=['POST', 'GET'])
 @login_required
 def form_1():
     form = Form1(request.form)
@@ -57,8 +57,9 @@ def form_1():
     form.district.choices = [('', '')] + [(x,x) for x in districts_list]
 
     if form.validate_on_submit():
-    	insert_datetime = datetime.utcnow()
+        insert_datetime = datetime.utcnow()
         form_data = {
+                'collectdate': form.collectdate.data,
                 'firstname': form.firstname.data,
                 'lastname': form.lastname.data,
                 'pid': form.pid.data,
@@ -89,7 +90,7 @@ def form_1():
                 'alcohol': form.alcohol.data,
                 'drink_per_day': form.drink_per_day.data,
                 'drink_years': form.drink_years.data,
-                'quit_drink_years': form.quite_drink_years.data,
+                'quit_drink_years': form.quit_drink_years.data,
                 'congenital_disease': form.congenital_disease.data,
                 'congenital_dis_other': form.congenital_dis_other.data,
                 'congenital_dis_years': form.congenital_dis_years.data,
@@ -129,7 +130,7 @@ def form_1():
                 'dental_transfer_cavity': form.dental_transfer_cavity.data,
                 'dental_transfer_swallow': form.dental_transfer_swallow.data,
                 'dental_transfer_denture': form.dental_transfer_denture.data,
-                
+
                 'eye_exam_one': form.eye_exam_one.data,
                 'eye_exam_two': form.eye_exam_two.data,
                 'eye_exam_three': form.eye_exam_three.data,
@@ -140,7 +141,7 @@ def form_1():
                 'eye_exam_five_side': form.eye_exam_five_side.data,
                 'snellen_left': form.snellen_left.data,
                 'snellen_right': form.snellen_right.data,
-                
+
                 'amt_one': form.amt_one.data,
                 'amt_two': form.amt_two.data,
                 'amt_three': form.amt_three.data,
@@ -163,9 +164,9 @@ def form_1():
                 'mmse_two_one_four': form.mmse_two_one_four.data,
                 'mmse_two_one_five': form.mmse_two_one_five.data,
 
-                'mmse_two_two_one': form.mmse_two_two_one,
-                'mmse_two_two_two': form.mmse_two_two_two,
-                'mmse_two_two_three': form.mmse_two_two_three,
+                'mmse_two_two_one': form.mmse_two_two_one.data,
+                'mmse_two_two_two': form.mmse_two_two_two.data,
+                'mmse_two_two_three': form.mmse_two_two_three.data,
                 'mmse_two_two_four': form.mmse_two_two_four.data,
                 'mmse_two_two_five': form.mmse_two_two_five.data,
 
@@ -188,10 +189,16 @@ def form_1():
 
                 'mmse_six_one': form.mmse_six_one.data,
                 'mmse_six_two': form.mmse_six_two.data,
-                'mmse_six_three': form.mmse_six_three.data,
+                'mmse_seven_one': form.mmse_seven_one.data,
+                'mmse_eight_one': form.mmse_eight_one.data,
+                'mmse_eight_two': form.mmse_eight_two.data,
+                'mmse_eight_three': form.mmse_eight_three.data,
                 'mmse_nine_one': form.mmse_nine_one.data,
                 'mmse_ten_one': form.mmse_ten_one.data,
                 'mmse_eleven_one': form.mmse_eleven_one.data,
+
+                'q2_one': form.q2_one.data,
+                'q2_two': form.q2_two.data,
 
                 'q9_one': form.q9_one.data,
                 'q9_two': form.q9_two.data,
@@ -211,7 +218,7 @@ def form_1():
                 'knee_pain_clinic_five': form.knee_pain_clinic_five.data,
 
                 'tugt': form.tugt.data,
-                'urine_holding': form.uring_holding.data,
+                'urine_holding': form.urine_holding.data,
                 'bmi': form.bmi.data,
                 'malnutrition_one': form.malnutrition_one.data,
                 'malnutrition_two': form.malnutrition_two.data,
@@ -282,7 +289,7 @@ def form_1():
                 }
         db.form1.insert(form_data, safe=True)
         flash('Data added sucessfully.')
-        return redirect(url_for('.form_1_view'))
+        return redirect(url_for('.form_1'))
 
     return render_template('form_1.html', form=form,
             user=current_user,
@@ -290,10 +297,298 @@ def form_1():
             provinces_list=json_util.dumps(provinces_json.keys()),
             amphurs=json_util.dumps(amphurs_json))
 
-@main.route('/form_1_view', methods=['GET', 'POST'])
+@main.route('/view/all/', methods=['GET', 'POST'])
 @login_required
-def form_1_view():
+def view_all():
     return render_template('form_1_report.html', db=db)
+
+@main.route('/view/person/<pid>')
+@login_required
+def view_person(pid):
+    form = Form1(request.form)
+    person = db.form1.find_one({'pid': pid})
+    na = u'ไม่มีข้อมูล'
+    try:
+        infarction_score = int(person['smoke_screening']) + \
+                int(person['bp']) + int(person['fpg']) + \
+                int(person['abnormal_lipid']) + \
+                int(person['waist']) + int(person['infarction']) + \
+                int(person['family_infarction'])
+    except:
+        infarction_result = None
+        infarction_score = None
+    else:
+        if infarction_score <= 2:
+            infarction_result = u'มีความเสี่ยง'
+        elif infarction_score < 5:
+            infarction_result = u'มีความเสี่ยงสูง'
+        elif infarction_score >= 5:
+            infarction_result = u'มีความเสี่ยงสูงมาก'
+
+    try:
+        dental_hygiene_score = int(person['dental_part_two_one']) + \
+                    int(person['dental_part_two_two']) + \
+                    int(person['dental_part_two_three']) + \
+                    int(person['dental_part_two_four'])
+    except:
+        dental_hygiene_score = None
+
+    try:
+        eye_exam_score = int(person['eye_exam_one']) + \
+                int(person['eye_exam_two']) + \
+                int(person['eye_exam_three']) + \
+                int(person['eye_exam_four']) + \
+                int(person['eye_exam_five'])
+    except:
+        eye_exam_score = None
+
+    try:
+        amt_score = int(person['amt_one']) + \
+                    int(person['amt_two']) + \
+                    int(person['amt_three']) + \
+                    int(person['amt_four']) + \
+                    int(person['amt_five']) + \
+                    int(person['amt_six']) + \
+                    int(person['amt_seven']) + \
+                    int(person['amt_eight']) + \
+                    int(person['amt_nine']) + \
+                    int(person['amt_ten'])
+    except:
+        amt_result = None
+        amt_score = None
+    else:
+        if amt_score and amt_score < 8:
+            amt_result = u'ผิดปกติ'
+        elif amt_score:
+            amt_result = u'ปกติ'
+        else:
+            amt_result = None
+
+    mmses = dict([('correct', 1), ('wrong', 0), ('na', 0)])
+    try:
+        mmse_score = mmses[person['mmse_one_one']] + \
+                        mmses[person['mmse_one_two']] + \
+                        mmses[person['mmse_one_three']] + \
+                        mmses[person['mmse_one_four']] + \
+                        mmses[person['mmse_two_one_one']] + \
+                        mmses[person['mmse_two_one_two']] + \
+                        mmses[person['mmse_two_one_three']] + \
+                        mmses[person['mmse_two_one_four']] + \
+                        mmses[person['mmse_two_one_five']] + \
+                        mmses[person['mmse_two_two_one']] + \
+                        mmses[person['mmse_two_two_two']] + \
+                        mmses[person['mmse_two_two_three']] + \
+                        mmses[person['mmse_two_two_four']] + \
+                        mmses[person['mmse_two_two_five']]
+
+        if (person['mmse_three_flower'] or
+                person['mmse_three_river'] or
+                person['mmse_three_train']):
+            mmse_score += int(person['mmse_three_flower']) +\
+                            int(person['mmse_three_river']) + \
+                            int(person['mmse_three_train'])
+        elif (person['mmse_three_tree'] or
+                person['mmse_three_sea'] or
+                person['mmse_three_car']):
+            mmse_score += int(person['mmse_three_tree']) +\
+                            int(person['mmse_three_sea']) + \
+                            int(person['mmse_three_car'])
+
+        mmse_score += mmses[person['mmse_four_one']] + \
+                        mmses[person['mmse_four_two']]
+
+        if (person['mmse_five_flower'] or
+                person['mmse_five_river'] or
+                person['mmse_five_train']):
+            mmse_score += int(person['mmse_five_flower']) +\
+                            int(person['mmse_five_river']) + \
+                            int(person['mmse_five_train'])
+        elif (person['mmse_five_tree'] or
+                person['mmse_five_sea'] or
+                person['mmse_five_car']):
+            mmse_score += int(person['mmse_five_tree']) + \
+                            int(person['mmse_five_sea']) + \
+                            int(person['mmse_five_car'])
+
+        mmse_score += mmses[person['mmse_six_one']] + \
+                        mmses[person['mmse_six_two']] + \
+                        mmses[person['mmse_seven_one']]
+
+        mmse_score += int(person['mmse_eight_one']) + \
+                        int(person['mmse_eight_two']) + \
+                        int(person['mmse_eight_three'])
+
+        mmse_score += int(person['mmse_nine_one']) + \
+                        int(person['mmse_ten_one'])
+    except:
+        mmse_result = None
+        mmse_score = None
+    else:
+        if person['edu'] == 0 and mmse_score <= 14:
+            mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
+        elif person['edu'] == 1 and mmse_score <= 17:
+            mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
+        elif person['edu'] > 1 and mmse_score <= 22:
+            mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
+        else:
+            mmse_result = u'ปกติ'
+
+    try:
+        q2_score = int(person['q2_one']) + int(person['q2_two'])
+    except:
+        q2_result = None
+        q2_score = None
+    else:
+        if q2_score == 0:
+            q2_result = u'ปกติ'
+        else:
+            q2_result = u'ผิดปกติ'
+
+    try:
+        q9_score = int(person['q9_one']) + \
+                        int(person['q9_two']) + \
+                        int(person['q9_three']) + \
+                        int(person['q9_four']) + \
+                        int(person['q9_five']) + \
+                        int(person['q9_six']) + \
+                        int(person['q9_seven']) + \
+                        int(person['q9_eight']) + \
+                        int(person['q9_nine'])
+    except:
+        q9_result = None
+        q9_score = None
+    else:
+        if q9_score < 7:
+            q9_result = u'ปกติ'
+        elif q9_score >=7 and q9_score < 13:
+            q9_result = u'มีอาการของโรคซึมเศร้าระดับน้อย'
+        elif q9_score >= 13 and q9_score < 19:
+            q9_result = u'มีอาการของโรคซึมเศร้าระดับปานกลาง'
+        else:
+            q9_result = u'มีอาการของโรคซึมเศร้าระดับมาก'
+
+    if person['knee_pain'] == 0:
+        knee_pain = u'ไม่ปวดเข่า'
+    else:
+        knee_pain = u'ปวดเข่า'
+
+    try:
+        knee_pain_clinic_score = int(person['knee_pain_clinic_one']) + \
+                                    int(person['knee_pain_clinic_two']) + \
+                                    int(person['knee_pain_clinic_three']) + \
+                                    int(person['knee_pain_clinic_four']) + \
+                                    int(person['knee_pain_clinic_five'])
+    except:
+        knee_pain_clinic = None
+        knee_pain_clinic_score = None
+    else:
+        if knee_pain_clinic_score > 2:
+            knee_pain_clinic = u'เสี่ยงต่อโรคข้อเข่าเสื่อม'
+        else:
+            knee_pain_clinic = u'ปกติ'
+
+    tugt = dict([(0, u'<30 วินาที'),
+                (1, u'>=30 วินาที'),
+                (2, u'เดินไม่ได้')]).get(person['tugt'])
+
+    try:
+        urine = dict([(0, u'ไม่มี'), (1, u'มี')])[person['urine_holding']]
+    except:
+        urine = None
+
+    try:
+        bmi = dict([(0, '<18.5'),
+                (1, '18.5-22.9'),
+                (2, '23.0-24.9'),
+                (3, '25.0-29.9'),
+                (4, '>=30')])[person['bmi']]
+    except:
+        bmi = None
+
+    try:
+        malnutrition_score = int(person['malnutrition_one']) + \
+                                int(person['malnutrition_two']) + \
+                                int(person['malnutrition_three']) + \
+                                int(person['malnutrition_four']) + \
+                                int(person['malnutrition_five'])
+    except:
+        malnutrition = None
+        malnutrition_score = None
+    else:
+        if malnutrition_score <= 7:
+            malnutrition = u'ขาดสารอาหาร'
+        elif malnutrition_score > 7 and malnutrition_score <= 11:
+            malnutrition = u'เสี่ยงต่อการขาดสารอาหาร'
+        else:
+            malnutrition = u'ปกติ'
+
+    if person['sleeping_one']:
+        sleeping = dict([(0, u'ไม่มีปัญหา'), (1, u'มีปัญหา')])[person['sleeping_one']]
+    else:
+        sleeping = None
+
+    try:
+        routine_score = int(person['routine_one']) + \
+                            int(person['routine_two']) + \
+                            int(person['routine_three']) + \
+                            int(person['routine_four']) + \
+                            int(person['routine_five']) + \
+                            int(person['routine_six']) + \
+                            int(person['routine_seven']) + \
+                            int(person['routine_eight']) + \
+                            int(person['routine_nine']) + \
+                            int(person['routine_ten'])
+    except:
+        routine = None
+        routine_score = None
+    else:
+        if routine_score >= 12:
+            routine = u'ช่วยเหลือตัวเองได้ และ/หรือช่วยเหลือผู้อื่นและคนในสังคมได้'
+        elif routine_score < 12 and routine_score >= 5:
+            routine = u'ช่วยเหลือและดูแลตัวเองได้บ้าง'
+        else:
+            routine = u'ช่วยเหลือตัวเองไม่ได้'
+
+    incomplete = u'ข้อมูลไม่พอสำหรับการแปลผล'
+    return render_template('show_personal_data.html',
+            person=person,
+            genders=dict(form.gender.choices),
+            maritals=dict(form.marital.choices),
+            edus=dict(form.edu.choices),
+            livings=dict(form.living.choices),
+            incomes=dict(form.income.choices),
+            clubs=dict(form.elder_club.choices),
+            health_statuses=dict(form.health_status.choices),
+            smokings=dict(form.smoking.choices),
+            smoke_freqs=dict(form.smoke_freq.choices),
+            alcohols=dict(form.alcohol.choices),
+            congenital_diseases=dict(form.congenital_disease.choices),
+            infarction_result=infarction_result,
+            infarction_score=infarction_score,
+            dental_hygiene_score=dental_hygiene_score,
+            eye_exam_score=eye_exam_score,
+            amt_result=amt_result,
+            amt_score=amt_score,
+            mmse_result=mmse_result,
+            mmse_score=mmse_score,
+            q2_score=q2_score,
+            q2_result=q2_result,
+            q9_score=q9_score,
+            q9_result=q9_result,
+            knee_pain=knee_pain,
+            knee_pain_clinic_score=knee_pain_clinic_score,
+            knee_pain_clinic=knee_pain_clinic,
+            tugt=tugt,
+            urine=urine,
+            bmi=bmi,
+            malnutrition_score=malnutrition_score,
+            malnutrition=malnutrition,
+            sleeping=sleeping,
+            routine_score=routine_score,
+            routine=routine,
+            na=na,
+            incomplete=incomplete,
+            )
 
 @main.route('/get_all_data')
 @login_required
@@ -320,7 +615,7 @@ def get_all_data():
 
     return jsonify(data=data)
 
-@main.route('/your_account')
+@main.route('/your_account/')
 @login_required
 def your_account_view():
     user = db.users.find_one({'username': current_user.username})
