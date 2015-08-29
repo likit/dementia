@@ -549,6 +549,130 @@ def view_person(pid):
         else:
             routine = u'ช่วยเหลือตัวเองไม่ได้'
 
+    try:
+        long_term_one_prelim_score = int(person['long_term_care_one_one']) + \
+                                        int(person['long_term_care_one_two']) + \
+                                        int(person['long_term_care_one_three'])
+    except:
+        long_term_one_prelim_score = None
+
+    try:
+        long_term_two_prelim_score = int(person['long_term_care_two_one']) + \
+                                        int(person['long_term_care_two_two'])
+    except:
+        long_term_two_prelim_score = None
+
+    try:
+        long_term_three_prelim_score = int(person['long_term_care_three_one'])
+        long_term_three_prelim_score += \
+                                1 if person['long_term_care_three_two_one'] and \
+                                    person['long_term_care_three_two_two'] else 0
+    except:
+        long_term_three_prelim_score = None
+
+    try:
+        long_term_four_prelim_score = int(person['long_term_care_four_one']) + \
+                                        int(person['long_term_care_four_two']) + \
+                                        int(person['long_term_care_four_three']) + \
+                                        int(person['long_term_care_four_four']) + \
+                                        int(person['long_term_care_four_five'])
+    except:
+        long_term_four_prelim_score = None
+
+    try:
+        long_term_five_prelim_score = int(person['long_term_care_five_one']) + \
+                                        int(person['long_term_care_five_two']) + \
+                                        int(person['long_term_care_five_three']) + \
+                                        int(person['long_term_care_five_four']) + \
+                                        int(person['long_term_care_five_five']) + \
+                                        int(person['long_term_care_five_six']) + \
+                                        int(person['long_term_care_five_seven']) + \
+                                        int(person['long_term_care_five_eight']) + \
+                                        int(person['long_term_care_five_nine']) + \
+                                        int(person['long_term_care_five_ten']) + \
+                                        int(person['long_term_care_five_eleven']) + \
+                                        int(person['long_term_care_five_twelve']) + \
+                                        int(person['long_term_care_five_thirteen']) + \
+                                        int(person['long_term_care_five_forteen']) + \
+                                        int(person['long_term_care_five_fifteen']) + \
+                                        int(person['long_term_care_five_sixteen'])
+    except:
+        long_term_five_prelim_score = None
+
+    if long_term_one_prelim_score != None:
+        if long_term_one_prelim_score <= 3:
+            long_term_one_score = 0
+    else:
+        long_term_one_score = None
+
+    if long_term_two_prelim_score != None:
+        if long_term_two_prelim_score == 0:
+            long_term_two_score = 1
+        if long_term_two_prelim_score == 1:
+            long_term_two_score = 2
+        if long_term_two_prelim_score == 2:
+            long_term_two_score = 3
+    else:
+        long_term_two_score = None
+
+    if long_term_three_prelim_score != None:
+        if long_term_three_prelim_score == 0:
+            long_term_three_score = 2
+        if long_term_three_prelim_score == 1:
+            long_term_three_score = 4
+        if long_term_three_prelim_score == 2:
+            long_term_three_score = 6
+    else:
+        long_term_three_score = None
+
+    if long_term_four_prelim_score != None:
+        if long_term_four_prelim_score == 0:
+            long_term_four_score = 0
+        if (long_term_four_prelim_score == 1 or
+                long_term_four_prelim_score == 2):
+            long_term_four_score = 8
+        if (long_term_four_prelim_score >= 3 and
+                long_term_four_prelim_score <= 5):
+            long_term_four_score = 12
+    else:
+        long_term_four_score = None
+
+    if long_term_five_prelim_score != None:
+        if (long_term_five_prelim_score >= 16 and
+                long_term_five_prelim_score <= 20):
+            long_term_five_score = 6
+        if (long_term_five_prelim_score >= 21 and
+                long_term_five_prelim_score <= 35):
+            long_term_five_score = 12
+        if (long_term_five_prelim_score >= 36 and
+                long_term_five_prelim_score <= 48):
+            long_term_five_score = 18
+    else:
+        long_term_five_score = None
+
+    print('longterm_one', long_term_one_score)
+    print('longterm_two', long_term_two_score)
+    print('longterm_three', long_term_three_score)
+    print('longterm_four', long_term_four_score)
+    print('longterm_five', long_term_five_score)
+
+    try:
+        long_term_score_total = long_term_one_score + \
+                                    long_term_two_score + \
+                                    long_term_three_score + \
+                                    long_term_four_score + \
+                                    long_term_five_score
+    except:
+        long_term = None
+        long_term_score_total = None
+    else:
+        if long_term_score_total >= 0 and long_term_score_total <= 16:
+            long_term = u'ไม่ต้องการการดูแลระยะยาว'
+        if long_term_score_total >= 17 and long_term_score_total <= 19:
+            long_term = u'ต้องเผ้าระวัง'
+        if long_term_score_total >= 20:
+            long_term = u'ต้องการการดูแลระยะยาว'
+
     incomplete = u'ข้อมูลไม่พอสำหรับการแปลผล'
     return render_template('show_personal_data.html',
             person=person,
@@ -586,6 +710,8 @@ def view_person(pid):
             sleeping=sleeping,
             routine_score=routine_score,
             routine=routine,
+            long_term_score_total=long_term_score_total,
+            long_term=long_term,
             na=na,
             incomplete=incomplete,
             )
