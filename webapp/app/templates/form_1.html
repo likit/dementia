@@ -760,7 +760,7 @@ $(document).ready(function() {
                 <div class="panel-body">
                     <table class="table table-striped table-bordered">
                         <tr><td>
-                            {{ form.pid.label }} {{ form.pid() }}
+                            {{ form.pid.label }} {{ form.pid(size="13") }}
                             {% if form.pid.errors %}
                                 {% for error in form.pid.errors %}
                                     <div class="pid_error">{{ error }}</div>
@@ -768,19 +768,21 @@ $(document).ready(function() {
                             {% endif %}
                             <button id="pid-search">ค้นหา</button> <span id="pid-search-badge" class="badge"></span>
                             <br/>
-                            {{ form.firstname.label }} {{ form.firstname() }}
-                            {{ form.lastname.label }} {{ form.lastname() }}
-                            {{ form.age.label }} {{ form.age() }}
+                            {{ form.firstname.label }} {{ form.firstname(size="40") }}
+                            {{ form.lastname.label }} {{ form.lastname(size="40") }}
+                            {{ form.age.label }} {{ form.age(size="3") }}
+                        </td></tr>
+                        <tr><td>
+                            {{ form.street_number.label }} {{ form.street_number(size="6") }}
+                            {{ form.district_number.label }} {{ form.district_number(size="3") }}
                             {{ form.province.label }} {{ form.province() }}
                             {{ form.amphur.label }} {{ form.amphur() }}
                             {{ form.district.label }} {{ form.district() }}
                         </td></tr>
                         <tr><td>
-                            {{ form.street_number.label }} {{ form.street_number() }}
-                            {{ form.district_number.label }} {{ form.district_number() }}
-                        </td></tr>
-                        <tr><td>
                             {{ form.gender.label }} {{ form.gender() }}
+                            {{ form.weight.label }} {{ form.weight(size="6") }}
+                            {{ form.height.label }} {{ form.height(size="6") }}
                             {{ form.marital.label }} {{ form.marital() }}
                             {{ form.marital_other.label }} {{ form.marital_other(disabled=True) }}
                         </td></tr>

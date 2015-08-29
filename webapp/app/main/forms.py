@@ -8,6 +8,7 @@ from wtforms import (StringField,
                         SelectField,
                         BooleanField,
                         RadioField,
+                        DecimalField,
                         )
 
 class Form1(Form):
@@ -22,6 +23,8 @@ class Form1(Form):
     amphur = SelectField(u'อำเภอ', validators=[Optional()])
     district = SelectField(u'ตำบล', validators=[Optional()])
     age = IntegerField(u'อายุ', validators=[NumberRange(1,130), Optional()])
+    weight = DecimalField(u'น้ำหนัก', validators=[Optional()])
+    height = DecimalField(u'ส่วนสูง', validators=[Optional()])
     gender = SelectField(u'เพศ', validators=[Optional()],
             choices=[('male',u'ชาย'),
                 ('female', u'หญิง'), ('none', u'ไม่ระบุ')])
@@ -30,7 +33,7 @@ class Form1(Form):
                 ('divorce', u'หย่าร้าง'), ('single', u'โสด'),
                 ('other', u'อื่นๆ')])
     marital_other = StringField(u'อื่นๆ โปรดระบุ', validators=[Optional()])
-    edu = SelectField(u'', validators=[Optional()],
+    edu = SelectField(u'ระดับการศึกษา', validators=[Optional()],
             choices=[('0', u'ไม่ได้รับการศึกษา'),
                 ('1', u'ประถมศึกษา'),
                 ('2', u'มัธยมศึกษาตอนต้น'),
