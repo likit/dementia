@@ -59,6 +59,26 @@ $(document).ready(function() {
             }
         });
 
+    $("#systolic").change(function() {
+            if(parseInt($(this).val()) > 135
+                && parseInt($("#diastolic").val()) > 85) {
+                $("#bp").prop("checked", true);
+                if (!$('#bp').prop('checked')) {
+                    $("#bp").prop("checked", true);
+                    $("#bp").trigger("change");
+                }
+            }
+        });
+    $("#diastolic").change(function() {
+            if(parseInt($(this).val()) > 85
+                && parseInt($("#systolic").val()) > 135) {
+                if (!$('#bp').prop('checked')) {
+                    $("#bp").prop("checked", true);
+                    $("#bp").trigger("change");
+                }
+            }
+        });
+
     $("#edu").change(function() {
         set_mmse_score_badge();
         if ($(this).val() === "7") {
@@ -106,7 +126,8 @@ $(document).ready(function() {
                 $("label[for=quit_smoke_years], input#quit_smoke_years").hide()
 
                 // reset some values
-                $("#smoke_screening").prop('checked', true)
+                $("#smoke_screening").prop('checked', true);
+                $('#smoke_screening').trigger("change");
                 $("#smoke_years").val("");
                 $("#quit_smoke_years").val("");
                 $("#smoke_per_day").val("");

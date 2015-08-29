@@ -19,7 +19,7 @@ from flask.ext.login import login_required, current_user
 
 
 @main.route('/', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def index():
     return render_template('index.html', user=current_user)
 
@@ -69,6 +69,8 @@ def form_1():
                 'amphur': form.amphur.data,
                 'district': form.district.data,
                 'age': form.age.data,
+                'weight': form.weight.data,
+                'height': form.height.data,
                 'gender': form.gender.data,
                 'marital': form.marital.data,
                 'marital_other': form.marital_other.data,

@@ -6,8 +6,24 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header">
-        <h1>Welcome to Online TEIS System</h1>
-        <p><h3>กรุณาเลือกการใช้งานจากเมนูด้านบน</h3></p>
+        <div class="jumbotron">
+        <p><h1><small>สถาบันเวชศาสตร์ผู้สูงอายุ</small></h1></p>
+        <h1>Welcome to The Online Thai Elderly Information System (TEIS)</h1>
+        <p><h3>ยินดีต้อนรับสู่ระบบเทคโนโลยีสารสนเทศ เพื่อพัฒนาฐานข้อมูลผู้สูงอายุ</h3></p>
+        {% if current_user.authenticated %}
+        {% if current_user.verified %}
+            <p><a class="btn btn-primary btn-lg" href="{{ url_for('.form_1') }}" role="button">คลิกเพื่อกรอกข้อมูล</a></p>
+            <p><h3>หรือเลือกการใช้งานอื่นๆ จากเมนูด้านบน</h3></p>
+        {% else %}
+            <p>ขออภัย ท่านยังไม่สามารถกรอกข้อมูลได้ในขณะนี้</p>
+            <p><h3>ท่านเลือกการใช้งานอื่นๆ จากเมนูด้านบน</h3></p>
+        {% endif %}
+        {% else %}
+                <p><a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">ลงทะเบียนเข้าใช้</a>
+                <a class="btn btn-success btn-lg" href="{{ url_for('auth.register') }}" role="button">สมัครสมาชิก</a></p>
+
+        {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
