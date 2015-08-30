@@ -8,8 +8,9 @@
     <div class="page-header">
         <div class="jumbotron">
         <p><h1><small>สถาบันเวชศาสตร์ผู้สูงอายุ</small></h1></p>
-        <h1>Welcome to The Online Thai Elderly Information System (TEIS)</h1>
-        <p><h3>ยินดีต้อนรับสู่ระบบเทคโนโลยีสารสนเทศ เพื่อพัฒนาฐานข้อมูลผู้สูงอายุ</h3></p>
+        <p><h1>ระบบเทคโนโลยีสารสนเทศเพื่อพัฒนาฐานข้อมูลผู้สูงอายุ</h1></p>
+        <p><h2>Thai Elderly Information System (TEIS)</h2><h3>Version 0.9beta</h3></p>
+        <p><small>พัฒนาโดยความร่วมมือกับคณะเทคนิคการแพทย์ มหาวิทยาลัยมหิดล</small></p>
         {% if current_user.authenticated %}
         {% if current_user.verified %}
             <p><a class="btn btn-primary btn-lg" href="{{ url_for('.form_1') }}" role="button">คลิกเพื่อกรอกข้อมูล</a></p>
