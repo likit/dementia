@@ -19,44 +19,83 @@ var provinces_list = {{ provinces_list|safe }}.sort();
     </div>
 </div>
 <div class="col-md4">
-    <form method="POST" action="{{ url_for('auth.register') }}">
+    <form method="POST" action="{{ url_for('auth.register') }}" class="form-inline" role="form">
         {{ form.show_hidden_tag }}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
             <div class="panel-body">
-                {{ form.pid.label  }} {{ form.pid(size=13, maxlength=13) }}
-                {{ form.password.label }} {{ form.password(size=20, maxlength=30) }}
-                {{ form.password2.label }} {{ form.password2(size=20, maxlength=30) }}
-                <br>
-                {{ form.title.label }} {{ form.title }}
-                {{ form.name.label  }} {{ form.name(size=30, maxlength=50) }}
-                {{ form.lastname.label  }} {{ form.lastname(size=30, maxlength=50) }}
-                <br>
-                {{ form.position.label  }} {{ form.position(size=30, maxlength=50) }}
-                {{ form.phone.label  }} {{ form.phone(size=20, maxlength=20) }}
-                {{ form.cell.label  }} {{ form.cell(size=20, maxlength=20) }}
+                <div class="form-group">
+                    {# {{ form.pid.label(for="pid", class="control-label") }} #}
+                    {{ form.pid(size=15, maxlength=13, class="form-control", placeholder="เลขบัตรประชาชน") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                </div>
+                <div class="form-group">
+                    {# {{ form.password.label(for="password", class="control-label") }} #}
+                    {{ form.password(size=20, maxlength=30, class="form-control", placeholder="รหัสผ่าน") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                </div>
+                <div class="form-group">
+                    {# {{ form.password2.label(for="password2", class="control-label") }} #}
+                    {{ form.password2(size=20, maxlength=30, class="form-control", placeholder="รหัสผ่านอีกครั้ง") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    {# {{ form.title.label(for="title", class="control-label") }} #}
+                    {{ form.title(class="form-control", required=true) }}
+                </div>
+                <div class="form-group">
+                    {# {{ form.name.label(for="name", class="control-label") }} #}
+                    {{ form.name(size=30, maxlength=50, class="form-control", placeholder="ชื่อจริง") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                    {# {{ form.lastname.label(for="lastname", class="control-label") }} #}
+                    {{ form.lastname(size=30, maxlength=50, class="form-control", placeholder="นามสกุล") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                    {# {{ form.position.label(for="position", class="control-label") }} #}
+                    {{ form.position(size=30, maxlength=50, class="form-control", placeholder="ตำแหน่ง") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+                </div>
+                <br><br>
+                <div class="form-group">
+                    {# {{ form.email.label(for="email", class="control-label") }} #}
+                    {{ form.email(size=40, maxlength=50, class="form-control", placeholder="อีเมล") }}
+                    {# {{ form.phone.label(for="phone", class="control-label")  }} #}
+                    {{ form.phone(size=20, maxlength=20, class="form-control", placeholder="โทรศัพท์") }}
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                    {# {{ form.cell.label(for="cell", class="control-label")  }} #}
+                    {{ form.cell(size=20, maxlength=20, class="form-control", placeholder="มือถือ") }}
+                </div>
             </div>
         </div>
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลหน่วยงาน/สังกัด</strong></h4></div>
             <div class="panel-body">
-                {{ form.org.label  }} {{ form.org(size=20, maxlength=50) }}
-                {{ form.org_address.label  }} {{ form.org_address(size=20, maxlength=50) }}
-                {{ form.mhoo.label  }} {{ form.mhoo(size=5, maxlength=3) }}
-                <br>
-                {{ form.province.label }} {{ form.province }}
-                {{ form.amphur.label }} {{ form.amphur(style="display: none;") }}
-                {{ form.district.label }} {{ form.district(style="display: none;") }}
+                <div class="form-group">
+                    {# {{ form.org.label(for="org", class="control-label") }} #}
+                    {{ form.org(size=20, maxlength=50, class="form-control", placeholder="องค์กร") }}
+                    {# {{ form.org_address.label(for="org_address", class="control-label") }} #}
+                    {{ form.org_address(size=20, maxlength=50, class="form-control", placeholder="บ้านเลขที่") }}
+                    {# {{ form.mhoo.label(for="mhoo", class="control-label") }} #}
+                    {{ form.mhoo(size=5, maxlength=3, class="form-control", placeholder="หมู่ที่") }}
+                    <br><br>
+                    {{ form.province.label(for="province", class="control-label")}}
+                    {{ form.province(class="form-control") }}
+                    {{ form.amphur.label(for="amphur", class="control-label") }}
+                    {{ form.amphur(style="display: none;", class="form-control") }}
+                    {{ form.district.label(for="district", class="control-label") }}
+                    {{ form.district(style="display: none;", class="form-control") }}
+                </div>
             </div>
         </div>
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>วัตถุประสงค์</strong></h4></div>
             <div class="panel-body">
-                {{ form.objective }}
+                {{ form.objective(rows="5", cols="80", class="form-control") }}
             </div>
         </div>
         {{ form.csrf_token }}
-        {{ form.submit }}
+        {{ form.submit(class="btn btn-primary btn-lg") }}
     </form>
 </div>
 {% endblock %}

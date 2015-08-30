@@ -31,6 +31,7 @@ class RegistrationForm(Form):
     name = StringField(u'ชื่อ', validators=[Required()])
     lastname = StringField(u'นามสกุล', validators=[Required()])
     position = StringField(u'ตำแหน่ง', validators=[Required()])
+    email = StringField(u'อีเมล', validators=[Optional(), Email(), Length(40)])
     phone = StringField(u'โทรศัพท์', validators=[Required()])
     cell = StringField(u'มือถือ', validators=[Optional()])
 

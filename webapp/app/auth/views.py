@@ -70,6 +70,7 @@ def register():
                 'name': form.name.data,
                 'lastname': form.lastname.data,
                 'position': form.position.data,
+                'email': form.email.data,
 
                 # TODO: use telephone field
                 'phone': form.phone.data,
