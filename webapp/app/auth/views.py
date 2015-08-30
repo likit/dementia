@@ -90,10 +90,10 @@ def register():
                 }
 
         db.users.insert(user_doc, safe=True)
-        send_email(to=current_app.config['ADMIN_EMAIL'],
-                subject=u' New Account verification: ชื่อผู้ขอใช้ %s %s' % \
-                        (form.name.data, form.lastname.data),
-                template='auth/email/confirm', user=user_doc)
+        # send_email(to=current_app.config['ADMIN_EMAIL'],
+        #         subject=u' New Account verification: ชื่อผู้ขอใช้ %s %s' % \
+        #                 (form.name.data, form.lastname.data),
+        #         template='auth/email/confirm', user=user_doc)
 
         flash(u'ระบบได้ส่งข้อมูลของท่านไปรอการตรวจสอบจากเจ้าหน้าที่แล้ว\n'
                 u'ท่านสามารถทำการลงชื่อเข้าใช้เพื่อตรวจสอบสถานะได้ตลอดเวลา')

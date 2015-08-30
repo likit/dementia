@@ -38,7 +38,13 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 {# <li><a href="/"></a></li> #}
-                <li><a href="/form_1/">กรอกข้อมูล</a></li>
+                <li><a href="/form_1/">กรอกข้อมูล
+                {% if current_user.verified %}
+                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                {% endif %}
+                </a></li>
                 <li><a href="/view/all/">ข้อมูลทั้งหมด</a></li>
                 <li><a href="/viz/">กราฟข้อมูล</a></li>
                 <li><a href="/your_account">บัญชีของคุณ</a></li>

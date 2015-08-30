@@ -20,7 +20,10 @@ var provinces_list = {{ provinces_list|safe }}.sort();
 </div>
 <div class="col-md4">
     <form method="POST" action="{{ url_for('auth.register') }}" class="form-inline" role="form">
-        {{ form.show_hidden_tag }}
+        {{ form.hidden_tag() }}
+        {% if form.errors %}
+        {{ form.errors }}
+        {% endif %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
             <div class="panel-body">
