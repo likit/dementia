@@ -728,7 +728,7 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    for res in db.form1.find():
+    for res in db.form1.find({'province':current_user.province}):
         no += 1
         result = [no,
                     res['pid'],
