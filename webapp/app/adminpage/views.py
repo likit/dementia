@@ -38,10 +38,10 @@ class Form1View(ModelView):
 
 
 class UserView(ModelView):
-    column_list = ('username', 'name', 'lastname', 'role', 'position', 'phone',
+    column_list = ('username', 'name', 'lastname', 'role', 'position', 'email', 'phone',
            'verified', 'org', 'org_address', 'mhoo',
            'province', 'district', 'tambon', 'create_date_time')
-    column_sortable_list = ('verified', 'name', 'lastname', 'role',
+    column_sortable_list = ('verified', 'name', 'lastname', 'email', 'role',
             'province', 'create_date_time')
 
     form = UserForm
