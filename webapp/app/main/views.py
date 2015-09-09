@@ -294,6 +294,7 @@ def form_1():
         return redirect(url_for('.form_1'))
 
     return render_template('form_1.html', form=form,
+            flash=flash,
             user=current_user,
             provinces=json_util.dumps(provinces_json),
             provinces_list=json_util.dumps(provinces_json.keys()),

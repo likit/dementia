@@ -8,23 +8,22 @@ from wtforms import (StringField,
                         SelectField,
                         BooleanField,
                         RadioField,
-                        DecimalField,
                         )
 
 class Form1(Form):
     # Personal info part
     collectdate = StringField(u'', validators=[Required()])
-    firstname = StringField(u'ชื่อ', validators=[Optional()])
-    lastname = StringField(u'นามสกุล', validators=[Optional()])
-    pid = StringField(u'รหัสบัตรประชาชน', validators=[Optional()])
-    street_number = StringField(u'บ้านเลขที่', validators=[Optional()])
-    district_number = StringField(u'หมู่', validators=[Optional()])
-    province = SelectField(u'จังหวัด', validators=[Optional()])
-    amphur = SelectField(u'อำเภอ', validators=[Optional()])
-    district = SelectField(u'ตำบล', validators=[Optional()])
+    firstname = StringField(u'ชื่อ', validators=[Required()])
+    lastname = StringField(u'นามสกุล', validators=[Required()])
+    pid = StringField(u'รหัสบัตรประชาชน', validators=[Required()])
+    street_number = StringField(u'บ้านเลขที่', validators=[Required()])
+    district_number = StringField(u'หมู่', validators=[Required()])
+    province = SelectField(u'จังหวัด', validators=[Required()])
+    amphur = SelectField(u'อำเภอ', validators=[Required()])
+    district = SelectField(u'ตำบล', validators=[Required()])
     age = IntegerField(u'อายุ', validators=[NumberRange(1,130), Optional()])
-    weight = DecimalField(u'น้ำหนัก', validators=[Optional()])
-    height = DecimalField(u'ส่วนสูง', validators=[Optional()])
+    weight = StringField(u'น้ำหนัก', validators=[Optional()])
+    height = StringField(u'ส่วนสูง', validators=[Optional()])
     gender = SelectField(u'เพศ', validators=[Optional()],
             choices=[('male',u'ชาย'),
                 ('female', u'หญิง'), ('none', u'ไม่ระบุ')])

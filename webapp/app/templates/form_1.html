@@ -747,7 +747,12 @@ $(document).ready(function() {
     <form id="mainform" method="post">
         {{ form.hidden_tag() }}
         {% if form.errors %}
-            {{ form.errors }}
+            {# {{ form.errors }} #}
+            <div class="alert alert-warning" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                กรุณากรอกข้อมูลช่องที่ต้องกรอกให้ครบ
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         {% endif %}
     <div class="page-header">
     <div>
@@ -768,9 +773,12 @@ $(document).ready(function() {
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="alert alert-warning">
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small> ต้องกรอก
+                    </div>
                     <label class="control-label" for="collectdate">โปรดเลือกวันที่เก็บข้อมูล </label>
                     {# <input type="text" id="datepicker"> #}
-                    {{ form.collectdate() }}
+                    {{ form.collectdate() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                 </div>
             </div>
         </div>
@@ -779,9 +787,12 @@ $(document).ready(function() {
         <div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="alert alert-warning">
+                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small> ต้องกรอก
+                    </div>
                     <table class="table table-striped table-bordered">
                         <tr><td>
-                            {{ form.pid.label }} {{ form.pid(size="13") }}
+                                {{ form.pid.label }} {{ form.pid(size="13") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                             {% if form.pid.errors %}
                                 {% for error in form.pid.errors %}
                                     <div class="pid_error">{{ error }}</div>
@@ -789,16 +800,24 @@ $(document).ready(function() {
                             {% endif %}
                             <button id="pid-search">ค้นหา</button> <span id="pid-search-badge" class="badge"></span>
                             <br/>
-                            {{ form.firstname.label }} {{ form.firstname(size="40") }}
-                            {{ form.lastname.label }} {{ form.lastname(size="40") }}
+                            {{ form.firstname.label }} {{ form.firstname(size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+                            {{ form.lastname.label }} {{ form.lastname(size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
                             {{ form.age.label }} {{ form.age(size="3") }}
                         </td></tr>
                         <tr><td>
-                            {{ form.street_number.label }} {{ form.street_number(size="6") }}
-                            {{ form.district_number.label }} {{ form.district_number(size="3") }}
-                            {{ form.province.label }} {{ form.province() }}
-                            {{ form.amphur.label }} {{ form.amphur() }}
-                            {{ form.district.label }} {{ form.district() }}
+                                {{ form.street_number.label }} {{ form.street_number(size="6") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+                                {{ form.district_number.label }} {{ form.district_number(size="3") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+                                {{ form.province.label }} {{ form.province() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+
+                                {{ form.amphur.label }} {{ form.amphur() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+
+                                {{ form.district.label }} {{ form.district() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                         </td></tr>
                         <tr><td>
                             {{ form.gender.label }} {{ form.gender() }}
