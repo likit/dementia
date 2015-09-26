@@ -5,6 +5,7 @@ from datetime import datetime
 
 import numpy as np
 import json
+import pymongo
 
 from flask import (render_template, session, redirect,
                         url_for, flash, jsonify, request)
@@ -17,6 +18,7 @@ from .. import APP_ROOT, APP_STATIC
 from bson.objectid import ObjectId
 from flask.ext.login import login_required, current_user
 
+scratchdb = pymongo.Connection()['scratch']
 
 @main.route('/', methods=['GET', 'POST'])
 #@login_required
@@ -26,15 +28,23 @@ def index():
 @main.route('/searchpid')
 def searchpid():
     qpid = request.args.get('pid')
-    res = db.form1.find_one({'pid': qpid})
+    res = db.person.find_one({'pid': qpid})
+    if res:
+        print res['firstname'], res['lastname'], res['marital'], res['street_number'], \
+        res['congenital_disease'], res['gender'], res['age']
     if res:
         return jsonify(result='found',
                 firstname=res['firstname'],
                 lastname=res['lastname'],
-                province=res['province'],
                 age=res['age'],
-                district=['district'],
-                amphur=['amphur'],
+                province=res['province'],
+                district=res['district'],
+                amphur=res['amphur'],
+                edu=res['edu'],
+                gender=res['gender'],
+                marital=res['marital'],
+                street_number=res['street_number'],
+                congenital_disease=res['congenital_disease']
                 )
     else:
         return jsonify(result='notfound')

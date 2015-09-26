@@ -26,6 +26,21 @@ $(document).ready(function() {
                 $('#amphur').val(data.amphur);
                 $('#province').val(data.province);
                 $('#age').val(data.age);
+                $('#marital').val(data.marital);
+                $('#edu').val(data.edu);
+                $('#street_number').val(data.street_number);
+                $('#gender').val(data.gender);
+                $('#congenital_disease').val(data.congenital_disease);
+                if (data.congenital_disease !== 'ไม่มีโรคประจำตัว') {
+                    $("label[for=congenital_dis_years], input#congenital_dis_years").show();
+                }
+                if (data.congenital_disease === "โรคเบาหวาน") {
+                    $("#fpg").prop("checked", true);
+                    $("#bp").prop("checked", false);
+                } else if (data.congenital_disease === "โรคความดัน") {
+                    $("#fpg").prop("checked", false);
+                    $("#bp").prop("checked", true);
+                }
             } else {
                 $('#pid-search-badge').removeClass();
                 $('#pid-search-badge').addClass('glyphicon glyphicon-remove').text('ไม่พบในฐานข้อมูล');
@@ -201,20 +216,20 @@ $(document).ready(function() {
             }
         });
     $("#congenital_disease").change(function() {
-            if ($(this).val() === "other") {
+            if ($(this).val() === "อื่นๆ") {
                 $("#congenital_dis_other").prop("disabled", false);
                 $("#fpg").prop("checked", false);
                 $("#bp").prop("checked", false);
-            } else if ($(this).val() === "diabetes") {
+            } else if ($(this).val() === "โรคเบาหวาน") {
                 $("#fpg").prop("checked", true);
                 $("#bp").prop("checked", false);
-            } else if ($(this).val() === "hypertension") {
+            } else if ($(this).val() === "โรคความดัน") {
                 $("#fpg").prop("checked", false);
                 $("#bp").prop("checked", true);
             } else {
                     $("#congenital_dis_other").prop("disabled", true);
             }
-            if ($(this).val() === "none") {
+            if ($(this).val() === "ไม่มีโรคประจำตัว") {
                 $("label[for=congenital_dis_years], input#congenital_dis_years").hide();
             } else {
                 $("label[for=congenital_dis_years], input#congenital_dis_years").show();

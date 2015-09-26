@@ -25,30 +25,35 @@ class Form1(Form):
     weight = StringField(u'น้ำหนัก', validators=[Optional()])
     height = StringField(u'ส่วนสูง', validators=[Optional()])
     gender = SelectField(u'เพศ', validators=[Optional()],
-            choices=[('male',u'ชาย'),
-                ('female', u'หญิง'), ('none', u'ไม่ระบุ')])
+            choices=[(u'ชาย',u'ชาย'),
+                        (u'หญิง', u'หญิง'),
+                        (u'ไม่ระบุ', u'ไม่ระบุ')])
     marital = SelectField(u'สถานภาพสมรส', validators=[Optional()],
-            choices=[('married', u'แต่งงานแล้ว'), ('widow', u'หม้าย'),
-                ('divorce', u'หย่าร้าง'), ('single', u'โสด'),
-                ('other', u'อื่นๆ')])
+            choices=[(u'แต่งงานแล้ว', u'แต่งงานแล้ว'),
+                        (u'หม้าย', u'หม้าย'),
+                        (u'หย่าร้าง', u'หย่าร้าง'),
+                        (u'โสด', u'โสด'),
+                        (u'สมณะ', u'สมณะ'),
+                        (u'อื่นๆ', u'อื่นๆ')])
     marital_other = StringField(u'อื่นๆ โปรดระบุ', validators=[Optional()])
     edu = SelectField(u'ระดับการศึกษา', validators=[Optional()],
-            choices=[('0', u'ไม่ได้รับการศึกษา'),
-                ('1', u'ประถมศึกษา'),
-                ('2', u'มัธยมศึกษาตอนต้น'),
-                ('3', u'มัธยมศึกษาตอนปลาย'),
-                ('4', u'อนุปริญญา'),
-                ('5', u'ปริญญาตรี'),
-                ('6', u'สูงกว่าปริญญาตรี'),
-                ('7', u'อื่นๆ')])
+            choices=[(u'ไม่ได้ศึกษา/ไม่มีวุฒิการศึกษา', u'ไม่ได้ศึกษา/ไม่มีวุฒิการศึกษา'),
+                (u'ประถมศึกษา', u'ประถมศึกษา'),
+                (u'มัธยมศึกษาตอนต้น', u'มัธยมศึกษาตอนต้น'),
+                (u'มัธยมศึกษาตอนปลาย หรือ ปวช.', u'มัธยมศึกษาตอนปลาย หรือ ปวช.'),
+                (u'อนุปริญญา ปวท.,ปวช.', u'อนุปริญญา ปวท.,ปวช.'),
+                (u'ระดับปริญญาตรี', u'ระดับปริญญาตรี'),
+                (u'สูงกว่าปริญญาตรี', u'สูงกว่าปริญญาตรี'),
+                 (u'ไม่ระบุ/ไม่ทราบ', u'ไม่ระบุ/ไม่ทราบ'),
+                (u'อื่นๆ', u'อื่นๆ')])
     edu_other = StringField(u'อื่นๆ โปรดระบุ', validators=[Optional()])
     edu_years = IntegerField(u'รวมจำนวนปีที่ได้รับการศึกษา', validators=[Optional()])
     living = SelectField(u'การพักอาศัย', validators=[Optional()],
-            choices=[('single', u'โสด'),
-                ('couple', u'กับคู่ครอง'),
-                ('family', u'กับครอบครัว'),
-                ('caregiver', u'กับผู้ดูแล'),
-                ('other', u'อื่นๆ')])
+            choices=[(u'โสด', u'โสด'),
+                (u'กับคู่ครอง', u'กับคู่ครอง'),
+                (u'กับครอบครัว', u'กับครอบครัว'),
+                (u'กับผู้ดูแล', u'กับผู้ดูแล'),
+                (u'อื่นๆ', u'อื่นๆ')])
     living_caregiver = StringField(u'มีผู้ดูแลโปรดระบุ', validators=[Optional()])
     living_other = StringField(u'อื่นๆ โปรดระบุ', validators=[Optional()])
     income = SelectField(u'ท่านคิดว่ามีรายได้เพียงพอในครอบครัว',
@@ -104,14 +109,15 @@ class Form1(Form):
 
     congenital_disease = SelectField(u'โรคประจำตัว',
             choices=[
-                ('none', u'ไม่มีโรคประจำตัว'),
-                ('diabetes', u'โรคเบาหวาน'),
-                ('hypertension', u'โรคความดันโลหิตสูง'),
-                ('hyperlipidemia', u'โรคไขมันในเลือดผิดปกติ'),
-                ('heart-disease', u'โรคหัวใจ'),
-                ('cancer', u'โรคมะเร็ง'),
-                ('obstructive-lung-disease', u'โรคปอดอุดกั้นเรื้อรัง'),
-                ('other', u'อื่นๆ'),
+                (u'ไม่มีโรคประจำตัว', u'ไม่มีโรคประจำตัว'),
+                (u'โรคเบาหวาน', u'โรคเบาหวาน'),
+                (u'โรคความดันโลหิตสูง', u'โรคความดันโลหิตสูง'),
+                (u'โรคหอบหืด', u'โรคหอบหืด'),
+                (u'โรคไขมันในเลือดผิดปกติ', u'โรคไขมันในเลือดผิดปกติ'),
+                (u'โรคหัวใจ', u'โรคหัวใจ'),
+                (u'โรคมะเร็ง', u'โรคมะเร็ง'),
+                (u'โรคปอดอุดกั้นเรื้อรัง', u'โรคปอดอุดกั้นเรื้อรัง'),
+                (u'อื่นๆ', u'อื่นๆ'),
                 ], validators=[Optional()])
 
     congenital_dis_other = StringField(u'อื่นๆ โปรดระบุ', validators=[Optional()])
