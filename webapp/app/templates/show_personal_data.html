@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}ข้อมูลทั้งหมด{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+{% endblock scripts %}
+
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        <div class="panel panel-primary">
+        <div class="panel panel-heading"><h3>ข้อมูลส่วนตัว</h3></div>
+        <div class="panel panel-body">
+            <h3>วันที่รวบรวมข้อมูล {{ person['collectdate'] }}</h3>
+        <table id="table" class="table table-striped table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th><h4>คำถาม</h4></th><th><h4>คำตอบ</h4></th>
+                    <th><h4>คำถาม</h4></th><th><h4>คำตอบ</h4></th>
+                    <th><h4>คำถาม</h4></th><th><h4>คำตอบ</h4></th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td>เลขบัตรประชาชน</td><td>{{ person['pid'] }}</td>
+                <td>ชื่อ</td><td>{{ person['firstname'] }}</td>
+                <td>นามสกุล</td><td>{{ person['lastname'] }}</td>
+            </tr><tr>
+                <td>บ้านเลขที่</td><td>{{ person['street_number'] }}</td>
+                <td>หมู่ที่</td><td>{{ person['district_number'] }}</td>
+                <td>ตำบล</td><td>{{ person['district'] }}</td>
+            </tr><tr>
+                <td>อำเภอ</td><td>{{ person['amphur'] }}</td>
+                <td>จังหวัด</td><td>{{ person['province'] }}</td>
+                <td>อายุ</td><td>{{ person['age'] }}</td>
+            </tr><tr>
+                <td>เพศ</td><td>{{ genders[person['gender']] }}</td>
+                <td>สถานภาพสมรส</td><td>{{ maritals[person['marital']] }}</td>
+                <td>สถานภาพสมรส อื่นๆ</td><td>
+                    {% if person['marital_other'] %}{{ person['marital_other'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}</td>
+            </tr><tr>
+                <td>การศึกษา</td><td>{{ edus[person['edu']] }}</td>
+                <td>การศึกษาอื่นๆ</td><td>
+                    {% if person['edu_other'] %}{{ person['edu_other'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}</td>
+                <td>จำนวนปีที่ได้รับการศึกษา</td><td>
+                    {% if person['edu_years'] %}{{ person['edu_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr><tr>
+                <td>การพักอาศัย</td><td>{{ livings[person['living']] }}</td>
+                <td>ผู้ดูแล</td><td>
+                    {% if person['living_caregiver'] %}{{ person['living_caregiver'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+                <td>การพักอาศัย อื่นๆ</td><td>
+                    {% if person['living_other'] %}{{ person['living_other'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}</td>
+            </tr><tr>
+                <td>รายได้</td><td>{{ incomes[person['income']] }}</td>
+                <td>เป็นสมาชิกชมรม</td><td>{{ clubs[person['elder_club']] }}</td>
+                <td>ประเมินสุขภาพโดยรวมของตนเอง</td><td>{{ health_statuses[person['health_status']] }}</td>
+            </tr><tr>
+                <td>การสูบบุหรี่</td><td>{{ smokings[person['smoking']] }}</td>
+                <td>ความถี่ในการสูบ</td><td>{{ smoke_freqs[person['smoke_freq']] }}</td>
+                <td>จำนวนบุหรี่ต่อสัปดาห์</td><td>
+                    {% if person['smoke_per_week'] %}{{ person['smoke_per_week'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr><tr>
+                <td>จำนวนบุหรี่ต่อวัน</td><td>
+                    {% if person['smoke_per_day'] %}{{ person['smoke_per_day'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+                <td>สูบมานาน (ปี)</td><td>
+                    {% if person['smoke_years'] %}{{ person['smoke_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+                <td>เลิกมานาน (ปี)</td><td>
+                    {% if person['quit_smoke_years'] %}{{ person['quit_smoke_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr><tr>
+                <td>การดื่มสุรา</td><td>{{ alcohols[person['alcohol']] }}</td>
+                <td>จำนวนต่อวัน</td><td>
+                    {% if person['drink_per_day'] %}{{ person['drink_per_day'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+                <td>ดื่มมานาน (ปี)</td><td>
+                    {% if person['drink_years'] %}{{ person['drink_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr><tr>
+                <td>เลิกมานาน (ปี)</td><td>
+                    {% if person['quit_drink_years'] %}{{ person['quit_drink_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+                <td>โรคประจำตัว</td><td>{{ congenital_diseases[person['congenital_disease']] }}</td>
+                <td>โรคประจำตัวอื่นๆ</td><td>
+                    {% if person['congenital_dis_other'] %}{{ person['congenital_dis_other'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr><tr>
+                <td>ป่วยมานาน (ปี)</td><td>
+                    {% if person['congenital_dis_years'] %}{{ person['congenital_dis_years'] }}
+                    {% else %}<small>{{ na }}</small>{% endif %}
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel panel-heading"><h3>ผลประเมินสุขภาพโดยรวม</h3></div>
+            <div class="panel panel-body">
+            <table class="table table-hover">
+            <tbody>
+            <tr>
+            <td>การคัดกรองความเสี่ยงต่อโรคหัวใจและหลอดเลือด</td><td>
+                {% if infarction_result %}{{ infarction_result }} <span class="badge">{{ infarction_score }}</span>
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>สุขภาพปากและฟันมีปัญหา</td><td>
+                {% if dental_hygiene_score > 0 or dental_hygiene_score %}{{ dental_hygiene_score }} ข้อ
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </td>
+            </tr><tr>
+                <td>สุขภาพตามีปัญหา</td><td>
+                    {% if eye_exam_score and eye_exam_score > 0 %}{{ eye_exam_score }} ข้อ
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+                </td>
+            </tr><tr>
+                <td>การทดสอบทางสมอง</td><td>
+                    {% if amt_result %}{{ amt_result }} <span class="badge">{{ amt_score }}</span>
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+                </td>
+            </tr><tr>
+                <td>การทดสอบสภาพสมองเบื้องต้นฉบับภาษาไทย MMSE-Thai 2002</td><td>
+                    {% if mmse_result %}{{ mmse_result }} <span class="badge">{{ mmse_score }}</span>
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>การทดสอบภาวะซึมเศร้า 2 คำถาม</td><td>
+                {% if q2_result %}{{ q2_result }} <span class="badge">{{ q2_score }}</span>
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>การทดสอบภาวะซึมเศร้า 9 คำถาม</td><td>
+                {% if q9_result %}{{ q9_result }} <span class="badge">{{ q9_score }}</span>
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>ภาวะเข้าเสื่อม</td><td>
+                {% if knee_pain %}{{ knee_pain }}
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ภาวะเข้าเสื่อมทางคลินิก</td><td>
+                    {% if knee_pain_clinic %}{{ knee_pain_clinic }} <span class="badge">{{ knee_pain_clinic_score }}</span>{% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>การคัดกรองภาวะหกล้ม</td><td>
+                {% if tugt %}{{ tugt }}
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ปัญหาการกลั้นปัสสาวะ</td><td>{% if urine %}{{ urine }}
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ดัชนีมวลกาย</td><td>{% if bmi %}{{ bmi }}
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ผลประเมินภาวะทุพโภชนาการ</td><td>
+                    {% if malnutrition %}{{ malnutrition }} <span class="badge">{{ malnutrition_score }}</span>
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ผลประเมินภาวะการนอน</td><td>{% if sleeping %}{{ sleeping }}
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+                <td>ความสามารถในการใช้ชีวิตประจำวัน</td><td>
+                    {% if routine %}{{ routine }} <span class="badge"> {{ routine_score }}</span>
+                    {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr><tr>
+            <td>ผลการคัดกรองผู้สูงอายุที่ต้องได้รับการดูแลระยะยาว</td><td>
+                {% if long_term %}{{ long_term }} <span class="badge">{{ long_term_score_total }}</span>
+                {% else %}<h4><span class="label label-danger">{{ incomplete }}</span></h4>{% endif %}</td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

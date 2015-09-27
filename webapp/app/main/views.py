@@ -28,17 +28,17 @@ def index():
 @main.route('/searchpid')
 def searchpid():
     qpid = request.args.get('pid')
-    res = db.person.find_one({'pid': qpid})
-    if res:
-        print res['firstname'], res['lastname'], res['marital'], res['street_number'], \
-        res['congenital_disease'], res['gender'], res['age']
+    res = db.form1.find_one({'pid': qpid})
+    if not res:
+        res = db.person.find_one({'pid': qpid})
+
     if res:
         return jsonify(result='found',
                 firstname=res['firstname'],
                 lastname=res['lastname'],
-                age=res['age'],
                 province=res['province'],
                 district=res['district'],
+                district_number=res['district_number'],
                 amphur=res['amphur'],
                 edu=res['edu'],
                 gender=res['gender'],
@@ -300,7 +300,7 @@ def form_1():
                 'inserted_by': current_user.username,
                 }
         db.form1.insert(form_data, safe=True)
-        flash('Data added sucessfully.')
+        flash('Data added successfully.')
         return redirect(url_for('.form_1'))
 
     return render_template('form_1.html', form=form,
@@ -310,16 +310,50 @@ def form_1():
             provinces_list=json_util.dumps(provinces_json.keys()),
             amphurs=json_util.dumps(amphurs_json))
 
+
 @main.route('/view/all/', methods=['GET', 'POST'])
 @login_required
 def view_all():
     return render_template('form_1_report.html', db=db)
 
-@main.route('/view/person/<pid>')
+
+@main.route('/view/person/<pid>', methods=['GET', 'POST'])
 @login_required
 def view_person(pid):
+    data = []
+    no = 0
+    # no = start
+    print type(pid), pid
+    for res in db.form1.find({'pid': pid, 'province': current_user.province,
+                              'inserted_by': current_user.username}):
+        no += 1
+        result = [no,
+                  res['pid'],
+                  res['firstname'],
+                  res['lastname'],
+                  res['age'],
+                  res['district'],
+                  res['amphur'],
+                  res['province'],
+                  res['collectdate'].replace('/', '-'),
+                  ]
+        print 'Date', type(res['collectdate'])
+        data.append(result)
+
+    return render_template('form_1_person.html', data=data)
+
+
+@main.route('/view/result', methods=['GET', 'POST'])
+@login_required
+def view_result():
+    pid = request.args.get('pid')
+    collectdate = request.args.get('collectdate')
+    print pid, collectdate
     form = Form1(request.form)
-    person = db.form1.find_one({'pid': pid})
+    collectdate = collectdate.replace('-', '/')
+    person = db.form1.find_one({'pid': pid, 'collectdate': collectdate,
+                                    'province': current_user.province,
+                                    'inserted_by': current_user.username})
     na = u'ไม่มีข้อมูล'
     try:
         infarction_score = int(person['smoke_screening']) + \
@@ -729,6 +763,35 @@ def view_person(pid):
             incomplete=incomplete,
             )
 
+
+@main.route('/get_person_data')
+@login_required
+def get_person_data():
+    pid = request.args.get('pid')
+    print pid
+    # start = int(request.args.get('start')) or 0
+    # length = int(request.args.get('length')) or 10
+    # search = request.args.get('search') or None
+    data = []
+    no = 0
+    # no = start
+    for res in db.form1.find({'pid': pid}):
+        no += 1
+        result = [no,
+                  res['pid'],
+                  res['firstname'],
+                  res['lastname'],
+                  res['age'],
+                  res['district'],
+                  res['amphur'],
+                  res['province'],
+                  res['collectdate'],
+                  ]
+        data.append(result)
+
+    return jsonify(data=data)
+
+
 @main.route('/get_all_data')
 @login_required
 def get_all_data():
@@ -739,7 +802,8 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    for res in db.form1.find({'province':current_user.province}):
+    for res in db.form1.find({'inserted_by':current_user.username,
+                                'province': current_user.province}):
         no += 1
         result = [no,
                     res['pid'],
@@ -749,6 +813,7 @@ def get_all_data():
                     res['district'],
                     res['amphur'],
                     res['province'],
+                    res['collectdate'].replace('/', '-'),
                 ]
         data.append(result)
 

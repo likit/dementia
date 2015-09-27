@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}ข้อมูลทั้งหมด{% endblock %}
+{% block title %}ข้อมูลส่วนบุคคล{% endblock %}
 
 {% block scripts %}
 {{ super() }}
@@ -10,7 +10,13 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(document).ready(function() {
         $('#datagrid').DataTable({
             "processing": true,
-            "ajax": $SCRIPT_ROOT + "/get_all_data",
+            "data": {{ data|tojson|safe }},
+            <!--"ajax": {-->
+                        <!--url: $SCRIPT_ROOT + "/get_person_data",-->
+                        <!--type: 'POST',-->
+                        <!--data: {'pid': pid },-->
+                        <!--dataType: "json",-->
+                    <!--},-->
             "columns": [
                 null,
                 {"searchable": true},
@@ -30,7 +36,8 @@ $(document).ready(function() {
         var myGrid = $('#datagrid').DataTable();
         $('#datagrid').on('click', '.action-view', function() {
             var id = myGrid.row($(this).parents('tr').first()).data()[1];
-            window.location.href="{{ url_for('.view_person', pid='') }}" + id;
+            var collectdate = myGrid.row($(this).parents('tr').first()).data()[8];
+            window.location.href="{{ url_for('.view_result') }}" + "?pid=" + id + "&collectdate=" + collectdate;
             });
         });
 </script>
@@ -43,7 +50,7 @@ $(document).ready(function() {
 {% block page_content %}
 <div class="container">
     <div class="page-header">
-        <h2>ข้อมูลทั้งหมด</h2>
+        <h2>ข้อมูลส่วนบุคลล</h2>
         <table id="datagrid" class="display" cellspacing="0" width="100%">
             <thead>
             <tr><th rowspan="2">ลำดับ</th>

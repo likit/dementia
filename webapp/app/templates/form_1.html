@@ -22,12 +22,16 @@ $(document).ready(function() {
                 $('#pid-search-badge').addClass('glyphicon glyphicon-ok').text('พบในฐานข้อมูล');
                 $('#firstname').val(data.firstname);
                 $('#lastname').val(data.lastname);
-                $('#district').val(data.district);
-                $('#amphur').val(data.amphur);
                 $('#province').val(data.province);
+                $('#province').trigger('change');
+                $('#amphur').val(data.amphur);
+                $('#amphur').trigger('change');
+                $('#district').val(data.district);
+                $('#district_number').val(data.district_number);
                 $('#age').val(data.age);
                 $('#marital').val(data.marital);
                 $('#edu').val(data.edu);
+                $('#edu').trigger('change');
                 $('#street_number').val(data.street_number);
                 $('#gender').val(data.gender);
                 $('#congenital_disease').val(data.congenital_disease);
@@ -762,7 +766,7 @@ $(document).ready(function() {
     <form id="mainform" method="post">
         {{ form.hidden_tag() }}
         {% if form.errors %}
-            {# {{ form.errors }} #}
+            {{ form.errors }}
             <div class="alert alert-warning" role="alert">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 กรุณากรอกข้อมูลช่องที่ต้องกรอกให้ครบ
