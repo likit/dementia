@@ -322,10 +322,8 @@ def view_all():
 def view_person(pid):
     data = []
     no = 0
-    # no = start
-    print type(pid), pid
-    for res in db.form1.find({'pid': pid, 'province': current_user.province,
-                              'inserted_by': current_user.username}):
+    for res in db.form1.find({'pid': pid,
+                    'province': current_user.province}):
         no += 1
         result = [no,
                   res['pid'],
@@ -335,9 +333,8 @@ def view_person(pid):
                   res['district'],
                   res['amphur'],
                   res['province'],
-                  res['collectdate'].replace('/', '-'),
+                  str(res['created_date'].date()),
                   ]
-        print 'Date', type(res['collectdate'])
         data.append(result)
 
     return render_template('form_1_person.html', data=data)
@@ -350,10 +347,10 @@ def view_result():
     collectdate = request.args.get('collectdate')
     print pid, collectdate
     form = Form1(request.form)
-    collectdate = collectdate.replace('-', '/')
-    person = db.form1.find_one({'pid': pid, 'collectdate': collectdate,
-                                    'province': current_user.province,
-                                    'inserted_by': current_user.username})
+    for person in db.form1.find({'pid': pid, 'province': current_user.province}):
+        if collectdate == str(person['created_date'].date()):
+            break
+
     na = u'ไม่มีข้อมูล'
     try:
         infarction_score = int(person['smoke_screening']) + \
@@ -514,10 +511,13 @@ def view_result():
         else:
             q9_result = u'มีอาการของโรคซึมเศร้าระดับมาก'
 
-    if person['knee_pain'] == 0:
-        knee_pain = u'ไม่ปวดเข่า'
+    if 'knee_pain' in person:
+        if person['knee_pain'] == 0:
+            knee_pain = u'ไม่ปวดเข่า'
+        else:
+            knee_pain = u'ปวดเข่า'
     else:
-        knee_pain = u'ปวดเข่า'
+        knee_pain = u''
 
     try:
         knee_pain_clinic_score = int(person['knee_pain_clinic_one']) + \
@@ -534,9 +534,12 @@ def view_result():
         else:
             knee_pain_clinic = u'ปกติ'
 
-    tugt = dict([(0, u'<30 วินาที'),
-                (1, u'>=30 วินาที'),
-                (2, u'เดินไม่ได้')]).get(person['tugt'])
+    if 'tugt' in person:
+        tugt = dict([(0, u'<30 วินาที'),
+                    (1, u'>=30 วินาที'),
+                    (2, u'เดินไม่ได้')]).get(person['tugt'])
+    else:
+        tugt = u''
 
     try:
         urine = dict([(0, u'ไม่มี'), (1, u'มี')])[person['urine_holding']]
@@ -569,10 +572,13 @@ def view_result():
         else:
             malnutrition = u'ปกติ'
 
-    if person['sleeping_one']:
-        sleeping = dict([(0, u'ไม่มีปัญหา'), (1, u'มีปัญหา')])[person['sleeping_one']]
+    if 'sleeping_one' in person:
+        if person['sleeping_one']:
+            sleeping = dict([(0, u'ไม่มีปัญหา'), (1, u'มีปัญหา')])[person['sleeping_one']]
+        else:
+            sleeping = u''
     else:
-        sleeping = None
+        sleeping = u''
 
     try:
         routine_score = int(person['routine_one']) + \
@@ -777,17 +783,21 @@ def get_person_data():
     # no = start
     for res in db.form1.find({'pid': pid}):
         no += 1
-        result = [no,
-                  res['pid'],
-                  res['firstname'],
-                  res['lastname'],
-                  res['age'],
-                  res['district'],
-                  res['amphur'],
-                  res['province'],
-                  res['collectdate'],
-                  ]
-        data.append(result)
+        try:
+            result = [no,
+                      res['pid'],
+                      res['firstname'],
+                      res['lastname'],
+                      res['age'],
+                      res['district'],
+                      res['amphur'],
+                      res['province'],
+                      str(res['created_date'].date()),
+                      ]
+        except:
+            pass
+        else:
+            data.append(result)
 
     return jsonify(data=data)
 
@@ -802,20 +812,27 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    for res in db.form1.find({'inserted_by':current_user.username,
-                                'province': current_user.province}):
+    print current_user.province
+    for res in db.form1.find({'province': current_user.province}):
         no += 1
-        result = [no,
-                    res['pid'],
-                    res['firstname'],
-                    res['lastname'],
-                    res['age'],
-                    res['district'],
-                    res['amphur'],
-                    res['province'],
-                    res['collectdate'].replace('/', '-'),
-                ]
-        data.append(result)
+        print res['province'], res['amphur'], res['district'], \
+                res['pid'], res['firstname'], res['lastname'], res['age'], \
+                res['created_date'].date()
+        try:
+            result = [no,
+                        res['pid'],
+                        res['firstname'],
+                        res['lastname'],
+                        res['age'],
+                        res['district'],
+                        res['amphur'],
+                        res['province'],
+                        str(res['created_date'].date()),
+                    ]
+        except:
+            pass
+        else:
+            data.append(result)
 
     return jsonify(data=data)
 
@@ -1059,3 +1076,104 @@ def longterm_viz(year):
                {'key': 'อืนๆ', 'y': 0},
                ]
     return render_template('viz/longterm.html', piedata=piedata, total=n, year=year)
+
+
+@main.route('/viz/mmse/<year>')
+@login_required
+def mmse_viz(year):
+    na = 0
+    positive = 0
+    negative = 0
+    if current_user.username == 'admin':  # TEMPORARY
+        cursor = db.form1.find()
+    else:
+        cursor = db.form1.find({'province': current_user.province})
+
+    n = 0
+    scores = []
+    for rec in cursor:
+        if year != 'all':
+            try:
+                eyear = rec['created_date'].year
+            except:
+                continue
+            else:
+                if eyear != int(year):
+                    continue
+        score = 0
+        n += 1
+        try:
+            if rec['mmse_one_one'] == 1: score += 1
+            if rec['mmse_one_two'] == 1: score += 1
+            if rec['mmse_one_three'] == 1: score += 1
+            if rec['mmse_one_four'] == 1: score += 1
+            if rec['mmse_one_five'] == 1: score += 1
+            if rec['mmse_two_one_one'] == 1: score += 1
+            if rec['mmse_two_one_two'] == 1: score += 1
+            if rec['mmse_two_one_three'] == 1: score += 1
+            if rec['mmse_two_one_four'] == 1: score += 1
+            if rec['mmse_two_one_five'] == 1: score += 1
+            if rec['mmse_two_two_one'] == 1: score += 1
+            if rec['mmse_two_two_two'] == 1: score += 1
+            if rec['mmse_two_two_three'] == 1: score += 1
+            if rec['mmse_two_two_four'] == 1: score += 1
+            if rec['mmse_two_two_five'] == 1: score += 1
+
+            itemscore = 0
+            itemscore += int(rec['mmse_three_flower'])
+            itemscore += int(rec['mmse_three_river'])
+            itemscore += int(rec['mmse_three_train'])
+            if itemscore == 0:
+                itemscore += int(rec['mmse_three_tree'])
+                itemscore += int(rec['mmse_three_sea'])
+                itemscore += int(rec['mmse_three_car'])
+            score += itemscore
+
+            if rec['edu'] > 1:
+                if rec['mmse_four_one'] < 6:
+                    score += rec['mmse_four_one']
+
+                if rec['mmse_four_two'] < 6:
+                    score += rec['mmse_four_two']
+
+            itemscore = 0
+            itemscore += int(rec['mmse_five_flower'])
+            itemscore += int(rec['mmse_five_river'])
+            itemscore += int(rec['mmse_five_train'])
+            if itemscore == 0:
+                itemscore += int(rec['mmse_five_tree'])
+                itemscore += int(rec['mmse_five_sea'])
+                itemscore += int(rec['mmse_five_car'])
+            score += itemscore
+
+            if rec['mmse_six_one'] == 1:
+                score += 1
+            if rec['mmse_six_two'] == 1:
+                score += 1
+            if rec['mmse_seven_one'] == 1:
+                score += 1
+
+            score += int(rec['mmse_eight_one'])
+            score += int(rec['mmse_eight_two'])
+            score += int(rec['mmse_eight_three'])
+            if rec['edu'] > 1:
+                score += int(rec['mmse_nine_one'])
+                score += int(rec['mmse_ten_one'])
+            score += int(rec['mmse_eleven_one'])
+
+            if rec['edu'] == 1 and score <= 14:
+                positive += 1
+            elif rec['edu'] == 2 and score <= 17:
+                positive += 1
+            elif rec['edu'] > 2 and score <= 22:
+                positive += 1
+            else:
+                negative += 1
+        except:
+            na += 1
+
+    piedata = [{'key': u'สงสัยภาวะสมองเสื่อม', 'y': positive},
+               {'key': u'ปกติ', 'y': negative},
+               {'key': u'ไม่มีข้อมูล', 'y': na},
+           ]
+    return render_template('viz/mmse.html', piedata=piedata, total=n, year=year)
