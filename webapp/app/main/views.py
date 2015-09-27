@@ -18,7 +18,7 @@ from .. import APP_ROOT, APP_STATIC
 from bson.objectid import ObjectId
 from flask.ext.login import login_required, current_user
 
-scratchdb = pymongo.Connection()['scratch']
+scratch = pymongo.Connection()['scratch']
 
 @main.route('/', methods=['GET', 'POST'])
 #@login_required
@@ -825,29 +825,45 @@ def your_account_view():
     user = db.users.find_one({'username': current_user.username})
     return render_template('your_account.html', db=db, user=user)
 
-@main.route('/viz/')
+@main.route('/viz/<year>')
 @login_required
-def age_viz():
+def age_viz(year):
     '''Visualize ages in a pie chart.'''
     males = 0
     females = 0
     others = 0
-    male_ages = []
-    female_ages = []
-    other_ages = []
-    for rec in db.form1.find():
-        if rec['firstname'].encode('utf8').startswith('นาย'):
+    male_ages = [0]  # add zero so the list is not empty
+    female_ages = [0]  # empty list fails to draw the boxplot
+    other_ages = [0]
+    if current_user.username == 'admin':  # TEMPORARY
+        cursor = db.form1.find()
+    else:
+        cursor = db.form1.find({'province': current_user.province})
+
+    n = 0
+    for rec in cursor:
+        if year != 'all':
+            try:
+                eyear = rec['created_date'].year
+            except:
+                continue
+            else:
+                if eyear != int(year):
+                    continue
+        n += 1
+
+        if rec['gender'] == u'ชาย':
             males += 1
-            male_ages.append(rec['age'])
-        elif rec['firstname'].encode('utf8').startswith('นาง'):
+            if rec['age']:
+                male_ages.append(rec['age'])
+        elif rec['gender'] == u'หญิง':
             females += 1
-            female_ages.append(rec['age'])
-        elif rec['firstname'].encode('utf8').startswith('น.ส.'):
-            females += 1
-            female_ages.append(rec['age'])
+            if rec['age']:
+                female_ages.append(rec['age'])
         else:
             others += 1
-            other_ages.append(rec['age'])
+            if rec['age']:
+                other_ages.append(rec['age'])
 
     piedata = [{'key': 'เพศชาย', 'y': males},
             {'key': 'เพศหญิง', 'y': females},
@@ -863,8 +879,7 @@ def age_viz():
         iqr = upper_quartile - lower_quartile
         upper_whisker = data[data<=upper_quartile+1.5*iqr].max()
         lower_whisker = data[data>=lower_quartile-1.5*iqr].min()
-        outliers = data[data>upper_whisker]
-        outliers += data[data<lower_whisker]
+        outliers = np.concatenate((data[data>upper_whisker], data[data<lower_whisker]))
 
         values = {
                 'Q1': lower_quartile,
@@ -895,4 +910,152 @@ def age_viz():
             )
 
     return render_template('viz/index.html', piedata=piedata,
-            boxplotdata=boxplotdata)
+            boxplotdata=boxplotdata, year=year, total=n)
+
+@main.route('/viz/knee/<year>')
+@login_required
+def knee_viz(year):
+    '''Visualize knee pain in a pie chart.'''
+    # Should categorize based on genders
+    pain = 0
+    no_pain = 0
+    others = 0
+    na = 0
+    if current_user.username == 'admin':  # TEMPORARY
+        cursor = db.form1.find()
+    else:
+        cursor = db.form1.find({'province': current_user.province})
+
+    n = 0
+    for rec in cursor:
+        if year != 'all':
+            try:
+                eyear = rec['created_date'].year
+            except:
+                continue
+            else:
+                if eyear != int(year):
+                    continue
+        n += 1
+        if 'knee_pain' in rec:
+            if rec['knee_pain'] == 1:
+                pain += 1
+            elif rec['knee_pain'] == 0:
+                no_pain += 1
+            else:
+                others += 1
+        else:
+            na += 1
+
+    piedata = [{'key': 'ปวดเข่า', 'y': pain},
+               {'key': 'ไม่ปวดเข่า', 'y': no_pain},
+               {'key': 'ไม่มีข้อมูล', 'y': na},
+               {'key': 'อืนๆ', 'y': others},
+               ]
+    return render_template('viz/knee.html', piedata=piedata, total=n, year=year)
+
+@main.route('/viz/longterm/<year>')
+@login_required
+def longterm_viz(year):
+    longterm_two_scores = dict([(0, 0), (1, 0), (2, 0), (3, 1), (4, 1), (5, 1)])
+    na = 0
+    need = []
+    no_need = []
+    if current_user.username == 'admin':  # TEMPORARY
+        cursor = scratch.qf.find()
+    else:
+        cursor = scratch.qf.find({'province': current_user.province})
+
+    n = 0
+    scores = []
+    for rec in cursor:
+        if year != 'all':
+            try:
+                eyear = rec['created_date'].year
+            except:
+                continue
+            else:
+                if eyear != int(year):
+                    continue
+        score = 0
+        n += 1
+        try:
+            social_score = 0
+            social_score += rec['long_term_care_one_one']
+            social_score += rec['long_term_care_one_two']
+            social_score += rec['long_term_care_one_three']
+
+            sense_score = 0
+            sense_score += longterm_two_scores[rec['long_term_care_two_one']]
+            sense_score += longterm_two_scores[rec['long_term_care_two_two']]
+
+            depress_score = 0
+            depress_score += rec['long_term_care_three_one']
+            if (rec['long_term_care_three_two_one'] or
+                    rec['long_term_care_three_two_two']):
+                depress_score += 1
+
+            sensitive_score = 0
+            sensitive_score += int(rec['long_term_care_four_one'])
+            sensitive_score += int(rec['long_term_care_four_two'])
+            sensitive_score += int(rec['long_term_care_four_three'])
+            sensitive_score += int(rec['long_term_care_four_four'])
+            sensitive_score += int(rec['long_term_care_four_five'])
+
+            routine_score = 0
+            routine_score += rec['long_term_care_five_one'] + 1
+            routine_score += rec['long_term_care_five_two'] + 1
+            routine_score += rec['long_term_care_five_three'] + 1
+            routine_score += rec['long_term_care_five_four'] + 1
+            routine_score += rec['long_term_care_five_five'] + 1
+            routine_score += rec['long_term_care_five_six'] + 1
+            routine_score += rec['long_term_care_five_seven'] + 1
+            routine_score += rec['long_term_care_five_eight'] + 1
+            routine_score += rec['long_term_care_five_nine'] + 1
+            routine_score += rec['long_term_care_five_ten'] + 1
+            routine_score += rec['long_term_care_five_eleven'] + 1
+            routine_score += rec['long_term_care_five_twelve'] + 1
+            routine_score += rec['long_term_care_five_thirteen'] + 1
+            routine_score += rec['long_term_care_five_fourteen'] + 1
+            routine_score += rec['long_term_care_five_fifteen'] + 1
+            routine_score += rec['long_term_care_five_sixteen'] + 1
+
+            total_score = 0
+            if social_score <= 3:
+                total_score += 0
+            total_score += sense_score + 1
+            if depress_score == 0:
+                total_score += 2
+            if depress_score == 1:
+                total_score += 4
+            if depress_score == 2:
+                total_score += 6
+            if sensitive_score == 0:
+                total_score += 4
+            if sensitive_score >=1 and sensitive_score <= 2:
+                total_score += 8
+            if sensitive_score >=3 and sensitive_score <= 5:
+                total_score += 12
+            if routine_score >=16 and routine_score <= 20:
+                total_score += 6
+            if routine_score >=21 and routine_score <= 35:
+                total_score += 12
+            if routine_score >=36 and routine_score <= 48:
+                total_score += 18
+
+        except:
+            na += 1
+            continue
+        scores.append(total_score)
+
+    noneed = len([x for x in scores if x <= 16])
+    watch = len([x for x in scores if x >= 17 and x <= 19])
+    need = len([x for x in scores if x > 20])
+
+    piedata = [{'key': 'ต้องการ', 'y': need},
+               {'key': 'ไม่ต้องการ', 'y': noneed},
+               {'key': 'เฝ้าระวัง', 'y': watch},
+               {'key': 'ไม่มีข้อมูล', 'y': na},
+               {'key': 'อืนๆ', 'y': 0},
+               ]
+    return render_template('viz/longterm.html', piedata=piedata, total=n, year=year)

@@ -625,7 +625,7 @@ class Form1(Form):
     long_term_care_five_thirteen = RadioField(u'กวาด/ถูบ้านซักรีดผ้า',
                     choices=long_term_care_five_choices,
                     coerce=int, validators=[Optional()])
-    long_term_care_five_forteen = RadioField(u'การซื้อของ จ่ายตลาด',
+    long_term_care_five_fourteen = RadioField(u'การซื้อของ จ่ายตลาด',
                     choices=long_term_care_five_choices,
                     coerce=int, validators=[Optional()])
     long_term_care_five_fifteen = RadioField(u'ใช้บริการระบบสาธารณะ เช่น รถโดยสาร รถเมล์ แท็กซี่ รถไฟ',

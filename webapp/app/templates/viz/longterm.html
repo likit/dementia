@@ -71,90 +71,16 @@ var piedata = {{ piedata|tojson|safe }}
         return chart;
     });
 </script>
-<script>
-    var boxplotdata = {{ boxplotdata|tojson|safe }};
-    nv.addGraph(function() {
-        var bpchart = nv.models.boxPlotChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.values.Q3 })
-            .width(700)
-            .staggerLabels(false)
-            .maxBoxWidth(75) // prevent boxes from being incredibly wide
-            .yDomain([50, 100])
-
-        bpchart.yAxis.axisLabel("อายุ").tickFormat(d3.format(',d'));
-
-        d3.select('#chart1 svg')
-            .datum(boxplotdata)
-            .attr('width', 800)
-            .attr('height', 400)
-            .call(bpchart);
-
-        nv.utils.windowResize(bpchart.update);
-        return bpchart;
-    });
-</script>
-<script>
-    var bardata = [
-            {
-              key: "Cumulative Return",
-              values: [
-                { 
-                  "label" : "A",
-                  "value" : 29
-                } , 
-                { 
-                  "label" : "B" , 
-                  "value" : 10
-                } , 
-                { 
-                  "label" : "C" , 
-                  "value" : 34
-                } , 
-                { 
-                  "label" : "D" , 
-                  "value" : 45
-                } , 
-                { 
-                  "label" : "E" ,
-                  "value" : 12
-                } , 
-                { 
-                  "label" : "F" , 
-                  "value" : 30
-                } , 
-              ]
-            }
-        ];
-    console.log(bardata);
-
-    nv.addGraph(function() {
-        var barchart = nv.models.discreteBarChart()
-                    .x(function(d) { return d.label })
-                    .y(function(d) { return d.value })
-                    .width(600)
-                    .height(400)
-                    .staggerLabels(true)
-                    .showValues(true);
-
-        barchart.tooltip.enabled(true);
-
-        d3.select('#chart2 svg')
-            .datum(bardata)
-            .attr('width', 600)
-            .attr('height', 400)
-            .call(barchart);
-
-        nv.utils.windowResize(barchart.update);
-        return barchart;
-    });
-</script>
 {% endblock scripts %}
 
 {% block page_content %}
 <div class="container">
     <div class="page-header">
+        {% if current_user.username == 'admin' %}
+        <h1>กราฟแสดงผลการคัดกรองผู้สูงอายุที่ต้องการได้รับการดูแลระยะยาว</h1>
+        {% else %}
         <h1>กราฟแสดงผลต่างๆ ของผู้สูงอายุในจังหวัด{{ current_user.province }}</h1>
+        {% endif %}
     </div>
     <div class="row">
         <div class="btn-group">
@@ -174,15 +100,15 @@ var piedata = {{ piedata|tojson|safe }}
                 เลือกปี <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ url_for('main.age_viz', year='2012') }}">2012</a></li>
-                <li><a href="{{ url_for('main.age_viz', year='2013') }}">2013</a></li>
-                <li><a href="{{ url_for('main.age_viz', year='2014') }}">2014</a></li>
-                <li><a href="{{ url_for('main.age_viz', year='2015') }}">2015</a></li>
+                <li><a href="{{ url_for('main.longterm_viz', year='2012') }}">2012</a></li>
+                <li><a href="{{ url_for('main.longterm_viz', year='2013') }}">2013</a></li>
+                <li><a href="{{ url_for('main.longterm_viz', year='2014') }}">2014</a></li>
+                <li><a href="{{ url_for('main.longterm_viz', year='2015') }}">2015</a></li>
             </ul>
         </div>
     </div>
     <div class="row">
-        <h3>จำนวนผู้สูงอายุแบ่งตามเพศจำนวน {{ total }} คน</h3>
+        <h3>จำนวนผู้สูงอายุทั้งหมด {{ total }} คน</h3>
         {% if year != 'all' %}
         <h3>ปี {{ year }}</h3>
         {% else %}
@@ -190,20 +116,6 @@ var piedata = {{ piedata|tojson|safe }}
         {% endif %}
         <div class="testBlock"><svg id="test1"></svg></div>
         <div class="testBlock"><svg id="test2"></svg></div>
-    </div>
-    <div class="row">
-        <h3>ข้อมูลอายุแบ่งตามเพศจำนวน {{ total }} คน</h3>
-        <h3>จำนวนผู้สูงอายุทั้งหมด {{ total }} คน</h3>
-        {% if year != 'all' %}
-        <h3>ปี {{ year }}</h3>
-        {% else %}
-        <h3>ทุกปี</h3>
-        {% endif %}
-        <div class="gallery" id="chart1"><svg></svg></div>
-    </div>
-    <div class="row">
-        <h3>ผลตรวจทางสมอง</h3>
-        <div class="gallery" id="chart2"><svg></svg></div>
     </div>
 </div>
 {% endblock page_content %}
