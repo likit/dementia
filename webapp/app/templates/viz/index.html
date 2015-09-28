@@ -94,61 +94,7 @@ var piedata = {{ piedata|tojson|safe }}
         return bpchart;
     });
 </script>
-<script>
-    var bardata = [
-            {
-              key: "Cumulative Return",
-              values: [
-                { 
-                  "label" : "A",
-                  "value" : 29
-                } , 
-                { 
-                  "label" : "B" , 
-                  "value" : 10
-                } , 
-                { 
-                  "label" : "C" , 
-                  "value" : 34
-                } , 
-                { 
-                  "label" : "D" , 
-                  "value" : 45
-                } , 
-                { 
-                  "label" : "E" ,
-                  "value" : 12
-                } , 
-                { 
-                  "label" : "F" , 
-                  "value" : 30
-                } , 
-              ]
-            }
-        ];
-    console.log(bardata);
 
-    nv.addGraph(function() {
-        var barchart = nv.models.discreteBarChart()
-                    .x(function(d) { return d.label })
-                    .y(function(d) { return d.value })
-                    .width(600)
-                    .height(400)
-                    .staggerLabels(true)
-                    .showValues(true);
-
-        barchart.tooltip.enabled(true);
-
-        d3.select('#chart2 svg')
-            .datum(bardata)
-            .attr('width', 600)
-            .attr('height', 400)
-            .call(barchart);
-
-        nv.utils.windowResize(barchart.update);
-        return barchart;
-    });
-</script>
 {% endblock scripts %}
 
 {% block page_content %}
@@ -165,9 +111,8 @@ var piedata = {{ piedata|tojson|safe }}
             <li><a href="{{ url_for('main.age_viz', year='all') }}">ข้อมูลเพศและอายุ</a></li>
             <li><a href="{{ url_for('main.longterm_viz', year='all') }}">ผลคัดกรองผู้ต้องการดูแลในระยะยาว</a></li>
             <li><a href="{{ url_for('main.knee_viz', year='all') }}">ผลการคัดกรองโรคข้อเข่าเสื่อม</a></li>
-            <li><a href="{{ url_for('main.mmse_viz', year='all') }}">ผลการคัดกรองสมองเสื่อม</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">ผลการคัดกรองโรคซึมเศร้า</a></li>
+            <li><a href="{{ url_for('main.mmse_viz', year='all') }}">ผลการคัดกรองสมองเสื่อม</a></li>
         </ul>
         </div>
         <div class="btn-group">
@@ -203,8 +148,6 @@ var piedata = {{ piedata|tojson|safe }}
         <div class="gallery" id="chart1"><svg></svg></div>
     </div>
     <div class="row">
-        <h3>ผลตรวจทางสมอง</h3>
-        <div class="gallery" id="chart2"><svg></svg></div>
     </div>
 </div>
 {% endblock page_content %}

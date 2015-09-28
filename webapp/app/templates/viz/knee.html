@@ -92,7 +92,7 @@ var piedata = {{ piedata|tojson|safe }}
             <li><a href="{{ url_for('main.longterm_viz', year='all') }}">ผลคัดกรองผู้ต้องการดูแลในระยะยาว</a></li>
             <li><a href="{{ url_for('main.knee_viz', year='all') }}">ผลการคัดกรองโรคข้อเข่าเสื่อม</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">ผลการคัดกรองโรคซึมเศร้า</a></li>
+            <li><a href="{{ url_for('main.mmse_viz', year='all') }}">ผลการคัดกรองสมองเสื่อม</a></li>
         </ul>
         </div>
         <div class="btn-group">
@@ -116,6 +116,37 @@ var piedata = {{ piedata|tojson|safe }}
         {% endif %}
         <div class="testBlock"><svg id="test1"></svg></div>
         <div class="testBlock"><svg id="test2"></svg></div>
+ <div class="row">
+        <h3>ข้อมูลผู้สูงอายุ</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <th>ปวดเข่า</th>
+            <th>ไม่ปวดเข่า</th>
+            <th>ไม่มีข้อมูล</th>
+            </thead>
+            <tbody>
+                <tr><td>{{ pain }}</td><td>{{ no_pain }}</td><td> {{ na }}</td></tr>
+            </tbody>
+        </table>
     </div>
+    <div class="row">
+        <h3>จำนวนผู้สูงอายุแยกตามจังหวัด</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <th>จังหวัด</th>
+                <th>ปวดเข่า</th>
+                <th>ไม่ปวดเข่า</th>
+            </thead>
+            <tbody>
+                {% for k,v in pain_prov.iteritems() %}
+                {% if k not in no_pain_prov %}
+                <tr><td>{{ k }}</td><td>{{ v }}</td><td>0</td></tr>
+                {% else %}
+                <tr><td>{{k}}</td><td>{{v}}</td><td>{{no_pain_prov[k]}}</td></tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>   </div>
 </div>
 {% endblock page_content %}

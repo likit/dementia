@@ -6,6 +6,7 @@ from datetime import datetime
 import numpy as np
 import json
 import pymongo
+from collections import Counter
 
 from flask import (render_template, session, redirect,
                         url_for, flash, jsonify, request)
@@ -17,8 +18,6 @@ from .. import APP_ROOT, APP_STATIC
 
 from bson.objectid import ObjectId
 from flask.ext.login import login_required, current_user
-
-scratch = pymongo.Connection()['scratch']
 
 @main.route('/', methods=['GET', 'POST'])
 #@login_required
@@ -345,7 +344,6 @@ def view_person(pid):
 def view_result():
     pid = request.args.get('pid')
     collectdate = request.args.get('collectdate')
-    print pid, collectdate
     form = Form1(request.form)
     for person in db.form1.find({'pid': pid, 'province': current_user.province}):
         if collectdate == str(person['created_date'].date()):
@@ -703,12 +701,6 @@ def view_result():
     else:
         long_term_five_score = None
 
-    print('longterm_one', long_term_one_score)
-    print('longterm_two', long_term_two_score)
-    print('longterm_three', long_term_three_score)
-    print('longterm_four', long_term_four_score)
-    print('longterm_five', long_term_five_score)
-
     try:
         long_term_score_total = long_term_one_score + \
                                     long_term_two_score + \
@@ -774,7 +766,6 @@ def view_result():
 @login_required
 def get_person_data():
     pid = request.args.get('pid')
-    print pid
     # start = int(request.args.get('start')) or 0
     # length = int(request.args.get('length')) or 10
     # search = request.args.get('search') or None
@@ -812,12 +803,8 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    print current_user.province
     for res in db.form1.find({'province': current_user.province}):
         no += 1
-        print res['province'], res['amphur'], res['district'], \
-                res['pid'], res['firstname'], res['lastname'], res['age'], \
-                res['created_date'].date()
         try:
             result = [no,
                         res['pid'],
@@ -938,6 +925,8 @@ def knee_viz(year):
     no_pain = 0
     others = 0
     na = 0
+    pain_prov = []
+    no_pain_prov = []
     if current_user.username == 'admin':  # TEMPORARY
         cursor = db.form1.find()
     else:
@@ -957,8 +946,16 @@ def knee_viz(year):
         if 'knee_pain' in rec:
             if rec['knee_pain'] == 1:
                 pain += 1
+                try:
+                    pain_prov.append(rec['province'])
+                except:
+                    pass
             elif rec['knee_pain'] == 0:
                 no_pain += 1
+                try:
+                    no_pain_prov.append(rec['province'])
+                except:
+                    pass
             else:
                 others += 1
         else:
@@ -969,7 +966,11 @@ def knee_viz(year):
                {'key': 'ไม่มีข้อมูล', 'y': na},
                {'key': 'อืนๆ', 'y': others},
                ]
-    return render_template('viz/knee.html', piedata=piedata, total=n, year=year)
+    pain_prov = Counter(pain_prov)
+    no_pain_prov = Counter(no_pain_prov)
+    return render_template('viz/knee.html', piedata=piedata, total=n, year=year,
+                           pain=pain, no_pain=no_pain, na=na, others=others,
+                           pain_prov=pain_prov, no_pain_prov=no_pain_prov)
 
 @main.route('/viz/longterm/<year>')
 @login_required
@@ -979,9 +980,9 @@ def longterm_viz(year):
     need = []
     no_need = []
     if current_user.username == 'admin':  # TEMPORARY
-        cursor = scratch.qf.find()
+        cursor = db.form1.find()
     else:
-        cursor = scratch.qf.find({'province': current_user.province})
+        cursor = db.form1.find({'province': current_user.province})
 
     n = 0
     scores = []
@@ -1063,11 +1064,17 @@ def longterm_viz(year):
         except:
             na += 1
             continue
-        scores.append(total_score)
+        try:
+            scores.append((rec['province'],total_score))
+        except KeyError:
+            continue
 
-    noneed = len([x for x in scores if x <= 16])
-    watch = len([x for x in scores if x >= 17 and x <= 19])
-    need = len([x for x in scores if x > 20])
+    noneed = len([x[1] for x in scores if x[1] <= 16])
+    watch = len([x[1] for x in scores if x[1] >= 17 and x[1] <= 19])
+    need = len([x[1] for x in scores if x[1] > 20])
+    noneed_prov = Counter([x[0] for x in scores if x[1] <= 16])
+    watch_prov = Counter([x[0] for x in scores if x[1] >= 17 and x[1] <= 19])
+    need_prov = Counter([x[0] for x in scores if x[1] > 20])
 
     piedata = [{'key': 'ต้องการ', 'y': need},
                {'key': 'ไม่ต้องการ', 'y': noneed},
@@ -1075,7 +1082,9 @@ def longterm_viz(year):
                {'key': 'ไม่มีข้อมูล', 'y': na},
                {'key': 'อืนๆ', 'y': 0},
                ]
-    return render_template('viz/longterm.html', piedata=piedata, total=n, year=year)
+    return render_template('viz/longterm.html',
+               piedata=piedata, total=n, year=year, na=na, noneed=noneed, need=need, watch=watch,
+               noneed_prov=noneed_prov, need_prov=need_prov, watch_prov=watch_prov)
 
 
 @main.route('/viz/mmse/<year>')
