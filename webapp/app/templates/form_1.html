@@ -31,7 +31,7 @@ $(document).ready(function() {
                 $('#age').val(data.age);
                 $('#marital').val(data.marital);
                 $('#edu').val(data.edu);
-                $('#edu').trigger('change');
+
                 $('#street_number').val(data.street_number);
                 $('#gender').val(data.gender);
                 $('#congenital_disease').val(data.congenital_disease);
@@ -1918,10 +1918,10 @@ $(document).ready(function() {
                         </tr>
                         <tr>
                             <td class="col-md-5">
-                                14) {{ form.long_term_care_five_forteen.label() }}
+                                14) {{ form.long_term_care_five_fourteen.label() }}
                             </td>
                             <td>
-                                {% for subfield in form.long_term_care_five_forteen %}
+                                {% for subfield in form.long_term_care_five_fourteen %}
                                     {{ subfield }} {{ subfield.label }}<br/>
                                 {% endfor %}
                         </tr>
