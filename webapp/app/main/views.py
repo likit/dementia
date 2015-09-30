@@ -288,7 +288,7 @@ def form_1():
                 'long_term_care_five_eleven': form.long_term_care_five_eleven.data,
                 'long_term_care_five_twelve': form.long_term_care_five_twelve.data,
                 'long_term_care_five_thirteen': form.long_term_care_five_thirteen.data,
-                'long_term_care_five_forteen': form.long_term_care_five_forteen.data,
+                'long_term_care_five_fourteen': form.long_term_care_five_fourteen.data,
                 'long_term_care_five_fifteen': form.long_term_care_five_fifteen.data,
                 'long_term_care_five_sixteen': form.long_term_care_five_sixteen.data,
 
@@ -644,7 +644,7 @@ def view_result():
                                         int(person['long_term_care_five_eleven']) + \
                                         int(person['long_term_care_five_twelve']) + \
                                         int(person['long_term_care_five_thirteen']) + \
-                                        int(person['long_term_care_five_forteen']) + \
+                                        int(person['long_term_care_five_fourteen']) + \
                                         int(person['long_term_care_five_fifteen']) + \
                                         int(person['long_term_care_five_sixteen'])
     except:
@@ -949,13 +949,13 @@ def knee_viz(year):
                 try:
                     pain_prov.append(rec['province'])
                 except:
-                    pass
+                    pain_prov.append('Unknown')
             elif rec['knee_pain'] == 0:
                 no_pain += 1
                 try:
                     no_pain_prov.append(rec['province'])
                 except:
-                    pass
+                    no_pain_prov.append('Unknown')
             else:
                 others += 1
         else:
