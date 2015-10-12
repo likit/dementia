@@ -239,12 +239,6 @@ $(document).ready(function() {
                 $("label[for=congenital_dis_years], input#congenital_dis_years").show();
             }
         });
-    $("#accordian").accordion({
-            heightStyle: "content",
-            event: "click hoverintent",
-            collapsible: true
-    });
-
     $("#dental_part_two_one").change(function() {
             // TODO: the following line is a hack
             if ($("input[name='dental_part_two_one']:checked").val() === "1") {
@@ -754,6 +748,13 @@ $(document).ready(function() {
     $('input[name=long_term_care_four_three]').change(set_long_term_care_score_checkbox);
     $('input[name=long_term_care_four_four]').change(set_long_term_care_score_checkbox);
     $('input[name=long_term_care_four_five]').change(set_long_term_care_score_checkbox);
+
+    $("#accordion").accordion({
+            heightStyle: "content",
+            event: "click hoverintent",
+            collapsible: true
+    });
+
 });
 </script>
 {% endblock %}
@@ -787,7 +788,7 @@ $(document).ready(function() {
         </div>
     </div>
 
-    <div id="accordian">
+    <div id="accordion">
         <h4><strong>วันที่เก็บข้อมูล <span id="collectdate-badge" class="badge"></span></strong></h4>
         <div>
             <div class="panel panel-default">
@@ -801,7 +802,6 @@ $(document).ready(function() {
                 </div>
             </div>
         </div>
-
         <h4><strong>แบบสัมภาษณ์ข้อมูลส่วนบุคคล</strong></h4>
         <div>
             <div class="panel panel-default">
@@ -889,7 +889,6 @@ $(document).ready(function() {
                 </div>
             </div>
         </div>
-
         <h4><strong>ค่าความดันโลหิต</strong></h4>
         <div>
             <div class="panel panel-default">
