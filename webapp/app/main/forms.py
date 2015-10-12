@@ -10,6 +10,10 @@ from wtforms import (StringField,
                         RadioField,
                         )
 
+class NotValidatingSelectField(SelectField):
+    def pre_validate(self, form):
+        pass
+
 class Form1(Form):
     # Personal info part
     collectdate = StringField(u'', validators=[Required()])
@@ -18,9 +22,9 @@ class Form1(Form):
     pid = StringField(u'รหัสบัตรประชาชน', validators=[Required()])
     street_number = StringField(u'บ้านเลขที่', validators=[Required()])
     district_number = StringField(u'หมู่', validators=[Required()])
-    province = SelectField(u'จังหวัด', validators=[Required()])
-    amphur = SelectField(u'อำเภอ', validators=[Required()])
-    district = SelectField(u'ตำบล', validators=[Required()])
+    province = SelectField(u'จังหวัด', validators=[Required()], coerce=unicode)
+    amphur = NotValidatingSelectField(u'อำเภอ', validators=[Required()], coerce=unicode)
+    district = NotValidatingSelectField(u'ตำบล', validators=[Required()], coerce=unicode)
     age = IntegerField(u'อายุ', validators=[NumberRange(1,130), Optional()])
     weight = StringField(u'น้ำหนัก', validators=[Optional()])
     height = StringField(u'ส่วนสูง', validators=[Optional()])
