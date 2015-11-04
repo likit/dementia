@@ -62,8 +62,10 @@ def form_1():
     for t in amphurs_json.itervalues():
         districts_list += t
 
-    form.amphur.choices = [('', '')] + [(x,x) for x in amphurs_json.keys()]
-    form.district.choices = [('', '')] + [(x,x) for x in districts_list]
+    # form.amphur.choices = [('', '')] + [(x,x) for x in amphurs_json.keys()]
+    # form.district.choices = [('', '')] + [(x,x) for x in districts_list]
+    form.amphur.choices = [('', '')]
+    form.district.choices = [('', '')]
 
     if form.validate_on_submit():
         insert_datetime = datetime.utcnow()

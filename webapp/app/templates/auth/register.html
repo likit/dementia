@@ -22,7 +22,10 @@ var provinces_list = {{ provinces_list|safe }}.sort();
     <form method="POST" action="{{ url_for('auth.register') }}" class="form-inline" role="form">
         {{ form.hidden_tag() }}
         {% if form.errors %}
-        {{ form.errors }}
+        <div class="alert alert-warning alert-dismissible" role="alert"><span class="glyphicon glyphicon-alert" aria-hidden="true">
+        กรุณากรอกข้อมูลให้ครบ </span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
         {% endif %}
         <div class="panel panel-default">
             <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
@@ -30,17 +33,14 @@ var provinces_list = {{ provinces_list|safe }}.sort();
                 <div class="form-group">
                     {# {{ form.pid.label(for="pid", class="control-label") }} #}
                     {{ form.pid(size=15, maxlength=13, class="form-control", placeholder="เลขบัตรประชาชน") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                 </div>
                 <div class="form-group">
                     {# {{ form.password.label(for="password", class="control-label") }} #}
                     {{ form.password(size=20, maxlength=30, class="form-control", placeholder="รหัสผ่าน") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                 </div>
                 <div class="form-group">
                     {# {{ form.password2.label(for="password2", class="control-label") }} #}
                     {{ form.password2(size=20, maxlength=30, class="form-control", placeholder="รหัสผ่านอีกครั้ง") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                 </div>
                 <br><br>
                 <div class="form-group">
@@ -50,13 +50,10 @@ var provinces_list = {{ provinces_list|safe }}.sort();
                 <div class="form-group">
                     {# {{ form.name.label(for="name", class="control-label") }} #}
                     {{ form.name(size=30, maxlength=50, class="form-control", placeholder="ชื่อจริง") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                     {# {{ form.lastname.label(for="lastname", class="control-label") }} #}
                     {{ form.lastname(size=30, maxlength=50, class="form-control", placeholder="นามสกุล") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                     {# {{ form.position.label(for="position", class="control-label") }} #}
                     {{ form.position(size=30, maxlength=50, class="form-control", placeholder="ตำแหน่ง") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
                 </div>
                 <br><br>
@@ -65,7 +62,6 @@ var provinces_list = {{ provinces_list|safe }}.sort();
                     {{ form.email(size=40, maxlength=50, class="form-control", placeholder="อีเมล") }}
                     {# {{ form.phone.label(for="phone", class="control-label")  }} #}
                     {{ form.phone(size=20, maxlength=20, class="form-control", placeholder="โทรศัพท์") }}
-                    <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                     {# {{ form.cell.label(for="cell", class="control-label")  }} #}
                     {{ form.cell(size=20, maxlength=20, class="form-control", placeholder="มือถือ") }}
                 </div>
