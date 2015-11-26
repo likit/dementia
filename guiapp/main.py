@@ -12,20 +12,14 @@ class Form(QWidget):
         self.txtUsername = QLineEdit()
         labelPassword = QLabel("Password")
         self.txtPassword = QLineEdit()
-        login_button = QPushButton('Ok', self)
-        login_button.clicked.connect(self.login)
+        self.login_button = QPushButton('Ok', self)
 
         self.formLayout = QFormLayout()
         self.formLayout.addRow(labelUsername, self.txtUsername)
         self.formLayout.addRow(labelPassword, self.txtPassword)
-        self.formLayout.addRow(login_button)
+        self.formLayout.addRow(self.login_button)
 
         self.setLayout(self.formLayout)
-
-    def login(self):
-        print('Name: ', self.txtUsername.text())
-        print('Password: ', self.txtPassword.text())
-        self.parentWidget().close()
 
 
 class MainWindow(QMainWindow):
@@ -63,9 +57,10 @@ class MainWindow(QMainWindow):
 
     def create_login_form(self):
         print('Building a form..')
-        self.form = Form()
-        self.MdiArea.addSubWindow(self.form)
-        self.form.show()
+        form = Form()
+        self.MdiArea.addSubWindow(form)
+        form.show()
+        return form
 
     def createActions(self):
         """ Function to create actions for menu
@@ -92,10 +87,13 @@ class MainWindow(QMainWindow):
         return None
 
     def login(self):
-        self.create_login_form()
+        self.form = self.create_login_form()
+        self.form.login_button.clicked.connect(self.hello)
 
     def hello(self):
-        print('Hello')
+        print('Name: ', self.form.txtUsername.text())
+        print('Password: ', self.form.txtPassword.text())
+        self.form.parentWidget().close()
 
 
 if __name__=='__main__':
