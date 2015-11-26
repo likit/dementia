@@ -8,18 +8,18 @@ class Form(QWidget):
         self.setWindowTitle('Log In')
         self.setMinimumWidth(300)
 
-        labelUsername = QLabel("Username")
-        self.txtUsername = QLineEdit()
-        labelPassword = QLabel("Password")
-        self.txtPassword = QLineEdit()
+        label_username = QLabel("Username")
+        self.text_username = QLineEdit()
+        label_password = QLabel("Password")
+        self.text_password = QLineEdit()
         self.login_button = QPushButton('Ok', self)
 
-        self.formLayout = QFormLayout()
-        self.formLayout.addRow(labelUsername, self.txtUsername)
-        self.formLayout.addRow(labelPassword, self.txtPassword)
-        self.formLayout.addRow(self.login_button)
+        self.form_layout = QFormLayout()
+        self.form_layout.addRow(label_username, self.text_username)
+        self.form_layout.addRow(label_password, self.text_password)
+        self.form_layout.addRow(self.login_button)
 
-        self.setLayout(self.formLayout)
+        self.setLayout(self.form_layout)
 
 
 class MainWindow(QMainWindow):
@@ -35,53 +35,53 @@ class MainWindow(QMainWindow):
         self.statusBar = QStatusBar()
         self.statusBar.showMessage('Ready', 2000)
         self.setStatusBar(self.statusBar)
-        self.setupComponents()
-        self.MdiArea = QMdiArea()
-        self.setCentralWidget(self.MdiArea)
+        self.setup_components()
+        self.mdi_area = QMdiArea()
+        self.setCentralWidget(self.mdi_area)
 
-    def setupComponents(self):
+    def setup_components(self):
         """ Setup status bar, central widget, menu bar
         """
-        self.createActions()
-        self.createMenus()
-        self.formMenu.addAction(self.newAction)
-        self.fileMenu.addAction(self.exitFileAction)
-        self.loginMenu.addAction(self.loginAction)
+        self.create_actions()
+        self.create_menus()
+        self.form_menu.addAction(self.newform_act)
+        self.file_menu.addAction(self.exit_act)
+        self.login_menu.addAction(self.login_act)
 
     # Slots called when the menu actions are triggered
-    def newForm(self):
-        pass
+    def new_form(self):
+        print('Creating a form..')
 
-    def exitFile(self):
+    def exit(self):
         self.close()
 
     def create_login_form(self):
         print('Building a form..')
         form = Form()
-        self.MdiArea.addSubWindow(form)
+        self.mdi_area.addSubWindow(form)
         form.show()
         return form
 
-    def createActions(self):
+    def create_actions(self):
         """ Function to create actions for menu
         """
-        self.newAction = QAction('&New',
+        self.newform_act = QAction('&New',
                 self, statusTip="New form",
-                triggered=self.newForm)
-        self.exitFileAction = QAction('&Exit',
+                triggered=self.new_form)
+        self.exit_act = QAction('&Exit',
                 self, statusTip="Exit program",
-                triggered=self.exitFile)
-        self.loginAction = QAction('&Login',
+                triggered=self.exit)
+        self.login_act = QAction('&Login',
                 self, statusTip="Login",
                 triggered=self.login)
 
-    def createMenus(self):
-        self.fileMenu = self.menuBar().addMenu('&File')
-        self.formMenu = self.menuBar().addMenu('F&orm')
-        self.loginMenu = self.menuBar().addMenu('&Login')
+    def create_menus(self):
+        self.file_menu = self.menuBar().addMenu('&File')
+        self.form_menu = self.menuBar().addMenu('F&orm')
+        self.login_menu = self.menuBar().addMenu('&Login')
 
     def activeMdiChild(self):
-        activeSubWindow = self.MdiArea.activeSubWindow()
+        activeSubWindow = self.mdi_area.activeSubWindow()
         if activeSubWindow:
             return activeSubWindow.widget()
         return None
@@ -91,13 +91,13 @@ class MainWindow(QMainWindow):
         self.form.login_button.clicked.connect(self.hello)
 
     def hello(self):
-        print('Name: ', self.form.txtUsername.text())
-        print('Password: ', self.form.txtPassword.text())
+        print('Name: ', self.form.text_username.text())
+        print('Password: ', self.form.text_password.text())
         self.form.parentWidget().close()
 
 
 if __name__=='__main__':
-    myApp = QApplication(sys.argv)
-    myWidget = MainWindow()
-    myWidget.show()
-    myApp.exec_()
+    qapp = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    qapp.exec_()
