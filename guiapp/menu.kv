@@ -1,0 +1,26 @@
+<MenuButton@Button>
+    font_name: "THSarabunNew"
+    font_size: 24
+    bold: True
+    height: 50
+    size_hint_y: None
+    size_hint_x: 1
+    background_normal: 'button_normal.png'
+    background_down: 'button_down.png'
+    border: (2, 2, 2, 2)
+
+<Menu@GridLayout>
+    padding: 10
+    spacing: 3
+    MenuButton:
+        text: 'ลงวันที่'
+        on_press: app.login()
+    MenuButton:
+        text: 'ข้อมูลทั่วไป'
+        on_press: app.login()
+    MenuButton:
+        text: 'ฟอร์มที่ 1'
+        on_press: app.login()
+    MenuButton:
+        text: 'ออก'
+        on_press: app.logout()
