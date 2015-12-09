@@ -1,0 +1,62 @@
+<InputField@BoxLayout>:
+    orientation: 'horizontal'
+    inlabel: ''
+    infield: _text
+    ThaiLabel:
+        text: root.inlabel
+        bold: True
+    TextInput:
+        font_name: "THSarabunNew"
+        font_size: 24
+        height: 40
+        size_hint_y: None
+        id: _text
+
+<DateForm>:
+    auto_dismiss: False
+    title: 'Data collection date'
+    size_hint: 0.7,0.6
+    date: _date
+    month: _month
+    year: _year
+    status: _status
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        BoxLayout:
+            spacing: 2
+            size_hint: 1, .4
+            orientation: 'vertical'
+            InputField:
+                id: _date
+                multiline: False
+                focus: True
+                inlabel: 'วันที่'
+            InputField:
+                id: _month
+                multiline: False
+                inlabel: 'เดือน (1-12)'
+            InputField:
+                id: _year
+                multiline: False
+                inlabel: 'พ.ศ. (เช่น 2515)'
+        BoxLayout:
+            size_hint: 1,.2
+            orientation: 'horizontal'
+            spacing: 2
+            MenuButton:
+                text: 'Ok'
+                on_press:
+                    root.save_date()
+                    root.validate_date()
+            MenuButton:
+                text: 'Cancel'
+                on_press:
+                    root.clear()
+                    root.dismiss()
+        BoxLayout:
+            size_hint: 1, .2
+            ThaiLabel:
+                id: _status
+                text: '[b]Status[/b] วันที่ถูกต้อง'
+                markup: True

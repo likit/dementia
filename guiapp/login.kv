@@ -1,0 +1,54 @@
+<LoginInput@TextInput>
+    font_name: "THSarabunNew"
+    font_size: 24
+    height: 40
+    size_hint_y: None
+
+<LoginForm>:
+    size_hint: 0.8, 0.8
+    pos_hint: {'center_x': 0.5}
+    orientation: "vertical"
+    pid: _pid
+    password: _password
+    ThaiLabel:
+        text: "ยินดีต้อนรับเข้าสู่ระบบฐานข้อมูลผู้สูงอายุ"
+        bold: True
+        markup: True
+        bcolor: 0,0,0,0
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    BoxLayout:
+        spacing: 10
+        padding: 20
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            ThaiLabel:
+                size_hint_x: None
+                width: 200
+                text: 'รหัสบัตรประชาชน'
+            LoginInput:
+                id: _pid
+                focus: True
+                multiline: False
+        BoxLayout:
+            orientation: 'horizontal'
+            ThaiLabel:
+                size_hint_x: None
+                width: 200
+                text: 'รหัสผ่าน'
+            LoginInput:
+                id: _password
+                text: '********'
+                multiline: False
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: 4
+        padding: 20
+        MenuButton:
+            text: 'ลงชื่อเข้าระบบ'
+            on_press: app.login()
+        MenuButton:
+            text: 'ออกจากโปรแกรม'
+            background_normal: 'red_button_normal.png'
+            background_down: 'red_button_down.png'
+            on_press: app.exit_app()
