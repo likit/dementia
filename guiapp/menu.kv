@@ -10,17 +10,60 @@
     border: (2, 2, 2, 2)
 
 <Menu@GridLayout>
+    orientation: "vertical"
+    rows: 10
+    cols: 2
     padding: 10
     spacing: 3
     MenuButton:
-        text: 'ลงวันที่'
-        on_press: app.login()
+        text: 'ลงวันที่เก็บข้อมูล'
+        on_press: app.show_dateform()
     MenuButton:
         text: 'ข้อมูลทั่วไป'
         on_press: app.login()
     MenuButton:
-        text: 'ฟอร์มที่ 1'
+        text: 'การประเมินผู้สูงอายุ'
         on_press: app.login()
     MenuButton:
-        text: 'ออก'
+        text: 'การคัดกรองเบาหวาน ความดัน หัวใจ'
+        on_press: app.login()
+    MenuButton:
+        text: 'การประเมินสุขภาพช่องปาก'
+        on_press: app.login()
+    MenuButton:
+        text: 'การคัดกรองสุขภาพทางตา'
+        on_press: app.login()
+    MenuButton:
+        text: 'การทดสอบสภาพสมอง'
+        on_press: app.login()
+    MenuButton:
+        text: 'การทดสอบโรคซึมเศร้า'
+        on_press: app.login()
+    MenuButton:
+        text: 'การคัดกรองโรคเข่าเสื่อม'
+        on_press: app.login()
+    MenuButton:
+        text: 'การคัดกรองการกลั้้นปัสสาวะ'
+        on_press: app.login()
+    MenuButton:
+        text: 'การประเมินภาวะโภชนาการ'
+        on_press: app.login()
+    MenuButton:
+        text: 'การประเมินปัญหาการนอน'
+        on_press: app.login()
+    MenuButton:
+        text: 'การประเมินการใช้ชีวิตประจำวัน'
+        on_press: app.login()
+    MenuButton:
+        text: 'การคัดกรองผู้ที่ต้องการดูแลในระยะยาว'
+        on_press: app.login()
+    MenuButton:
+        text: 'ออกจากระบบ'
+        background_normal: 'red_button_normal.png'
+        background_down: 'red_button_down.png'
         on_press: app.logout()
+    MenuButton:
+        text: 'ออกจากโปรแกรม'
+        background_normal: 'red_button_normal.png'
+        background_down: 'red_button_down.png'
+        on_press: app.exit_app()
