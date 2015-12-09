@@ -1,98 +1,36 @@
 #: import C kivy.utils.get_color_from_hex
 #: import datetime datetime.datetime
-
-<LoginInput@TextInput>
-    font_name: "THSarabunNew"
-    font_size: 24
-    height: 30
-    size_hint_y: None
+#: import ScreenTransition kivy.uix.screenmanager.SlideTransition
 
 <ThaiLabel@Label>
     font_name: "THSarabunNew"
-    font_size: 24
+    font_size: 26
     height: 30
     size_hint_y: None
-    bcolor: 0,0.5,0.5,0.2
-    canvas.before:
-        Color:
-            rgba: self.bcolor
-        Rectangle:
-            pos: self.pos
-            size: self.size
 
 ScreenManagement:
 <ScreenManagement>:
+    transition: ScreenTransition()
     Screen:
         name: "login"
-        BoxLayout:
-            orientation: "vertical"
-            GridLayout:
-                rows: 2
-                cols: 2
-                spacing: 4
-                padding: 10
-                ThaiLabel:
-                    width: 300
-                    size_hint_x: None
-                    text: 'รหัสบัตรประชาชน'
-                    text_size: self.size
-                    halign: 'right'
-                LoginInput:
-                    id: pid
-                    focus: True
-                    multiline: False
-                    padding: [10,0.5 * (self.height - self.line_height)]
-                ThaiLabel:
-                    width: 300
-                    size_hint_x: None
-                    text: 'รหัสผ่าน'
-                    text_size: self.size
-                    halign: 'right'
-                LoginInput:
-                    id: password
-                    text: 'ทดสอบ'
-                    multiline: False
-                    padding: [10,0.5 * (self.height - self.line_height)]
-            MenuButton:
-                text: 'ลงชื่อเข้าระบบ'
-                size_hint_x: None
-                width: 200
-                pos_hint: {'x': 0, 'center_x': 0.5}
-                on_press: app.login()
-
+        LoginForm:
     Screen:
-        name: "form1"
-        AnchorLayout:
-            anchor_x: 'left'
-            anchor_y: 'top'
-            Menu:
-                id: _form_menu
-                size_hint: None, None
-                width: 200
-                orientation: "vertical"
-                rows: 5
-                cols: 1
-        AnchorLayout:
-            anchor_x: 'right'
-            anchor_y: 'top'
-            RelativeLayout:
-                id: _form_space
-                size_hint: None, None
-                width: root.width - _form_menu.width
-                height: root.height - _status_bar.height
-                ScrollView:
-                    ThaiLabel:
-                        id: _form1_greeting
-                        text: "Welcome"
-                        bold: True
-        AnchorLayout:
-            anchor_x: 'center'
-            anchor_y: 'bottom'
-            BoxLayout:
+        name: "all_form"
+        Menu:
+            id: _form_menu
+    Screen:
+        name: "dateform"
+        StackLayout:
+            orientation: 'lr-tb'
+            spacing: 2
+            padding: 5
+            ThaiLabel:
                 size_hint: 1, None
-                ThaiLabel:
-                    id: _status_bar
-                    height: 40
-                    text_size: self.size
-                    text: 'คุณอยู่ที่หน้าหลัก' + 'สถานะ พร้อมใช้งาน'
-                    bcolor: 1,1,1,0.1
+                text: 'ลงวันที่เก็บข้อมูล'
+                bold: True
+                bcolor: (1,1,1,0.2)
+                height: 50
+                size_hint_y: None
+            DateForm:
+                id: _dateform
+            StatusBar:
