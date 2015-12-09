@@ -34,6 +34,12 @@ class LoginForm(BoxLayout):
 
 Builder.load_file('login.kv')
 
+
+class GeneralInfoForm(Popup):
+    pass
+
+Builder.load_file('generalinfo.kv')
+
 class DateForm(Popup):
     date = ObjectProperty()
     month = ObjectProperty()
@@ -86,6 +92,10 @@ class AgingApp(App):
         self.dateform.year.infield.text = str(today.year)
 
         self.dateform.open()
+
+    def show_general_info_form(self):
+        self.general_info_form = GeneralInfoForm()
+        self.general_info_form.open()
 
     def to_main(self):
         self.root.current = 'all_form'
