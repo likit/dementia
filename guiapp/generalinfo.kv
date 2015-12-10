@@ -1,7 +1,20 @@
+<PlainButton@Button>:
+    font_name: "THSarabunNew"
+    font_size: 24
+    height: 40
+    size_hint_y: None
+    size_hint_x: 1
+
 <GeneralInfoForm>:
     auto_dismiss: False
-    title: 'General Information Form'
-    size_hint: 0.85, 0.95
+    title: 'ฟอร์มบันทึกข้อมูลทั่วไป'
+    title_font: 'THSarabunNew'
+    title_size: 28
+    size_hint: 0.95, 0.95
+    pid: _pid
+    firstname: _firstname
+    lastname: _lastname
+    gender: _dropdown_gender_btn
     BoxLayout:
         orientation: 'vertical'
         ScrollView:
@@ -10,28 +23,169 @@
                 size_hint_y: None
                 height: self.minimum_height
                 do_scroll_x: False
+                BoxLayout:
+                    spacing: 4
+                    size_hint: None, None
+                    size: 400, 50
+                    InputField:
+                        inlabel: 'รหัสบัตรประชาชน'
+                        id: _pid
+                    MenuButton:
+                        text: 'ค้้นหา'
+                        size: 100, 40
+                        size_hint: None, None
+                        on_press: root.search_pid()
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'ชื่อ'
+                    id: _firstname
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'นามสกุล'
+                    id: _lastname
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'อายุ'
+                    id: _age
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'บ้านเลขที่'
+                    id: _streetno
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'หมู่'
+                    id: _moo
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, None
+                    size: 200, 50
+                    ThaiLabel:
+                        text: 'เพศ'
+                    PlainButton:
+                        id: _dropdown_gender_btn
+                        on_release: _genderlist.open(self)
+                        text: 'ชาย'
+                    DropDown:
+                        id: _genderlist
+                        on_parent: self.dismiss()
+                        on_select: _dropdown_gender_btn.text = '{}'.format(args[1])
+                        ScrollView:
+                            bcolor: 0.28, 0.26, 0.32, 0.9
+                            canvas.before:
+                                Color:
+                                    rgba: self.bcolor
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                            size_hint: 1, None
+                            height: 150
+                            auto_dismiss: False
+                            GridLayout:
+                                cols: 1
+                                padding: 10
+                                spacing: 1
+                                size_hint_y: None
+                                pos_hint: {'top': 0}
+                                height: self.minimum_height
+                                PlainButton:
+                                    text: 'ชาย'
+                                    on_release: _genderlist.select('ชาย')
+                                PlainButton:
+                                    text: 'หญิง'
+                                    on_release: _genderlist.select('หญิง')
+                                PlainButton:
+                                    text: 'อืนๆ'
+                                    on_release: _genderlist.select('อื่นๆ')
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'นำ้หนัก'
+                    id: _weight
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'ส่วนสูง'
+                    id: _height
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, None
+                    size: 300, 50
+                    ThaiLabel:
+                        text: 'สถานภาพสมรส'
+                    PlainButton:
+                        id: _dropdown_marriage_btn
+                        on_release: _marriagelist.open(self)
+                        text: 'โสด'
+                    DropDown:
+                        id: _marriagelist
+                        on_parent: self.dismiss()
+                        on_select: _dropdown_marriage_btn.text = '{}'.format(args[1])
+                        ScrollView:
+                            size_hint: 1, None
+                            height: 150
+                            auto_dismiss: False
+                            bcolor: 0.28, 0.26, 0.32, 0.9
+                            canvas.before:
+                                Color:
+                                    rgba: self.bcolor
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                            GridLayout:
+                                cols: 1
+                                padding: 10
+                                spacing: 1
+                                size_hint_y: None
+                                pos_hint: {'top': 0}
+                                height: self.minimum_height
+                                PlainButton:
+                                    text: 'โสด'
+                                    on_release: _marriagelist.select('โสด')
+                                PlainButton:
+                                    text: 'แต่่งงานแล้ว'
+                                    on_release: _marriagelist.select('แต่่งงานแล้ว')
+                                PlainButton:
+                                    text: 'หญิง'
+                                    on_release: _marriagelist.select('หม้าย')
+                                PlainButton:
+                                    text: 'หย่าร้าง'
+                                    on_release: _marriagelist.select('หย่าร้าง')
+                                PlainButton:
+                                    text: 'สมณะ'
+                                    on_release: _marriagelist.select('สมณะ')
+                                PlainButton:
+                                    text: 'อืนๆ'
+                                    on_release: _marriagelist.select('อื่นๆ')
+                GridLayout:
+                    cols: 2
+                    size_hint_x: 300
+                    height: self.minimum_height
+                    size_hint: None, None
+                    ThaiLabel:
+                        text: 'checkbox'
+                    CheckBox:
+                        active: True
+                    ThaiLabel:
+                        text: 'checkbox'
+                    CheckBox:
+                        active: True
+                    ThaiLabel:
+                        text: 'checkbox'
+                    CheckBox:
+                        active: True
                 InputField:
-                    inlabel: 'Field'
+                    inlabel: 'นำ้หนัก'
+                    id: _weight
                 InputField:
-                    inlabel: 'Field'
-                InputField:
-                    inlabel: 'Field'
-                InputField:
-                    inlabel: 'Field'
-        MenuButton:
-            text: 'Back'
-            on_press: root.dismiss()
+                    inlabel: 'ส่วนสูง'
+                    id: _height
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            spacing: 5
+            orientation: 'horizontal'
+            MenuButton:
+                text: 'บันทึก'
+                on_press:
+                    root.showdata()
+                    root.dismiss()
+            MenuButton:
+                text: 'เริ่มใหม่'
+                on_press: root.clear_fields()
+            MenuButton:
+                text: 'กลับ'
+                background_normal: 'red_button_normal.png'
+                background_down: 'red_button_down.png'
+                on_press: root.dismiss()
