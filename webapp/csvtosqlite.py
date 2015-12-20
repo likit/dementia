@@ -25,6 +25,29 @@ class Province(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     region_id = db.Column(db.Integer, db.ForeignKey('ref_regions.id'))
+    pads = db.relationship('Pad', backref='province', lazy='dynamic')
+
+
+class Amphur(db.Model):
+    __tablename__ = 'ref_amphurs'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    pads = db.relationship('Pad', backref='amphur', lazy='dynamic')
+
+
+class District(db.Model):
+    __tablename__ = 'ref_districts'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    pads = db.relationship('Pad', backref='district', lazy='dynamic')
+
+
+class Pad(db.Model):
+    __tablename__ = 'pads'
+    id = db.Column(db.Integer, primary_key=True)
+    province_id = db.Column(db.Integer, db.ForeignKey('ref_provinces.id'))
+    amphur_id = db.Column(db.Integer, db.ForeignKey('ref_amphurs.id'))
+    district_id = db.Column(db.Integer, db.ForeignKey('ref_districts.id'))
 
 
 class QuestionType(db.Model):
@@ -206,9 +229,25 @@ def main():
                 'name': lambda x: unicode(x[1], 'utf8'),
                 'region_id': lambda x: x[2],
                 }
+        district_amphur_values = {
+                'id': lambda x: x[0],
+                'name': lambda x: unicode(x[1], 'utf8'),
+                }
+        pad_values = {
+                'id': lambda x: x[0],
+                'province_id': lambda x: x[1],
+                'amphur_id': lambda x: x[2],
+                'district_id': lambda x: x[3],
+                }
 
-        insert_data(os.path.join(datadir, 'ref_province.csv'),
-                Province, province_values)
+        # insert_data(os.path.join(datadir, 'ref_province.csv'),
+        #         Province, province_values)
+        insert_data(os.path.join(datadir, 'ref_district.csv'),
+                District, district_amphur_values)
+        insert_data(os.path.join(datadir, 'ref_amphur.csv'),
+                Amphur, district_amphur_values)
+        insert_data(os.path.join(datadir, 'ref_pad.csv'),
+                Pad, pad_values)
 
         # for row in Question.query.all():
         #     print("{0} {1}".format(row.id, row.qname.encode('utf8')))
