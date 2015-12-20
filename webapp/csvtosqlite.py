@@ -10,6 +10,12 @@ webapp = create_app('default')
 db.app = webapp
 
 
+class Education(db.Model):
+    __tablename__ = 'ref_education'
+    id = db.Column(db.Integer, primary_key=True)
+    degree = db.Column(db.String(255))
+    level = db.Column(db.Integer)
+
 class Region(db.Model):
     __tablename__ = 'ref_regions'
     id = db.Column(Integer, primary_key=True)
