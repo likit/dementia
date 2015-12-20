@@ -49,9 +49,85 @@ class Elder(db.Model):
             }
 
 
+class ElderAddr(db.Model):
+    __tablename__ = 'eh_elder_addresses'
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(40))
+    moo = db.Column(db.String(10))
+    tel = db.Column(db.String(40))
+    pad_id = db.Column(db.Integer, db.ForeignKey('pads.id'))
+    elder_id = db.Column(db.Integer, db.ForeignKey('eh_elders.id'))
+    current = db.Column(db.Boolean)
+    updated_year = db.Column(db.String(10))
+    village = db.Column(db.String(255))
+
+    schema = {
+            'id': lambda x: x[0],
+            'address': lambda x: unicode(x[1], 'utf8'),
+            'moo': lambda x: unicode(x[2], 'utf8'),
+            'tel': lambda x: unicode(x[3], 'utf8'),
+            'pad_id': lambda x: x[4],
+            'elder_id': lambda x: x[5],
+            'current': lambda x: to_bool(x[7]),
+            'updated_year': lambda x: unicode(x[8], 'utf8'),
+            'village': lambda x: unicode(x[9], 'utf8'),
+            }
+
+
+
 class User(db.Model):
     __tablename__ = 'eh_users'
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(13))
+    password = db.Column(db.String(40))
+    prefix = db.Column(db.String(20))
+    firstname = db.Column(db.String(255))
+    lastname = db.Column(db.String(255))
+    tel = db.Column(db.String(40))
+    mobile = db.Column(db.String(40))
+    email = db.Column(db.String(255))
+    admin = db.Column(db.Boolean)
+    location_id = db.Column(db.Integer, db.ForeignKey('eh_user_locations.id'))
+    created_date = db.Column(db.String(255))
+    created_by = db.Column(db.Integer, db.ForeignKey('eh_users.id'))
+    updated_date = db.Column(db.String(255))
+    updated_by = db.Column(db.Integer, db.ForeignKey('eh_users.id'))
+
+    schema = {
+            'id': lambda x: x[0],
+            'username': lambda x: unicode(x[1], 'utf8'),
+            'password': lambda x: unicode(x[2], 'utf8'),
+            'prefix': lambda x: unicode(x[3], 'utf8'),
+            'firstname': lambda x: unicode(x[4], 'utf8'),
+            'lastname': lambda x: unicode(x[5], 'utf8'),
+            'tel': lambda x: unicode(x[6], 'utf8'),
+            'mobile': lambda x: unicode(x[7], 'utf8'),
+            'email': lambda x: unicode(x[8], 'utf8'),
+            'admin': lambda x: to_bool(unicode(x[9], 'utf8')),
+            'location_id': lambda x: x[10],
+            'created_date': lambda x: unicode(x[11], 'utf8'),
+            'created_by': lambda x: x[12],
+            'updated_date': lambda x: unicode(x[13], 'utf8'),
+            'updated_by': lambda x: x[14],
+            }
+
+
+class UserLocation(db.Model):
+    __tablename__ = 'eh_user_locations'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    address = db.Column(db.String(255))
+    moo = db.Column(db.String(10))
+    pad_id = db.Column(db.Integer, db.ForeignKey('pads.id'))
+    users = db.relationship('User', backref='location', lazy='dynamic')
+
+    schema = {
+            'id': lambda x: x[0],
+            'name': lambda x: unicode(x[1], 'utf8'),
+            'address': lambda x: unicode(x[2], 'utf8'),
+            'moo': lambda x: unicode(x[3], 'utf8'),
+            'pad_id': lambda x: x[4],
+            }
 
 
 class Education(db.Model):
@@ -206,7 +282,7 @@ def insert_answer(infile):
 
 def to_bool(str_value):
     keys = {'N': False, 'Y': True}
-    return keys[str_value]
+    return keys.get(str_value, False)
 
 
 def insert_question_health(infile):
@@ -251,8 +327,9 @@ def insert_data(infile, model):
         try:
             db.session.add(r)
             db.session.commit()
-        except:
+        except Exception as e:
             print(row)
+            raise e
 
         if n == 20: break
 
@@ -312,7 +389,11 @@ def main():
         # insert_data(os.path.join(datadir, 'ref_education.csv'),
         #         Education, edu_values)
 
-        insert_data(os.path.join(datadir, 'eh_elder.csv'), Elder)
+        # insert_data(os.path.join(datadir, 'eh_elder.csv'), Elder)
+        # insert_data(os.path.join(datadir, 'eh_elder_address.csv'), ElderAddr)
+        # insert_data(os.path.join(datadir, 'eh_user.csv'), User)
+        insert_data(os.path.join(datadir,
+            'eh_user_location.csv'), UserLocation)
 
         # for row in Question.query.all():
         #     print("{0} {1}".format(row.id, row.qname.encode('utf8')))
