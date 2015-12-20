@@ -79,7 +79,7 @@ var piedata = {{ piedata|tojson|safe }}
         {% if current_user.username == 'admin' %}
         <h1>กราฟแสดงผลการคัดกรองโรคข้อเข่าเสื่อมของผู้สูงอายุ</h1>
         {% else %}
-        <h1>กราฟแสดงผลต่างๆ ของผู้สูงอายุในจังหวัด{{ current_user.province }}</h1>
+        <h1>กราฟแสดงผลต่างๆ ของผู้สูงอายุในจังหวัด</h1>
         {% endif %}
     </div>
     <div class="row">
