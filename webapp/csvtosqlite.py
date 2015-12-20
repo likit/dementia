@@ -14,9 +14,17 @@ class Region(db.Model):
     __tablename__ = 'ref_regions'
     id = db.Column(Integer, primary_key=True)
     desc = db.Column(db.String(255))
+    provinces = db.relationship('Province', backref='region', lazy='dynamic')
 
     def __repr__(self):
         return '<Region %d %s>' % (self.id, self.desc)
+
+
+class Province(db.Model):
+    __tablename__ = 'ref_provinces'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    region_id = db.Column(db.Integer, db.ForeignKey('ref_regions.id'))
 
 
 class QuestionType(db.Model):
@@ -167,9 +175,6 @@ def insert_data(infile, model, values):
 
         r = model(**kwargs)
         db.session.add(r)
-        print("{0} {1}".format(r.id, r.desc.encode('utf8')))
-        n += 1
-        if n == 5: break
     db.session.commit()
 
 
@@ -193,8 +198,17 @@ def main():
                 'id': lambda x: x[0],
                 'desc': lambda x: unicode(x[1], 'utf8'),
                 }
-        insert_data(os.path.join(datadir, 'ref_region.csv'),
-                Region, region_values)
+        # insert_data(os.path.join(datadir, 'ref_region.csv'),
+        #         Region, region_values)
+
+        province_values = {
+                'id': lambda x: x[0],
+                'name': lambda x: unicode(x[1], 'utf8'),
+                'region_id': lambda x: x[2],
+                }
+
+        insert_data(os.path.join(datadir, 'ref_province.csv'),
+                Province, province_values)
 
         # for row in Question.query.all():
         #     print("{0} {1}".format(row.id, row.qname.encode('utf8')))
