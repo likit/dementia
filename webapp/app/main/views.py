@@ -15,6 +15,8 @@ from . import main
 from .. import db
 from .forms import Form1
 from .. import APP_ROOT, APP_STATIC
+from app.models import User
+from app.main.models import Elder, AnswerForm
 
 from bson.objectid import ObjectId
 from flask.ext.login import login_required, current_user
@@ -27,23 +29,19 @@ def index():
 @main.route('/searchpid')
 def searchpid():
     qpid = request.args.get('pid')
-    res = db.form1.find_one({'pid': qpid})
-    if not res:
-        res = db.person.find_one({'pid': qpid})
-
+    res = Elder.query.filter_by(pid=qpid).first()
     if res:
         return jsonify(result='found',
-                firstname=res['firstname'],
-                lastname=res['lastname'],
-                province=res['province'],
-                district=res['district'],
-                district_number=res['district_number'],
-                amphur=res['amphur'],
-                edu=res['edu'],
-                gender=res['gender'],
-                marital=res['marital'],
-                street_number=res['street_number'],
-                congenital_disease=res['congenital_disease']
+                firstname=res.firstname,
+                lastname=res.lastname,
+                province=res.province,
+                district=res.district,
+                district_number=res.moo,
+                amphur=res.amphur,
+                edu=res.edu,
+                gender=res.gender,
+                marital=res.marital,
+                street_number=res.address,
                 )
     else:
         return jsonify(result='notfound')
@@ -69,13 +67,16 @@ def form_1():
 
     if form.validate_on_submit():
         insert_datetime = datetime.utcnow()
-        form_data = {
-                'collectdate': form.collectdate.data,
+        elder = Elder.query.filter_by(pid=form.pid.data).first()
+
+        personal_data = {
+                'updated_date': datetime.strptime(
+                    form.collectdate.data, '%d/%m/%Y'),
                 'firstname': form.firstname.data,
                 'lastname': form.lastname.data,
                 'pid': form.pid.data,
-                'street_number': form.street_number.data,
-                'district_number': form.district_number.data,
+                'address': form.street_number.data,
+                'moo': form.district_number.data,
                 'province': form.province.data,
                 'amphur': form.amphur.data,
                 'district': form.district.data,
@@ -88,6 +89,14 @@ def form_1():
                 'edu': form.edu.data,
                 'edu_other': form.edu_other.data,
                 'edu_years': form.edu_years.data,
+                }
+
+        if not elder:
+            elder = Elder(**personal_data)
+        else:
+            pass
+
+        form_data = {
                 'living': form.living.data,
                 'living_caregiver': form.living_caregiver.data,
                 'living_other': form.living_other.data,
@@ -295,12 +304,19 @@ def form_1():
                 'long_term_care_five_sixteen': form.long_term_care_five_sixteen.data,
 
                 'locale': current_user.province,
-                'update_datetime': insert_datetime,
-                'insert_datetime': insert_datetime,
+                'updated_on': insert_datetime,
+                'created_on': insert_datetime,
                 'updated_by': current_user.username,
-                'inserted_by': current_user.username,
+                'created_by': current_user.username,
+                'collected_date': datetime.strptime(
+                                    form.collectdate.data, '%d/%m/%Y'),
                 }
-        db.form1.insert(form_data, safe=True)
+        db.session.add(elder)
+        db.session.commit()
+        answer_form = AnswerForm(**form_data)
+        answer_form.elder_id = elder.id
+        db.session.add(answer_form)
+        db.session.commit()
         flash('Data added successfully.')
         return redirect(url_for('.form_1'))
 
@@ -323,18 +339,22 @@ def view_all():
 def view_person(pid):
     data = []
     no = 0
-    for res in db.form1.find({'pid': pid,
-                    'province': current_user.province}):
+    elder = Elder.query.filter_by(pid=pid).first()
+
+    #TODO: uncomment the line below
+    # for res in AnswerForm.query.filter_by(elder_id=elder.id,
+    #         locale=current_user.province):
+    for res in AnswerForm.query.filter_by(elder_id=elder.id):
         no += 1
         result = [no,
-                  res['pid'],
-                  res['firstname'],
-                  res['lastname'],
-                  res['age'],
-                  res['district'],
-                  res['amphur'],
-                  res['province'],
-                  str(res['created_date'].date()),
+                  elder.pid,
+                  elder.firstname,
+                  elder.lastname,
+                  elder.age,
+                  elder.district,
+                  elder.amphur,
+                  elder.province,
+                  str(res.collected_date.date()),
                   ]
         data.append(result)
 
@@ -346,18 +366,23 @@ def view_person(pid):
 def view_result():
     pid = request.args.get('pid')
     collectdate = request.args.get('collectdate')
+    elder = Elder.query.filter_by(pid=pid).first()
     form = Form1(request.form)
-    for person in db.form1.find({'pid': pid, 'province': current_user.province}):
-        if collectdate == str(person['created_date'].date()):
+
+    #TODO: uncomment the line below
+    # for f in AnswerForm.query.filter_by(elder_id=elder.id,
+    #         locale=current_user.province):
+    for f in AnswerForm.query.filter_by(elder_id=elder.id):
+        if collectdate == str(f.collected_date.date()):
             break
 
     na = u'ไม่มีข้อมูล'
     try:
-        infarction_score = int(person['smoke_screening']) + \
-                int(person['bp']) + int(person['fpg']) + \
-                int(person['abnormal_lipid']) + \
-                int(person['waist']) + int(person['infarction']) + \
-                int(person['family_infarction'])
+        infarction_score = int(f.smoke_screening) + \
+                int(f.bp) + int(f.fpg) + \
+                int(f.abnormal_lipid) + \
+                int(f.waist) + int(f.infarction) + \
+                int(f.family_infarction)
     except:
         infarction_result = None
         infarction_score = None
@@ -370,33 +395,33 @@ def view_result():
             infarction_result = u'มีความเสี่ยงสูงมาก'
 
     try:
-        dental_hygiene_score = int(person['dental_part_two_one']) + \
-                    int(person['dental_part_two_two']) + \
-                    int(person['dental_part_two_three']) + \
-                    int(person['dental_part_two_four'])
+        dental_hygiene_score = int(f.dental_part_two_one) + \
+                    int(f.dental_part_two_two) + \
+                    int(f.dental_part_two_three) + \
+                    int(f.dental_part_two_four)
     except:
         dental_hygiene_score = None
 
     try:
-        eye_exam_score = int(person['eye_exam_one']) + \
-                int(person['eye_exam_two']) + \
-                int(person['eye_exam_three']) + \
-                int(person['eye_exam_four']) + \
-                int(person['eye_exam_five'])
+        eye_exam_score = int(f.eye_exam_one) + \
+                int(f.eye_exam_two) + \
+                int(f.eye_exam_three) + \
+                int(f.eye_exam_four) + \
+                int(f.eye_exam_five)
     except:
         eye_exam_score = None
 
     try:
-        amt_score = int(person['amt_one']) + \
-                    int(person['amt_two']) + \
-                    int(person['amt_three']) + \
-                    int(person['amt_four']) + \
-                    int(person['amt_five']) + \
-                    int(person['amt_six']) + \
-                    int(person['amt_seven']) + \
-                    int(person['amt_eight']) + \
-                    int(person['amt_nine']) + \
-                    int(person['amt_ten'])
+        amt_score = int(f.amt_one) + \
+                    int(f.amt_two) + \
+                    int(f.amt_three) + \
+                    int(f.amt_four) + \
+                    int(f.amt_five) + \
+                    int(f.amt_six) + \
+                    int(f.amt_seven) + \
+                    int(f.amt_eight) + \
+                    int(f.amt_nine) + \
+                    int(f.amt_ten)
     except:
         amt_result = None
         amt_score = None
@@ -410,75 +435,75 @@ def view_result():
 
     mmses = dict([('correct', 1), ('wrong', 0), ('na', 0)])
     try:
-        mmse_score = mmses[person['mmse_one_one']] + \
-                        mmses[person['mmse_one_two']] + \
-                        mmses[person['mmse_one_three']] + \
-                        mmses[person['mmse_one_four']] + \
-                        mmses[person['mmse_two_one_one']] + \
-                        mmses[person['mmse_two_one_two']] + \
-                        mmses[person['mmse_two_one_three']] + \
-                        mmses[person['mmse_two_one_four']] + \
-                        mmses[person['mmse_two_one_five']] + \
-                        mmses[person['mmse_two_two_one']] + \
-                        mmses[person['mmse_two_two_two']] + \
-                        mmses[person['mmse_two_two_three']] + \
-                        mmses[person['mmse_two_two_four']] + \
-                        mmses[person['mmse_two_two_five']]
+        mmse_score = mmses[f.mmse_one_one] + \
+                        mmses[f.mmse_one_two] + \
+                        mmses[f.mmse_one_three] + \
+                        mmses[f.mmse_one_four] + \
+                        mmses[f.mmse_two_one_one] + \
+                        mmses[f.mmse_two_one_two] + \
+                        mmses[f.mmse_two_one_three] + \
+                        mmses[f.mmse_two_one_four] + \
+                        mmses[f.mmse_two_one_five] + \
+                        mmses[f.mmse_two_two_one] + \
+                        mmses[f.mmse_two_two_two] + \
+                        mmses[f.mmse_two_two_three] + \
+                        mmses[f.mmse_two_two_four] + \
+                        mmses[f.mmse_two_two_five]
 
-        if (person['mmse_three_flower'] or
-                person['mmse_three_river'] or
-                person['mmse_three_train']):
-            mmse_score += int(person['mmse_three_flower']) +\
-                            int(person['mmse_three_river']) + \
-                            int(person['mmse_three_train'])
-        elif (person['mmse_three_tree'] or
-                person['mmse_three_sea'] or
-                person['mmse_three_car']):
-            mmse_score += int(person['mmse_three_tree']) +\
-                            int(person['mmse_three_sea']) + \
-                            int(person['mmse_three_car'])
+        if (f.mmse_three_flower or
+                f.mmse_three_river or
+                f.mmse_three_train):
+            mmse_score += int(f.mmse_three_flower) +\
+                            int(f.mmse_three_river) + \
+                            int(f.mmse_three_train)
+        elif (f.mmse_three_tree or
+                f.mmse_three_sea or
+                f.mmse_three_car):
+            mmse_score += int(f.mmse_three_tree) +\
+                            int(f.mmse_three_sea) + \
+                            int(f.mmse_three_car)
 
-        mmse_score += mmses[person['mmse_four_one']] + \
-                        mmses[person['mmse_four_two']]
+        mmse_score += mmses[f.mmse_four_one] + \
+                        mmses[f.mmse_four_two]
 
-        if (person['mmse_five_flower'] or
-                person['mmse_five_river'] or
-                person['mmse_five_train']):
-            mmse_score += int(person['mmse_five_flower']) +\
-                            int(person['mmse_five_river']) + \
-                            int(person['mmse_five_train'])
-        elif (person['mmse_five_tree'] or
-                person['mmse_five_sea'] or
-                person['mmse_five_car']):
-            mmse_score += int(person['mmse_five_tree']) + \
-                            int(person['mmse_five_sea']) + \
-                            int(person['mmse_five_car'])
+        if (f.mmse_five_flower or
+                f.mmse_five_river or
+                f.mmse_five_train):
+            mmse_score += int(f.mmse_five_flower) +\
+                            int(f.mmse_five_river) + \
+                            int(f.mmse_five_train)
+        elif (f.mmse_five_tree or
+                f.mmse_five_sea or
+                f.mmse_five_car):
+            mmse_score += int(f.mmse_five_tree) + \
+                            int(f.mmse_five_sea) + \
+                            int(f.mmse_five_car)
 
-        mmse_score += mmses[person['mmse_six_one']] + \
-                        mmses[person['mmse_six_two']] + \
-                        mmses[person['mmse_seven_one']]
+        mmse_score += mmses[f.mmse_six_one] + \
+                        mmses[f.mmse_six_two] + \
+                        mmses[f.mmse_seven_one]
 
-        mmse_score += int(person['mmse_eight_one']) + \
-                        int(person['mmse_eight_two']) + \
-                        int(person['mmse_eight_three'])
+        mmse_score += int(f.mmse_eight_one) + \
+                        int(f.mmse_eight_two) + \
+                        int(f.mmse_eight_three)
 
-        mmse_score += int(person['mmse_nine_one']) + \
-                        int(person['mmse_ten_one'])
+        mmse_score += int(f.mmse_nine_one) + \
+                        int(f.mmse_ten_one)
     except:
         mmse_result = None
         mmse_score = None
     else:
-        if person['edu'] == 0 and mmse_score <= 14:
+        if f.edu == 0 and mmse_score <= 14:
             mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
-        elif person['edu'] == 1 and mmse_score <= 17:
+        elif f.edu == 1 and mmse_score <= 17:
             mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
-        elif person['edu'] > 1 and mmse_score <= 22:
+        elif f.edu > 1 and mmse_score <= 22:
             mmse_result = u'เข้าข่ายมีภาวะความจำเสื่อม'
         else:
             mmse_result = u'ปกติ'
 
     try:
-        q2_score = int(person['q2_one']) + int(person['q2_two'])
+        q2_score = int(f.q2_one) + int(f.q2_two)
     except:
         q2_result = None
         q2_score = None
@@ -489,15 +514,15 @@ def view_result():
             q2_result = u'ผิดปกติ'
 
     try:
-        q9_score = int(person['q9_one']) + \
-                        int(person['q9_two']) + \
-                        int(person['q9_three']) + \
-                        int(person['q9_four']) + \
-                        int(person['q9_five']) + \
-                        int(person['q9_six']) + \
-                        int(person['q9_seven']) + \
-                        int(person['q9_eight']) + \
-                        int(person['q9_nine'])
+        q9_score = int(f.q9_one) + \
+                        int(f.q9_two) + \
+                        int(f.q9_three) + \
+                        int(f.q9_four) + \
+                        int(f.q9_five) + \
+                        int(f.q9_six) + \
+                        int(f.q9_seven) + \
+                        int(f.q9_eight) + \
+                        int(f.q9_nine)
     except:
         q9_result = None
         q9_score = None
@@ -511,20 +536,17 @@ def view_result():
         else:
             q9_result = u'มีอาการของโรคซึมเศร้าระดับมาก'
 
-    if 'knee_pain' in person:
-        if person['knee_pain'] == 0:
-            knee_pain = u'ไม่ปวดเข่า'
-        else:
-            knee_pain = u'ปวดเข่า'
+    if f.knee_pain == 0:
+        knee_pain = u'ไม่ปวดเข่า'
     else:
-        knee_pain = u''
+        knee_pain = u'ปวดเข่า'
 
     try:
-        knee_pain_clinic_score = int(person['knee_pain_clinic_one']) + \
-                                    int(person['knee_pain_clinic_two']) + \
-                                    int(person['knee_pain_clinic_three']) + \
-                                    int(person['knee_pain_clinic_four']) + \
-                                    int(person['knee_pain_clinic_five'])
+        knee_pain_clinic_score = int(f.knee_pain_clinic_one) + \
+                                    int(f.knee_pain_clinic_two) + \
+                                    int(f.knee_pain_clinic_three) + \
+                                    int(f.knee_pain_clinic_four) + \
+                                    int(f.knee_pain_clinic_five)
     except:
         knee_pain_clinic = None
         knee_pain_clinic_score = None
@@ -534,15 +556,12 @@ def view_result():
         else:
             knee_pain_clinic = u'ปกติ'
 
-    if 'tugt' in person:
-        tugt = dict([(0, u'<30 วินาที'),
-                    (1, u'>=30 วินาที'),
-                    (2, u'เดินไม่ได้')]).get(person['tugt'])
-    else:
-        tugt = u''
+    tugt = dict([(0, u'<30 วินาที'),
+                (1, u'>=30 วินาที'),
+                (2, u'เดินไม่ได้')]).get(f.tugt)
 
     try:
-        urine = dict([(0, u'ไม่มี'), (1, u'มี')])[person['urine_holding']]
+        urine = dict([(0, u'ไม่มี'), (1, u'มี')]).get(f.urine_holding)
     except:
         urine = None
 
@@ -551,16 +570,16 @@ def view_result():
                 (1, '18.5-22.9'),
                 (2, '23.0-24.9'),
                 (3, '25.0-29.9'),
-                (4, '>=30')])[person['bmi']]
+                (4, '>=30')]).get(f.bmi)
     except:
         bmi = None
 
     try:
-        malnutrition_score = int(person['malnutrition_one']) + \
-                                int(person['malnutrition_two']) + \
-                                int(person['malnutrition_three']) + \
-                                int(person['malnutrition_four']) + \
-                                int(person['malnutrition_five'])
+        malnutrition_score = int(f.malnutrition_one) + \
+                                int(f.malnutrition_two) + \
+                                int(f.malnutrition_three) + \
+                                int(f.malnutrition_four) + \
+                                int(f.malnutrition_five)
     except:
         malnutrition = None
         malnutrition_score = None
@@ -572,25 +591,22 @@ def view_result():
         else:
             malnutrition = u'ปกติ'
 
-    if 'sleeping_one' in person:
-        if person['sleeping_one']:
-            sleeping = dict([(0, u'ไม่มีปัญหา'), (1, u'มีปัญหา')])[person['sleeping_one']]
-        else:
-            sleeping = u''
+    if f.sleeping_one:
+        sleeping = dict([(0, u'ไม่มีปัญหา'), (1, u'มีปัญหา')])[f.sleeping_one]
     else:
         sleeping = u''
 
     try:
-        routine_score = int(person['routine_one']) + \
-                            int(person['routine_two']) + \
-                            int(person['routine_three']) + \
-                            int(person['routine_four']) + \
-                            int(person['routine_five']) + \
-                            int(person['routine_six']) + \
-                            int(person['routine_seven']) + \
-                            int(person['routine_eight']) + \
-                            int(person['routine_nine']) + \
-                            int(person['routine_ten'])
+        routine_score = int(f.routine_one) + \
+                            int(f.routine_two) + \
+                            int(f.routine_three) + \
+                            int(f.routine_four) + \
+                            int(f.routine_five) + \
+                            int(f.routine_six) + \
+                            int(f.routine_seven) + \
+                            int(f.routine_eight) + \
+                            int(f.routine_nine) + \
+                            int(f.routine_ten)
     except:
         routine = None
         routine_score = None
@@ -603,52 +619,52 @@ def view_result():
             routine = u'ช่วยเหลือตัวเองไม่ได้'
 
     try:
-        long_term_one_prelim_score = int(person['long_term_care_one_one']) + \
-                                        int(person['long_term_care_one_two']) + \
-                                        int(person['long_term_care_one_three'])
+        long_term_one_prelim_score = int(f.long_term_care_one_one) + \
+                                        int(f.long_term_care_one_two) + \
+                                        int(f.long_term_care_one_three)
     except:
         long_term_one_prelim_score = None
 
     try:
-        long_term_two_prelim_score = int(person['long_term_care_two_one']) + \
-                                        int(person['long_term_care_two_two'])
+        long_term_two_prelim_score = int(f.long_term_care_two_one) + \
+                                        int(f.long_term_care_two_two)
     except:
         long_term_two_prelim_score = None
 
     try:
-        long_term_three_prelim_score = int(person['long_term_care_three_one'])
+        long_term_three_prelim_score = int(f.long_term_care_three_one)
         long_term_three_prelim_score += \
-                                1 if person['long_term_care_three_two_one'] and \
-                                    person['long_term_care_three_two_two'] else 0
+                                1 if f.long_term_care_three_two_one and \
+                                    f.long_term_care_three_two_two else 0
     except:
         long_term_three_prelim_score = None
 
     try:
-        long_term_four_prelim_score = int(person['long_term_care_four_one']) + \
-                                        int(person['long_term_care_four_two']) + \
-                                        int(person['long_term_care_four_three']) + \
-                                        int(person['long_term_care_four_four']) + \
-                                        int(person['long_term_care_four_five'])
+        long_term_four_prelim_score = int(f.long_term_care_four_one) + \
+                                        int(f.long_term_care_four_two) + \
+                                        int(f.long_term_care_four_three) + \
+                                        int(f.long_term_care_four_four) + \
+                                        int(f.long_term_care_four_five)
     except:
         long_term_four_prelim_score = None
 
     try:
-        long_term_five_prelim_score = int(person['long_term_care_five_one']) + \
-                                        int(person['long_term_care_five_two']) + \
-                                        int(person['long_term_care_five_three']) + \
-                                        int(person['long_term_care_five_four']) + \
-                                        int(person['long_term_care_five_five']) + \
-                                        int(person['long_term_care_five_six']) + \
-                                        int(person['long_term_care_five_seven']) + \
-                                        int(person['long_term_care_five_eight']) + \
-                                        int(person['long_term_care_five_nine']) + \
-                                        int(person['long_term_care_five_ten']) + \
-                                        int(person['long_term_care_five_eleven']) + \
-                                        int(person['long_term_care_five_twelve']) + \
-                                        int(person['long_term_care_five_thirteen']) + \
-                                        int(person['long_term_care_five_fourteen']) + \
-                                        int(person['long_term_care_five_fifteen']) + \
-                                        int(person['long_term_care_five_sixteen'])
+        long_term_five_prelim_score = int(f.long_term_care_five_one) + \
+                                        int(f.long_term_care_five_two) + \
+                                        int(f.long_term_care_five_three) + \
+                                        int(f.long_term_care_five_four) + \
+                                        int(f.long_term_care_five_five) + \
+                                        int(f.long_term_care_five_six) + \
+                                        int(f.long_term_care_five_seven) + \
+                                        int(f.long_term_care_five_eight) + \
+                                        int(f.long_term_care_five_nine) + \
+                                        int(f.long_term_care_five_ten) + \
+                                        int(f.long_term_care_five_eleven) + \
+                                        int(f.long_term_care_five_twelve) + \
+                                        int(f.long_term_care_five_thirteen) + \
+                                        int(f.long_term_care_five_fourteen) + \
+                                        int(f.long_term_care_five_fifteen) + \
+                                        int(f.long_term_care_five_sixteen)
     except:
         long_term_five_prelim_score = None
 
@@ -722,7 +738,7 @@ def view_result():
 
     incomplete = u'ข้อมูลไม่พอสำหรับการแปลผล'
     return render_template('show_personal_data.html',
-            person=person,
+            person=elder,
             genders=dict(form.gender.choices),
             maritals=dict(form.marital.choices),
             edus=dict(form.edu.choices),
@@ -805,18 +821,19 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    for res in db.form1.find({'province': current_user.province}):
+    # for res in Elder.query.filter_by(province=current_user.province):
+    for res in Elder.query.all():
         no += 1
         try:
             result = [no,
-                        res['pid'],
-                        res['firstname'],
-                        res['lastname'],
-                        res['age'],
-                        res['district'],
-                        res['amphur'],
-                        res['province'],
-                        str(res['created_date'].date()),
+                        res.pid,
+                        res.firstname,
+                        res.lastname,
+                        res.age,
+                        res.district,
+                        res.amphur,
+                        res.province,
+                        str(res.updated_date.date()),
                     ]
         except:
             pass
@@ -828,7 +845,7 @@ def get_all_data():
 @main.route('/your_account/')
 @login_required
 def your_account_view():
-    user = db.users.find_one({'username': current_user.username})
+    user = User.query.filter_by(username=current_user.username).first()
     return render_template('your_account.html', db=db, user=user)
 
 @main.route('/viz/<year>')
@@ -842,15 +859,17 @@ def age_viz(year):
     female_ages = [0]  # empty list fails to draw the boxplot
     other_ages = [0]
     if current_user.username == 'admin':  # TEMPORARY
-        cursor = db.form1.find()
+        cursor = AnswerForm.query.all()
     else:
-        cursor = db.form1.find({'province': current_user.province})
+        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        cursor = AnswerForm.query.all()
 
     n = 0
     for rec in cursor:
+        elder = Elder.query.get(rec.elder_id)
         if year != 'all':
             try:
-                eyear = rec['created_date'].year
+                eyear = rec.collected_date.year
             except:
                 continue
             else:
@@ -858,18 +877,18 @@ def age_viz(year):
                     continue
         n += 1
 
-        if rec['gender'] == u'ชาย':
+        if elder.gender == u'ชาย':
             males += 1
-            if rec['age']:
-                male_ages.append(rec['age'])
-        elif rec['gender'] == u'หญิง':
+            if elder.age:
+                male_ages.append(elder.age)
+        elif elder.gender == u'หญิง':
             females += 1
-            if rec['age']:
-                female_ages.append(rec['age'])
+            if elder.age:
+                female_ages.append(elder.age)
         else:
             others += 1
-            if rec['age']:
-                other_ages.append(rec['age'])
+            if elder.age:
+                other_ages.append(elder.age)
 
     piedata = [{'key': 'เพศชาย', 'y': males},
             {'key': 'เพศหญิง', 'y': females},
@@ -930,38 +949,37 @@ def knee_viz(year):
     pain_prov = []
     no_pain_prov = []
     if current_user.username == 'admin':  # TEMPORARY
-        cursor = db.form1.find()
+        cursor = AnswerForm.query.all()
     else:
-        cursor = db.form1.find({'province': current_user.province})
+        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        cursor = AnswerForm.query.all()
 
     n = 0
     for rec in cursor:
         if year != 'all':
             try:
-                eyear = rec['created_date'].year
+                eyear = rec.created_date.year
             except:
                 continue
             else:
                 if eyear != int(year):
                     continue
         n += 1
-        if 'knee_pain' in rec:
-            if rec['knee_pain'] == 1:
-                pain += 1
-                try:
-                    pain_prov.append(rec['province'])
-                except:
-                    pain_prov.append('Unknown')
-            elif rec['knee_pain'] == 0:
-                no_pain += 1
-                try:
-                    no_pain_prov.append(rec['province'])
-                except:
-                    no_pain_prov.append('Unknown')
-            else:
-                others += 1
+        #TODO: find out whether we want locale or province
+        if rec.knee_pain == 1:
+            pain += 1
+            try:
+                pain_prov.append(rec.locale)
+            except:
+                pain_prov.append('Unknown')
+        elif rec.knee_pain == 0:
+            no_pain += 1
+            try:
+                no_pain_prov.append(rec.locale)
+            except:
+                no_pain_prov.append('Unknown')
         else:
-            na += 1
+            others += 1
 
     piedata = [{'key': 'ปวดเข่า', 'y': pain},
                {'key': 'ไม่ปวดเข่า', 'y': no_pain},
@@ -982,16 +1000,17 @@ def longterm_viz(year):
     need = []
     no_need = []
     if current_user.username == 'admin':  # TEMPORARY
-        cursor = db.form1.find()
+        cursor = AnswerForm.query.all()
     else:
-        cursor = db.form1.find({'province': current_user.province})
+        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        cursor = AnswerForm.query.all()
 
     n = 0
     scores = []
     for rec in cursor:
         if year != 'all':
             try:
-                eyear = rec['created_date'].year
+                eyear = rec.created_date.year
             except:
                 continue
             else:
@@ -1001,44 +1020,44 @@ def longterm_viz(year):
         n += 1
         try:
             social_score = 0
-            social_score += rec['long_term_care_one_one']
-            social_score += rec['long_term_care_one_two']
-            social_score += rec['long_term_care_one_three']
+            social_score += rec.long_term_care_one_one
+            social_score += rec.long_term_care_one_two
+            social_score += rec.long_term_care_one_three
 
             sense_score = 0
-            sense_score += longterm_two_scores[rec['long_term_care_two_one']]
-            sense_score += longterm_two_scores[rec['long_term_care_two_two']]
+            sense_score += longterm_two_scores[rec.long_term_care_two_one]
+            sense_score += longterm_two_scores[rec.long_term_care_two_two]
 
             depress_score = 0
-            depress_score += rec['long_term_care_three_one']
-            if (rec['long_term_care_three_two_one'] or
-                    rec['long_term_care_three_two_two']):
+            depress_score += rec.long_term_care_three_one
+            if (rec.long_term_care_three_two_one or
+                    rec.long_term_care_three_two_two):
                 depress_score += 1
 
             sensitive_score = 0
-            sensitive_score += int(rec['long_term_care_four_one'])
-            sensitive_score += int(rec['long_term_care_four_two'])
-            sensitive_score += int(rec['long_term_care_four_three'])
-            sensitive_score += int(rec['long_term_care_four_four'])
-            sensitive_score += int(rec['long_term_care_four_five'])
+            sensitive_score += int(rec.long_term_care_four_one)
+            sensitive_score += int(rec.long_term_care_four_two)
+            sensitive_score += int(rec.long_term_care_four_three)
+            sensitive_score += int(rec.long_term_care_four_four)
+            sensitive_score += int(rec.long_term_care_four_five)
 
             routine_score = 0
-            routine_score += rec['long_term_care_five_one'] + 1
-            routine_score += rec['long_term_care_five_two'] + 1
-            routine_score += rec['long_term_care_five_three'] + 1
-            routine_score += rec['long_term_care_five_four'] + 1
-            routine_score += rec['long_term_care_five_five'] + 1
-            routine_score += rec['long_term_care_five_six'] + 1
-            routine_score += rec['long_term_care_five_seven'] + 1
-            routine_score += rec['long_term_care_five_eight'] + 1
-            routine_score += rec['long_term_care_five_nine'] + 1
-            routine_score += rec['long_term_care_five_ten'] + 1
-            routine_score += rec['long_term_care_five_eleven'] + 1
-            routine_score += rec['long_term_care_five_twelve'] + 1
-            routine_score += rec['long_term_care_five_thirteen'] + 1
-            routine_score += rec['long_term_care_five_fourteen'] + 1
-            routine_score += rec['long_term_care_five_fifteen'] + 1
-            routine_score += rec['long_term_care_five_sixteen'] + 1
+            routine_score += rec.long_term_care_five_one + 1
+            routine_score += rec.long_term_care_five_two + 1
+            routine_score += rec.long_term_care_five_three + 1
+            routine_score += rec.long_term_care_five_four + 1
+            routine_score += rec.long_term_care_five_five + 1
+            routine_score += rec.long_term_care_five_six + 1
+            routine_score += rec.long_term_care_five_seven + 1
+            routine_score += rec.long_term_care_five_eight + 1
+            routine_score += rec.long_term_care_five_nine + 1
+            routine_score += rec.long_term_care_five_ten + 1
+            routine_score += rec.long_term_care_five_eleven + 1
+            routine_score += rec.long_term_care_five_twelve + 1
+            routine_score += rec.long_term_care_five_thirteen + 1
+            routine_score += rec.long_term_care_five_fourteen + 1
+            routine_score += rec.long_term_care_five_fifteen + 1
+            routine_score += rec.long_term_care_five_sixteen + 1
 
             total_score = 0
             if social_score <= 3:
@@ -1067,7 +1086,7 @@ def longterm_viz(year):
             na += 1
             continue
         try:
-            scores.append((rec['province'],total_score))
+            scores.append((rec.locale,total_score))
         except KeyError:
             continue
 

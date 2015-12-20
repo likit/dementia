@@ -9,6 +9,7 @@ from wtforms.validators import (Required, Email, Length,
 from wtforms.widgets import Select
 from wtforms import ValidationError
 from .. import db
+from ..models import User
 
 import sys
 
@@ -50,5 +51,5 @@ class RegistrationForm(Form):
     #         raise ValidationError('Email already registered.')
 
     def validate_pid(self, field):
-        if db.users.find_one({'pid': field.data}):
+        if User.query.filter_by(username=field.data).first():
             raise ValidationError('PID already registered.')

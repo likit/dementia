@@ -1,3 +1,4 @@
+import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -7,76 +8,9 @@ from . import login_manager
 from flask.ext.login import UserMixin
 
 
-class LoginUser():
-    def __init__(self, username):
-            self.username = username
-
-    def is_active(self):
-        return True
-
-    def is_authenticated(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.username
-
-    @staticmethod
-    def validate_login(password_hash, password):
-        return check_password_hash(password_hash, password)
-
-class User():
-    def __init__(self, username, **kwargs):
-        if kwargs['role'] != 'admin':
-            self.username = username
-            self.province = kwargs['province']
-            self.name = kwargs['name']
-            self.lastname = kwargs['lastname']
-            self.title = kwargs['title']
-            self.role = kwargs['role']
-            self.position = kwargs['position']
-            self.org = kwargs['org']
-            self.verified = kwargs['verified']
-            self.last_login = kwargs['last_login']
-        elif kwargs['role'] == 'admin':
-            self.username = username
-            self.role = 'admin'
-        else:
-            pass
-
-    def is_active(self):
-        return True
-
-    def is_authenticated(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.username
-
-    @staticmethod
-    def validate_login(password_hash, password):
-        return check_password_hash(password_hash, password)
-
 @login_manager.user_loader
-def load_user(username):
-    u = db.users.find_one({'username': username})
-    if not u:
-        return None
-    else:
-        if u['role'] != 'admin':
-            return User(u['username'], title=u['title'], name=u['name'],
-                    lastname=u['lastname'], province=u['province'],
-                    role=u['role'], org=u['org'], position=u['position'],
-                    verified=u['verified'], last_login=u['last_login'])
-        elif u['role'] == 'admin':
-            return User(u['username'], email=u['email'], role=u['role'])
-        else:
-            pass
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 def generate_confirmation_token(pid, expiration=3600):
@@ -94,3 +28,48 @@ def confirm(user, token):
     # TODO: read data from mongo db and update verify field
     user['verified'] = True
     return True
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(13))
+    title = db.Column(db.String(30))
+    email = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    name = db.Column(db.String(255))
+    lastname = db.Column(db.String(255))
+    province = db.Column(db.String(255))
+    role = db.Column(db.String(20))
+    org = db.Column(db.String(255))
+    position = db.Column(db.String(255))
+    phone = db.Column(db.String(25))
+    cell = db.Column(db.String(25))
+    verified = db.Column(db.Boolean)
+    last_login = db.Column(db.DateTime)
+    org_address = db.Column(db.String(255))
+    moo = db.Column(db.String(255))
+    province = db.Column(db.String(255))
+    amphur = db.Column(db.String(255))
+    district = db.Column(db.String(255))
+    objective = db.Column(db.Text)
+    updated_on = db.Column(db.DateTime)
+    created_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
+
+    @staticmethod
+    def validate_login(password_hash, password):
+        return check_password_hash(password_hash, password)
+

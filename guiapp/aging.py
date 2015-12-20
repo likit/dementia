@@ -36,7 +36,29 @@ Builder.load_file('login.kv')
 
 
 class GeneralInfoForm(Popup):
-    pass
+    pid = ObjectProperty()
+    firstname = ObjectProperty()
+    lastname = ObjectProperty()
+    gender = ObjectProperty()
+
+    def search_pid(self):
+        print('PID=', self.pid.infield.text)
+        if self.pid.infield.text == '3760100358991':
+            self.firstname.infield.text = 'Likit'
+            self.lastname.infield.text = 'Preeyanon'
+
+    def clear_fields(self):
+        print('All fields cleared..')
+        self.pid.infield.text = ''
+        self.firstname.infield.text = ''
+        self.lastname.infield.text = ''
+
+    def showdata(self):
+        print(self.pid.infield.text)
+        print(self.firstname.infield.text)
+        print(self.lastname.infield.text)
+        print(self.gender.text)
+
 
 Builder.load_file('generalinfo.kv')
 

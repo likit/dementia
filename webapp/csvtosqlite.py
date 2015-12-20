@@ -45,7 +45,7 @@ class Elder(db.Model):
             'updated_by': lambda x: x[12],
             'height': lambda x: x[13],
             'weight': lambda x: x[14],
-            'edu_id': lambda x: x[15],
+            'edu_id': lambda x: unicode(x[15], 'utf8').isdigit() or None,
             }
 
 
@@ -66,8 +66,8 @@ class ElderAddr(db.Model):
             'address': lambda x: unicode(x[1], 'utf8'),
             'moo': lambda x: unicode(x[2], 'utf8'),
             'tel': lambda x: unicode(x[3], 'utf8'),
-            'pad_id': lambda x: x[4],
-            'elder_id': lambda x: x[5],
+            'pad_id': lambda x: unicode(x[4], 'utf8').isdigit() or None,
+            'elder_id': lambda x: unicode(x[5], 'utf8').isdigit() or None,
             'current': lambda x: to_bool(x[7]),
             'updated_year': lambda x: unicode(x[8], 'utf8'),
             'village': lambda x: unicode(x[9], 'utf8'),
@@ -96,7 +96,7 @@ class User(db.Model):
     schema = {
             'id': lambda x: x[0],
             'username': lambda x: unicode(x[1], 'utf8'),
-            'password': lambda x: unicode(x[2], 'utf8'),
+            'password': lambda x: None,
             'prefix': lambda x: unicode(x[3], 'utf8'),
             'firstname': lambda x: unicode(x[4], 'utf8'),
             'lastname': lambda x: unicode(x[5], 'utf8'),
@@ -104,7 +104,7 @@ class User(db.Model):
             'mobile': lambda x: unicode(x[7], 'utf8'),
             'email': lambda x: unicode(x[8], 'utf8'),
             'admin': lambda x: to_bool(unicode(x[9], 'utf8')),
-            'location_id': lambda x: x[10],
+            'location_id': lambda x: unicode(x[10], 'utf8').isdigit() or None,
             'created_date': lambda x: unicode(x[11], 'utf8'),
             'created_by': lambda x: x[12],
             'updated_date': lambda x: unicode(x[13], 'utf8'),
@@ -126,7 +126,7 @@ class UserLocation(db.Model):
             'name': lambda x: unicode(x[1], 'utf8'),
             'address': lambda x: unicode(x[2], 'utf8'),
             'moo': lambda x: unicode(x[3], 'utf8'),
-            'pad_id': lambda x: x[4],
+            'pad_id': lambda x: unicode(x[4], 'utf8').isdigit() or None,
             }
 
 
@@ -136,12 +136,24 @@ class Education(db.Model):
     degree = db.Column(db.String(255))
     level = db.Column(db.Integer)
     edu = db.relationship('Elder', backref='education', lazy='dynamic')
+    schema = {
+            'id': lambda x: x[0],
+            'degree': lambda x: unicode(x[1], 'utf8'),
+            'level': lambda x: x[2],
+            }
+
 
 class Region(db.Model):
     __tablename__ = 'ref_regions'
     id = db.Column(Integer, primary_key=True)
     desc = db.Column(db.String(255))
     provinces = db.relationship('Province', backref='region', lazy='dynamic')
+
+
+    schema = {
+            'id': lambda x: x[0],
+            'desc': lambda x: unicode(x[1], 'utf8'),
+            }
 
     def __repr__(self):
         return '<Region %d %s>' % (self.id, self.desc)
@@ -153,6 +165,11 @@ class Province(db.Model):
     name = db.Column(db.String(255))
     region_id = db.Column(db.Integer, db.ForeignKey('ref_regions.id'))
     pads = db.relationship('Pad', backref='province', lazy='dynamic')
+    schema = {
+            'id': lambda x: x[0],
+            'name': lambda x: unicode(x[1], 'utf8'),
+            'region_id': lambda x: unicode(x[2], 'utf8').isdigit() or None,
+            }
 
 
 class Amphur(db.Model):
@@ -160,6 +177,10 @@ class Amphur(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     pads = db.relationship('Pad', backref='amphur', lazy='dynamic')
+    schema = {
+            'id': lambda x: x[0],
+            'name': lambda x: unicode(x[1], 'utf8'),
+            }
 
 
 class District(db.Model):
@@ -167,6 +188,10 @@ class District(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     pads = db.relationship('Pad', backref='district', lazy='dynamic')
+    schema = {
+            'id': lambda x: x[0],
+            'name': lambda x: unicode(x[1], 'utf8'),
+            }
 
 
 class Pad(db.Model):
@@ -175,6 +200,12 @@ class Pad(db.Model):
     province_id = db.Column(db.Integer, db.ForeignKey('ref_provinces.id'))
     amphur_id = db.Column(db.Integer, db.ForeignKey('ref_amphurs.id'))
     district_id = db.Column(db.Integer, db.ForeignKey('ref_districts.id'))
+    schema = {
+            'id': lambda x: x[0],
+            'province_id': lambda x: unicode(x[1], 'utf8').isdigit() or None,
+            'amphur_id': lambda x: unicode(x[2], 'utf8').isdigit() or None,
+            'district_id': lambda x: unicode(x[3], 'utf8').isdigit() or None,
+            }
 
 
 class QuestionType(db.Model):
@@ -186,6 +217,13 @@ class QuestionType(db.Model):
     group = Column(Integer)
     questions = db.relationship('Question', backref='question_type',
             lazy='dynamic')
+    schema = {
+            'id': lambda x: x[0],
+            'th_name': lambda x: unicode(x[1], 'utf8'),
+            'en_name': lambda x: unicode(x[2], 'utf8'),
+            'remark': lambda x: unicode(x[3], 'utf8'),
+            'group': lambda x: unicode(x[4], 'utf8'),
+            }
 
 
 class Question(db.Model):
@@ -198,6 +236,15 @@ class Question(db.Model):
     question_type_id = db.Column(Integer,
             db.ForeignKey('eh_question_types.id'))
     answers = db.relationship('Answer', backref='question')
+    schema = {
+            'id': lambda x: x[0],
+            'qname': lambda x: unicode(x[1], 'utf8'),
+            'question_type_id': lambda x: unicode(x[2],
+                                    'utf8').isdigit() or None,
+            'parent_qid': lambda x: unicode(x[3], 'utf8').isdigit() or None,
+            'order': lambda x: x[4],
+            'special': lambda x: unicode(x[5], 'utf8'),
+            }
 
 
 class Answer(db.Model):
@@ -210,6 +257,15 @@ class Answer(db.Model):
     other_ = db.Column(db.String(255))
     question_id = db.Column(db.Integer,
                         db.ForeignKey('eh_questions.id'))
+    schema = {
+            'id': lambda x: x[0],
+            'score': lambda x: x[1],
+            'desc': lambda x: unicode(x[2], 'utf8'),
+            'question_id': lambda x: unicode(x[3], 'utf8').isdigit() or None,
+            'order': lambda x: x[4],
+            'text_': lambda x: unicode(x[5], 'utf8'),
+            'other_': lambda x: unicode(x[6], 'utf8'),
+            }
 
     def __repr__(self):
         return '<Answer %d>' % self.id
@@ -222,6 +278,11 @@ class QuestionHealth(db.Model):
     parent_qh_id_ = db.Column(db.Integer)
     answers = db.relationship('AnswerHealth',
             backref='question')
+    schema = {
+            'id': lambda x: x[0],
+            'desc': lambda x: unicode(x[1], 'utf8'),
+            'parent_qh_id_': lambda x: unicode(x[2], 'utf8').isdigit() or None,
+            }
 
 
 class AnswerHealth(db.Model):
@@ -233,91 +294,27 @@ class AnswerHealth(db.Model):
             db.ForeignKey('eh_question_healths.id'))
     other_ = db.Column(db.Boolean)
     disease_ = db.Column(db.Boolean)
+    schema = {
+            'id': lambda x: x[0],
+            'seq_': lambda x: x[1],
+            'desc': lambda x: unicode(x[2], 'utf8'),
+            'question_id': lambda x: unicode(x[3], 'utf8').isdigit() or None,
+            'other_': lambda x: to_bool(unicode(x[4], 'utf8')),
+            'disease_': lambda x: to_bool(unicode(x[5], 'utf8')),
+            }
 
     def __repr__(self):
         return '<Answer %d>' % self.id
-
-def insert_question_type(infile):
-    reader = csv.reader(open(infile))
-    for row in reader:
-        qt = QuestionType(th_name=unicode(row[1], 'utf8'),
-                            en_name=row[2],
-                            remark=unicode(row[3], 'utf8'),
-                            group=row[4])
-        db.session.add(qt)
-        db.session.commit()
-
-
-def insert_question(infile):
-    reader = csv.reader(open(infile))
-    n = 0
-    for row in reader:
-        q = Question(qname=unicode(row[1], 'utf8'),
-                            question_type_id=row[2],
-                            parent_qid=row[3],
-                            order=row[4],
-                            special=unicode(row[5], 'utf8'))
-        db.session.add(q)
-        db.session.commit()
-        n += 1
-        if n == 5: break
-
-def insert_answer(infile):
-    reader = csv.reader(open(infile))
-    n = 0
-    for row in reader:
-        ans = Answer(
-                score=row[1],
-                desc=unicode(row[2], 'utf8'),
-                question_id=row[3],
-                order=row[4],
-                text_=unicode(row[5], 'utf8'),
-                other_=unicode(row[6], 'utf8'),
-                )
-        db.session.add(ans)
-        db.session.commit()
-        n += 1
-        if n == 5: break
-
 
 def to_bool(str_value):
     keys = {'N': False, 'Y': True}
     return keys.get(str_value, False)
 
 
-def insert_question_health(infile):
-    reader = csv.reader(open(infile))
-    n = 0
-    for row in reader:
-        ans = QuestionHealth(
-                id=row[0],
-                desc=unicode(row[1], 'utf8'),
-                parent_qh_id_=row[2]
-                )
-        db.session.add(ans)
-        db.session.commit()
-
-
-def insert_answer_health(infile):
-    reader = csv.reader(open(infile))
-    n = 0
-    for row in reader:
-        ans = AnswerHealth(
-                id=row[0],
-                seq_=row[1],
-                desc=unicode(row[2], 'utf8'),
-                question_id=row[3],
-                other_=to_bool(unicode(row[4], 'utf8')),
-                disease_=to_bool(unicode(row[5], 'utf8')),
-                )
-        db.session.add(ans)
-        n += 1
-        if n == 5: break
-    db.session.commit()
-
 def insert_data(infile, model):
     reader = csv.reader(open(infile))
     n = 0
+    failed = 0
     for n, row in enumerate(reader):
         kwargs = {}
         for k,v in model.schema.iteritems():
@@ -328,70 +325,60 @@ def insert_data(infile, model):
             db.session.add(r)
             db.session.commit()
         except Exception as e:
-            print(row)
+            failed += 1
             raise e
 
         if n == 20: break
 
+    print('Failed %d' % failed)
+
 
 def main():
     try:
+        db.drop_all()
         db.create_all()
     except Exception as e:
         raise e
     else:
         print('SQLite is set.')
         datadir = '../data-latest'
-        # insert_question_type(os.path.join(datadir,
-        #                                 'eh_question_type.csv'))
+        print('Inserting question types')
+        insert_data(os.path.join(datadir,
+                                'eh_question_type.csv'), QuestionType)
 
-        # insert_question(os.path.join(datadir, 'eh_question.csv'))
-        # insert_answer(os.path.join(datadir, 'eh_answer.csv'))
-        # insert_answer_health(os.path.join(datadir, 'eh_answer_health.csv'))
-        # insert_question_health(os.path.join(datadir, 'eh_question_health.csv'))
+        print('Inserting question')
+        insert_data(os.path.join(datadir, 'eh_question.csv'),
+                Question)
+        print('Inserting answers')
+        insert_data(os.path.join(datadir, 'eh_answer.csv'), Answer)
+        print('Inserting answer health')
+        insert_data(os.path.join(datadir, 'eh_answer_health.csv'),
+                AnswerHealth)
+        print('Inserting question health')
+        insert_data(os.path.join(datadir, 'eh_question_health.csv'),
+                QuestionHealth)
 
-        region_values = {
-                'id': lambda x: x[0],
-                'desc': lambda x: unicode(x[1], 'utf8'),
-                }
-        # insert_data(os.path.join(datadir, 'ref_region.csv'),
-        #         Region, region_values)
+        print('Inserting regions')
+        insert_data(os.path.join(datadir, 'ref_region.csv'), Region)
 
-        province_values = {
-                'id': lambda x: x[0],
-                'name': lambda x: unicode(x[1], 'utf8'),
-                'region_id': lambda x: x[2],
-                }
-        district_amphur_values = {
-                'id': lambda x: x[0],
-                'name': lambda x: unicode(x[1], 'utf8'),
-                }
-        pad_values = {
-                'id': lambda x: x[0],
-                'province_id': lambda x: x[1],
-                'amphur_id': lambda x: x[2],
-                'district_id': lambda x: x[3],
-                }
-        edu_values = {
-                'id': lambda x: x[0],
-                'degree': lambda x: unicode(x[1], 'utf8'),
-                'level': lambda x: x[2],
-                }
+        print('Inserting provinces')
+        insert_data(os.path.join(datadir, 'ref_province.csv'), Province)
+        print('Inserting districts')
+        insert_data(os.path.join(datadir, 'ref_district.csv'), District)
+        print('Inserting amphurs')
+        insert_data(os.path.join(datadir, 'ref_amphur.csv'), Amphur)
+        print('Inserting pads')
+        insert_data(os.path.join(datadir, 'ref_pad.csv'), Pad)
+        print('Inserting educations')
+        insert_data(os.path.join(datadir, 'ref_education.csv'), Education)
 
-        # insert_data(os.path.join(datadir, 'ref_province.csv'),
-        #         Province, province_values)
-        # insert_data(os.path.join(datadir, 'ref_district.csv'),
-        #         District, district_amphur_values)
-        # insert_data(os.path.join(datadir, 'ref_amphur.csv'),
-        #         Amphur, district_amphur_values)
-        # insert_data(os.path.join(datadir, 'ref_pad.csv'),
-        #         Pad, pad_values)
-        # insert_data(os.path.join(datadir, 'ref_education.csv'),
-        #         Education, edu_values)
-
-        # insert_data(os.path.join(datadir, 'eh_elder.csv'), Elder)
-        # insert_data(os.path.join(datadir, 'eh_elder_address.csv'), ElderAddr)
-        # insert_data(os.path.join(datadir, 'eh_user.csv'), User)
+        print('Inserting elders')
+        insert_data(os.path.join(datadir, 'eh_elder.csv'), Elder)
+        print('Inserting elders address')
+        insert_data(os.path.join(datadir, 'eh_elder_address.csv'), ElderAddr)
+        print('Inserting user')
+        insert_data(os.path.join(datadir, 'eh_user.csv'), User)
+        print('Inserting user location')
         insert_data(os.path.join(datadir,
             'eh_user_location.csv'), UserLocation)
 

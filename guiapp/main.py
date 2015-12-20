@@ -2,9 +2,25 @@ import sys
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-class Form(QWidget):
+class MainForm(QWidget):
     def __init__(self):
-        super(Form, self).__init__()
+        super(MainForm, self).__init__()
+        self.setWindowTitle('Main Form')
+        self.setMinimumWidth(400)
+        add_date_btn = QPushButton('Collect Date')
+        vbox = QVBoxLayout()
+        vbox.addWidget(add_date_btn)
+        self.setLayout(vbox)
+
+        add_date_btn.clicked.connect(self.open_date_dialog)
+
+    def open_date_dialog(self):
+        print("Opening date dialog ...")
+
+
+class LoginForm(QWidget):
+    def __init__(self):
+        super(LoginForm, self).__init__()
         self.setWindowTitle('Log In')
         self.setMinimumWidth(300)
 
@@ -51,16 +67,18 @@ class MainWindow(QMainWindow):
     # Slots called when the menu actions are triggered
     def new_form(self):
         print('Creating a form..')
+        self.form = MainForm()
+        self.form.show()
 
     def exit(self):
         self.close()
 
     def create_login_form(self):
         print('Building a form..')
-        form = Form()
-        self.mdi_area.addSubWindow(form)
-        form.show()
-        return form
+        login_form = LoginForm()
+        self.mdi_area.addSubWindow(login_form)
+        login_form.show()
+        return login_form
 
     def create_actions(self):
         """ Function to create actions for menu
@@ -87,13 +105,13 @@ class MainWindow(QMainWindow):
         return None
 
     def login(self):
-        self.form = self.create_login_form()
-        self.form.login_button.clicked.connect(self.hello)
+        self.login_form = self.create_login_form()
+        self.login_form.login_button.clicked.connect(self.hello)
 
     def hello(self):
-        print('Name: ', self.form.text_username.text())
-        print('Password: ', self.form.text_password.text())
-        self.form.parentWidget().close()
+        print('Name: ', self.login_form.text_username.text())
+        print('Password: ', self.login_form.text_password.text())
+        self.login_form.parentWidget().close()
 
 
 if __name__=='__main__':

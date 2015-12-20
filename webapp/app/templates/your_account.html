@@ -9,7 +9,7 @@
             <div class="panel panel-heading"><h4><strong>ข้อมูลส่วนบุคคล</strong></h4></div>
             <div class="panel-body">
                 <table class="table table-striped">
-                    <tr><td class="col-md-2"><strong>ลงทะเบียนเข้าใช้ครั้งล่าสุด</strong></td><td>{{ user.last_login[-1].strftime('%d-%m-%Y %H:%M') }}</td></tr>
+                    <tr><td class="col-md-2"><strong>ลงทะเบียนเข้าใช้ครั้งล่าสุด</strong></td><td>{{ user.last_login.strftime('%d-%m-%Y %H:%M') }}</td></tr>
                     <tr><td class="col-md-2"><strong>รหัสบัตรประชาชน</strong></td><td>{{ user.username }}</td></tr>
                     <tr><td class="col-md-2"><strong>ชื่อ</strong></td><td>{{ user.title }} {{ user.name }} {{ user.lastname }}</td></tr>
                     <tr><td class="col-md-2"><strong>ตำแหน่ง</strong></td><td>{{ user.position }}</td></tr>

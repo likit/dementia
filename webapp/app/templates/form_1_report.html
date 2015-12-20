@@ -4,7 +4,7 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(document).ready(function() {
@@ -37,7 +37,7 @@ $(document).ready(function() {
 {% endblock scripts %}
 {% block styles %}
 {{ super() }}
-<link href="https://cdn.datatables.net/1.10.8/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet">
 {% endblock styles %}
 
 {% block page_content %}

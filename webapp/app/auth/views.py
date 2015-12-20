@@ -15,7 +15,7 @@ from .. import APP_ROOT, APP_STATIC
 from datetime import datetime
 from flask.ext.login import login_user, login_required, logout_user
 from .forms import LoginForm, RegistrationForm
-from ..models import User, LoginUser
+from ..models import User
 from ..email import send_email
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -24,14 +24,13 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.users.find_one({'username': form.pid.data})
-        if user is not None and check_password_hash(user['password'],
+        user = User.query.filter_by(username=form.pid.data).first()
+        if user is not None and check_password_hash(user.password,
                 form.password.data):
             #FIXME: use email instead?
-            new_user = copy.deepcopy(user)
-            new_user['last_login'].append(datetime.now())
-            db.users.update({'username': user['username']}, new_user, safe=True)
-            login_user(LoginUser(user['username']), form.remember_me.data)
+            user.last_login = datetime.now()
+            login_user(user, form.remember_me.data)
+            print('logged in!!', user.is_authenticated())
             return redirect(request.args.get('next') \
                     or url_for('main.index'))
         flash('Invalid username or password')
@@ -63,7 +62,7 @@ def register():
     form.district.choices = [('', '')] + [(x,x) for x in districts_list]
 
     if form.validate_on_submit():
-        user_doc = {
+        user_fields = {
                 'username': form.pid.data, # pid is used as a username
                 'password': generate_password_hash(form.password.data),
                 'title': form.title.data,
@@ -78,18 +77,21 @@ def register():
 
                 'org': form.org.data,
                 'org_address': form.org_address.data,
-                'mhoo': form.mhoo.data,
+                'moo': form.mhoo.data,
                 'province': form.province.data,
                 'district': form.district.data,
                 'amphur': form.amphur.data,
                 'objective': form.objective.data,
-                'verified': False,
-                'create_date_time': datetime.today(),
+                'verified': True,
+                'created_on': datetime.today(),
                 'role': 'staff',
-                'last_login': [],
+                'last_login': None,
                 }
 
-        db.users.insert(user_doc, safe=True)
+        user = User(**user_fields)
+        db.session.add(user)
+        db.session.commit()
+
         # send_email(to=current_app.config['ADMIN_EMAIL'],
         #         subject=u' New Account verification: ชื่อผู้ขอใช้ %s %s' % \
         #                 (form.name.data, form.lastname.data),

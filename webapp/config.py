@@ -25,6 +25,8 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
     #         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     MONGO_DBNAME = 'data-dev'
+    # MONGO_HOST = '128.199.148.69'
+    # MONGO_PORT = 27019
 
 
 class TestingConfig(Config):

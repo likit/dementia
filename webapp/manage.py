@@ -45,23 +45,24 @@ def test(coverage=False):
 @manager.command
 def initdb():
     """Init the database."""
-    db.drop_collection('users')
-    db.drop_collection('form1')
-    password = generate_password_hash('testpass')
-    admin_doc = {
-                'username': 'admin',
-                'email': 'admin@example.com',
-                'password': password,
-                'name': 'Likit',
-                'lastname': 'Preeyanon',
-                'organization': 'MUMT',
-                'role': 'admin',
-                'province': 'all',
-                'verified': True,
-                'create_date_time': datetime.today(),
-            }
+    db.create_all()
+    # db.drop_collection('users')
+    # db.drop_collection('form1')
+    # password = generate_password_hash('testpass')
+    # admin_doc = {
+    #             'username': 'admin',
+    #             'email': 'admin@example.com',
+    #             'password': password,
+    #             'name': 'Likit',
+    #             'lastname': 'Preeyanon',
+    #             'organization': 'MUMT',
+    #             'role': 'admin',
+    #             'province': 'all',
+    #             'verified': True,
+    #             'create_date_time': datetime.today(),
+    #         }
 
-    db.users.insert(admin_doc, safe=True)
+    # db.users.insert(admin_doc, safe=True)
 
 if __name__ == '__main__':
     manager.run()

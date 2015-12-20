@@ -21,8 +21,6 @@ class WebApp(QThread):
 
 
 def main():
-    global web, env
-
     # Init flask server
     webappThread = WebApp()
     def setup_callback():
@@ -38,8 +36,9 @@ def main():
     # Setup webkit
     web = QWebView()
     web.load(QUrl('http://localhost:5000'))
-    web.resize(992, 800)
-    web.setWindowTitle('Thai Elderly Database')
+    # web.resize(992, 800)
+    web.showMaximized()
+    web.setWindowTitle('Thai Elderly Information System')
     web.show()
     app.exec_()
 
