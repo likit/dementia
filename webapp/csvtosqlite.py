@@ -25,9 +25,23 @@ class Question(db.Model):
     id = Column(Integer, primary_key=True)
     qname = Column(String(255))
     parent_qid = Column(Integer)
-    sort = Column(Integer)
+    order = Column(Integer)
     special = Column(String(255))
-    question_type_id = db.Column(Integer, db.ForeignKey('eh_question_types.id'))
+    question_type_id = db.Column(Integer,
+            db.ForeignKey('eh_question_types.id'))
+    answers = db.relationship('Answer', backref='question')
+
+
+class Answer(db.Model):
+    __tablename__ = 'eh_answers'
+    id = db.Column(db.Integer, primary_key=True)
+    score = db.Column(db.Integer)
+    desc = db.Column(db.String(255))
+    order = db.Column(db.Integer)
+    text_ = db.Column(db.String(40))
+    other_ = db.Column(db.String(255))
+    question_id = db.Column(db.Integer,
+                        db.ForeignKey('eh_questions.id'))
 
 
 def insert_question_type(infile):
@@ -48,19 +62,35 @@ def insert_question(infile):
         q = Question(qname=unicode(row[1], 'utf8'),
                             question_type_id=row[2],
                             parent_qid=row[3],
-                            sort=row[4],
+                            order=row[4],
                             special=unicode(row[5], 'utf8'))
         db.session.add(q)
         db.session.commit()
         n += 1
         if n == 5: break
 
+def insert_answer(infile):
+    reader = csv.reader(open(infile))
+    n = 0
+    for row in reader:
+        ans = Answer(
+                score=row[1],
+                desc=unicode(row[2], 'utf8'),
+                question_id=row[3],
+                order=row[4],
+                text_=unicode(row[5], 'utf8'),
+                other_=unicode(row[6], 'utf8'),
+                )
+        db.session.add(ans)
+        db.session.commit()
+        n += 1
+        if n == 5: break
 
 def main():
     try:
         db.create_all()
-    except:
-        pass
+    except Exception as e:
+        raise e
     else:
         print('SQLite is set.')
         datadir = '../data-latest'
@@ -68,6 +98,7 @@ def main():
         #                                 'eh_question_type.csv'))
 
         insert_question(os.path.join(datadir, 'eh_question.csv'))
+        insert_answer(os.path.join(datadir, 'eh_answer.csv'))
 
 
 if __name__=='__main__':
