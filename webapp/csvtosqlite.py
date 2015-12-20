@@ -9,6 +9,16 @@ from app import create_app, db
 webapp = create_app('default')
 db.app = webapp
 
+
+class Region(db.Model):
+    __tablename__ = 'ref_regions'
+    id = db.Column(Integer, primary_key=True)
+    desc = db.Column(db.String(255))
+
+    def __repr__(self):
+        return '<Region %d %s>' % (self.id, self.desc)
+
+
 class QuestionType(db.Model):
     __tablename__ = 'eh_question_types'
     id = Column(Integer, primary_key=True)
@@ -143,9 +153,24 @@ def insert_answer_health(infile):
                 disease_=to_bool(unicode(row[5], 'utf8')),
                 )
         db.session.add(ans)
-        db.session.commit()
         n += 1
         if n == 5: break
+    db.session.commit()
+
+def insert_data(infile, model, values):
+    reader = csv.reader(open(infile))
+    n = 0
+    for row in reader:
+        kwargs = {}
+        for k,v in values.iteritems():
+            kwargs[k] = v(row)
+
+        r = model(**kwargs)
+        db.session.add(r)
+        print("{0} {1}".format(r.id, r.desc.encode('utf8')))
+        n += 1
+        if n == 5: break
+    db.session.commit()
 
 
 def main():
@@ -161,8 +186,15 @@ def main():
 
         # insert_question(os.path.join(datadir, 'eh_question.csv'))
         # insert_answer(os.path.join(datadir, 'eh_answer.csv'))
-        insert_answer_health(os.path.join(datadir, 'eh_answer_health.csv'))
+        # insert_answer_health(os.path.join(datadir, 'eh_answer_health.csv'))
         # insert_question_health(os.path.join(datadir, 'eh_question_health.csv'))
+
+        region_values = {
+                'id': lambda x: x[0],
+                'desc': lambda x: unicode(x[1], 'utf8'),
+                }
+        insert_data(os.path.join(datadir, 'ref_region.csv'),
+                Region, region_values)
 
         # for row in Question.query.all():
         #     print("{0} {1}".format(row.id, row.qname.encode('utf8')))
