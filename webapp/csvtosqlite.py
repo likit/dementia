@@ -10,11 +10,56 @@ webapp = create_app('default')
 db.app = webapp
 
 
+class Elder(db.Model):
+    __tablename__ = 'eh_elders'
+    id = db.Column(db.Integer, primary_key=True)
+    prefix = db.Column(db.String(30))
+    firstname = db.Column(db.String(255))
+    lastname = db.Column(db.String(255))
+    birthday = db.Column(db.String(40))
+    gender = db.Column(db.String(20))
+    pid = db.Column(db.String(13))
+    living = db.Column(db.Boolean)
+    note = db.Column(db.Text)
+    created_date = db.Column(db.String(40))
+    created_by = db.Column(db.Integer, db.ForeignKey('eh_users.id'))
+    updated_date = db.Column(db.String(40))
+    updated_by = db.Column(db.Integer, db.ForeignKey('eh_users.id'))
+    height = db.Column(db.Integer)
+    weight = db.Column(db.Integer)
+    edu_id = db.Column(db.Integer, db.ForeignKey('ref_educations.id'))
+
+    schema = {
+            'id': lambda x: x[0],
+            'prefix': lambda x: unicode(x[1], 'utf8'),
+            'firstname': lambda x: unicode(x[2], 'utf8'),
+            'lastname': lambda x: unicode(x[3], 'utf8'),
+            'birthday': lambda x: unicode(x[4], 'utf8'),
+            'gender': lambda x: unicode(x[5], 'utf8'),
+            'pid': lambda x: unicode(x[6], 'utf8'),
+            'living': lambda x: to_bool(unicode(x[7], 'utf8')),
+            'note': lambda x: unicode(x[8], 'utf8'),
+            'created_date': lambda x: unicode(x[9], 'utf8'),
+            'created_by': lambda x: x[10],
+            'updated_date': lambda x: unicode(x[11], 'utf8'),
+            'updated_by': lambda x: x[12],
+            'height': lambda x: x[13],
+            'weight': lambda x: x[14],
+            'edu_id': lambda x: x[15],
+            }
+
+
+class User(db.Model):
+    __tablename__ = 'eh_users'
+    id = db.Column(db.Integer, primary_key=True)
+
+
 class Education(db.Model):
-    __tablename__ = 'ref_education'
+    __tablename__ = 'ref_educations'
     id = db.Column(db.Integer, primary_key=True)
     degree = db.Column(db.String(255))
     level = db.Column(db.Integer)
+    edu = db.relationship('Elder', backref='education', lazy='dynamic')
 
 class Region(db.Model):
     __tablename__ = 'ref_regions'
@@ -194,17 +239,22 @@ def insert_answer_health(infile):
         if n == 5: break
     db.session.commit()
 
-def insert_data(infile, model, values):
+def insert_data(infile, model):
     reader = csv.reader(open(infile))
     n = 0
-    for row in reader:
+    for n, row in enumerate(reader):
         kwargs = {}
-        for k,v in values.iteritems():
+        for k,v in model.schema.iteritems():
             kwargs[k] = v(row)
 
         r = model(**kwargs)
-        db.session.add(r)
-    db.session.commit()
+        try:
+            db.session.add(r)
+            db.session.commit()
+        except:
+            print(row)
+
+        if n == 20: break
 
 
 def main():
@@ -245,15 +295,24 @@ def main():
                 'amphur_id': lambda x: x[2],
                 'district_id': lambda x: x[3],
                 }
+        edu_values = {
+                'id': lambda x: x[0],
+                'degree': lambda x: unicode(x[1], 'utf8'),
+                'level': lambda x: x[2],
+                }
 
         # insert_data(os.path.join(datadir, 'ref_province.csv'),
         #         Province, province_values)
-        insert_data(os.path.join(datadir, 'ref_district.csv'),
-                District, district_amphur_values)
-        insert_data(os.path.join(datadir, 'ref_amphur.csv'),
-                Amphur, district_amphur_values)
-        insert_data(os.path.join(datadir, 'ref_pad.csv'),
-                Pad, pad_values)
+        # insert_data(os.path.join(datadir, 'ref_district.csv'),
+        #         District, district_amphur_values)
+        # insert_data(os.path.join(datadir, 'ref_amphur.csv'),
+        #         Amphur, district_amphur_values)
+        # insert_data(os.path.join(datadir, 'ref_pad.csv'),
+        #         Pad, pad_values)
+        # insert_data(os.path.join(datadir, 'ref_education.csv'),
+        #         Education, edu_values)
+
+        insert_data(os.path.join(datadir, 'eh_elder.csv'), Elder)
 
         # for row in Question.query.all():
         #     print("{0} {1}".format(row.id, row.qname.encode('utf8')))
