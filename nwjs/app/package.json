@@ -1,0 +1,7 @@
+{
+    "name": "nw-hello-world",
+    "main": "index.html",
+    "dependencies": {
+        "markdown": "0.5.x"
+    }
+}
