@@ -14,6 +14,20 @@ class NotValidatingSelectField(SelectField):
     def pre_validate(self, form):
         pass
 
+class PersonalForm(Form):
+    #TODO: Change street_number and district_number to address and moo
+    # in other forms
+    # For editing some personal information
+    firstname = StringField(u'ชื่อ', validators=[Required()])
+    lastname = StringField(u'นามสกุล', validators=[Required()])
+    # pid = StringField(u'รหัสบัตรประชาชน', validators=[Required()])
+    address = StringField(u'บ้านเลขที่', validators=[Required()])
+    moo = StringField(u'หมู่', validators=[Required()])
+    age = IntegerField(u'อายุ', validators=[NumberRange(1,130), Optional()])
+    weight = StringField(u'น้ำหนัก', validators=[Optional()])
+    height = StringField(u'ส่วนสูง', validators=[Optional()])
+    submit = SubmitField()
+
 class Form1(Form):
     # Personal info part
     collectdate = StringField(u'', validators=[Required()])

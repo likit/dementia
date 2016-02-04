@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for("static", filename="jquery-ui/datepicker-th.js") }}"></script>
+<script src="{{ url_for("static", filename="province.js") }}"></script>
+{% endblock %}
+
+{% block title %}แบบแก้ไขข้อมูลผู้สูงอายุ{% endblock %}
+
+{% block page_content %}
+{% if current_user.verified %}
+<form id="mainform" method="post">
+    {{ form.hidden_tag() }}
+    {% if form.errors %}
+        {{ form.errors }}
+        <div class="alert alert-warning" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            กรุณากรอกข้อมูลช่องที่ต้องกรอกให้ครบ
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    {% endif %}
+<div class="page-header">
+<div>
+    <div class="panel panel-primary">
+        <div class="panel panel-heading"><h4><strong>ข้อมูลผู้กรอกแบบประเมิน</strong></h4></div>
+        <div class="panel-body">
+            <p><strong>รหัสบัตรประชาชน: </strong>{{ current_user.username }}
+            <strong>ชื่อ: </strong>{{ current_user.title }} {{ current_user.name }} {{ current_user.lastname }}</p>
+            <p><strong>ตำแหน่ง: </strong>{{ current_user.position }}
+            <strong>หน่วยงาน: </strong>{{ current_user.org }}
+            <strong>จังหวัด: </strong>{{ current_user.province }}</p>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h4><strong>แก้ไขข้อมูลส่วนตัว</strong></h4>
+    <div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table table-striped table-bordered">
+                    <tr><td>
+                            <h2><small> รหัสบัตรประชาชน {{ elder.pid }}</small></h2>
+                        <br>
+                        <div class="form-group form-inline">
+                        {{ form.firstname.label(for="firstname") }} {{ form.firstname(class="form-control", size="40", required=True) }}
+
+                        {{ form.lastname.label(for="lastname") }} {{ form.lastname(class="form-control", size="40", required=True) }}
+
+                        {{ form.age.label(for="age") }} {{ form.age(size="3", class="form-control") }}
+                        </div>
+                    </td></tr>
+                    <tr><td>
+                            <div class="form-group form-inline">
+                            {{ form.address.label(for="address") }} {{ form.address(size="6", class="form-control", required=True) }}
+
+                            {{ form.moo.label(for="moo") }} {{ form.moo(size="3", class="form-control", required=True) }}
+
+                            <h3><small>ตำบล {{ elder.district }} อำเภอ {{ elder.amphur }} จังหวัด {{ elder.province }}</small></h3>
+                            </div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="form-group form-inline">
+                        {{ form.weight.label(for="weight") }} {{ form.weight(size="6", class="form-control") }}
+                        {{ form.height.label(for="height") }} {{ form.height(size="6", class="form-control") }}
+                        </div>
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+<br/>
+<br/>
+<center>{{ form.submit(class="btn btn-primary", value="ส่งข้อมูล") }}</center>
+</form>
+
+{% else %}
+    <div class="panel panel-default">
+        <div class="panel panel-heading"><h4><strong>ขออภัย</strong></h4></div>
+        <div class="panel-body">
+            <p>บัญชีของท่านยังไม่ผ่านการตรวจสอบจึงไม่สามารถกรอกข้อมูลได้ในขณะนี้</p>
+            <p>โปรดรอให้บัญชีของท่านได้รับการยืนยันจากเจ้าหน้าที่ดูแลระบบก่อน</p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

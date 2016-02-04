@@ -13,7 +13,7 @@ from flask import (render_template, session, redirect,
 from bson import json_util
 from . import main
 from .. import db
-from .forms import Form1
+from .forms import Form1, PersonalForm
 from .. import APP_ROOT, APP_STATIC
 from app.models import User
 from app.main.models import Elder, AnswerForm
@@ -1207,3 +1207,17 @@ def mmse_viz(year):
                {'key': u'ไม่มีข้อมูล', 'y': na},
            ]
     return render_template('viz/mmse.html', piedata=piedata, total=n, year=year)
+
+@main.route('/edit_info', methods=['POST', 'GET'])
+def edit_info():
+    qpid = request.args.get('qpid')
+    elder = Elder.query.filter_by(pid=qpid).first()
+    form = PersonalForm(obj=elder)
+    if form.validate_on_submit():
+        form.populate_obj(elder)
+        # db.session.add()
+        #TODO: Add eror handler here
+        db.session.commit()
+        flash('บันทึกข้อมูลเรียบร้อยแล้ว')
+        return redirect(url_for('main.view_person', pid=elder.pid))
+    return render_template('info_form.html', form=form, elder=elder)
