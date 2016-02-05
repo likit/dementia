@@ -342,9 +342,9 @@ def view_person(pid):
     elder = Elder.query.filter_by(pid=pid).first()
 
     #TODO: uncomment the line below
-    # for res in AnswerForm.query.filter_by(elder_id=elder.id,
-    #         locale=current_user.province):
-    for res in AnswerForm.query.filter_by(elder_id=elder.id):
+    for res in AnswerForm.query.filter_by(elder_id=elder.id,
+            locale=current_user.province):
+    # for res in AnswerForm.query.filter_by(elder_id=elder.id):
         no += 1
         result = [no,
                   elder.pid,
@@ -370,9 +370,9 @@ def view_result():
     form = Form1(request.form)
 
     #TODO: uncomment the line below
-    # for f in AnswerForm.query.filter_by(elder_id=elder.id,
-    #         locale=current_user.province):
-    for f in AnswerForm.query.filter_by(elder_id=elder.id):
+    for f in AnswerForm.query.filter_by(elder_id=elder.id,
+            locale=current_user.province):
+    # for f in AnswerForm.query.filter_by(elder_id=elder.id):
         if collectdate == str(f.collected_date.date()):
             break
 
@@ -821,8 +821,9 @@ def get_all_data():
     data = []
     no = 0
     # no = start
-    # for res in Elder.query.filter_by(province=current_user.province):
-    for res in Elder.query.all():
+    for res in Elder.query.filter_by(province=current_user.province,
+            district=current_user.district,amphur=current_user.amphur):
+    # for res in Elder.query.all():
         no += 1
         try:
             result = [no,
@@ -861,8 +862,8 @@ def age_viz(year):
     if current_user.username == 'admin':  # TEMPORARY
         cursor = AnswerForm.query.all()
     else:
-        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
-        cursor = AnswerForm.query.all()
+        cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        # cursor = AnswerForm.query.all()
 
     n = 0
     for rec in cursor:
@@ -951,8 +952,8 @@ def knee_viz(year):
     if current_user.username == 'admin':  # TEMPORARY
         cursor = AnswerForm.query.all()
     else:
-        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
-        cursor = AnswerForm.query.all()
+        cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        # cursor = AnswerForm.query.all()
 
     n = 0
     for rec in cursor:
@@ -1002,8 +1003,8 @@ def longterm_viz(year):
     if current_user.username == 'admin':  # TEMPORARY
         cursor = AnswerForm.query.all()
     else:
-        # cursor = AnswerForm.query.filter_by(locale=current_user.province)
-        cursor = AnswerForm.query.all()
+        cursor = AnswerForm.query.filter_by(locale=current_user.province)
+        # cursor = AnswerForm.query.all()
 
     n = 0
     scores = []
