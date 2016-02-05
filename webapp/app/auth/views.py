@@ -29,6 +29,8 @@ def login():
                 form.password.data):
             #FIXME: use email instead?
             user.last_login = datetime.now()
+            db.session.add(user)
+            db.session.commit()
             login_user(user, form.remember_me.data)
             print('logged in!!', user.is_authenticated())
             return redirect(request.args.get('next') \
