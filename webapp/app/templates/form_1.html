@@ -52,6 +52,14 @@ $(document).ready(function() {
             });
         });
 
+    $('#fpg_level').change(function() {
+        if(parseFloat($(this).val()) >= 100) {
+            $("#fpg").prop("checked", true);
+        } else {
+            $("fpg").prop("checked", false);
+        }
+    })
+
     $('input[type=submit]').button();
     $("#collectdate").datepicker($.datepicker.regional["th"]);
     $('#collectdate').on('change', function() {
@@ -811,79 +819,120 @@ $(document).ready(function() {
                     </div>
                     <table class="table table-striped table-bordered">
                         <tr><td>
-                                {{ form.pid.label }} {{ form.pid(size="13") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                            {{ form.pid.label(class="control-label") }}
+                            {{ form.pid(class="form-control", maxlength="13", size="13") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
                             {% if form.pid.errors %}
                                 {% for error in form.pid.errors %}
                                     <div class="pid_error">{{ error }}</div>
                                 {% endfor %}
                             {% endif %}
-                            <button id="pid-search">ค้นหา</button> <span id="pid-search-badge" class="badge"></span>
-                            <br/>
-                            {{ form.firstname.label }} {{ form.firstname(size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                            <button class="btn btn-default btn-sm" id="pid-search">ค้นหา</button> <span id="pid-search-badge" class="badge"></span>
+                        </td></tr>
+                        <tr><td>
+                            <div class="form-inline">
+                            {{ form.firstname.label }} {{ form.firstname(class="form-control", size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
-                            {{ form.lastname.label }} {{ form.lastname(size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                            {{ form.lastname.label }} {{ form.lastname(class="form-control", size="40") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
                             {{ form.age.label }} {{ form.age(size="3") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                                {{ form.street_number.label }} {{ form.street_number(size="6") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                                <div class="form-inline">
+                                {{ form.street_number.label }} {{ form.street_number(class="form-control", size="6") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
-                                {{ form.district_number.label }} {{ form.district_number(size="3") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                                {{ form.district_number.label }} {{ form.district_number(class="form-control", size="3") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
-                                {{ form.province.label }} {{ form.province() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
-
-
-                                {{ form.amphur.label }} {{ form.amphur() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                                {{ form.province.label }} {{ form.province(class="form-control") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
 
 
-                                {{ form.district.label }} {{ form.district() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                                {{ form.amphur.label }} {{ form.amphur(class="form-control") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+
+
+                                {{ form.district.label }} {{ form.district(class="form-control") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                                </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.gender.label }} {{ form.gender() }}
-                            {{ form.weight.label }} {{ form.weight(size="6") }}
-                            {{ form.height.label }} {{ form.height(size="6") }}
-                            {{ form.marital.label }} {{ form.marital() }}
-                            {{ form.marital_other.label }} {{ form.marital_other(disabled=True) }}
+                            <div class="form-inline">
+                            {{ form.gender.label }} {{ form.gender(class="form-control") }}
+                            {{ form.weight.label }} {{ form.weight(class="form-control", size="6") }}
+                            {{ form.height.label }} {{ form.height(class="form-control", size="6") }}
+                            {{ form.marital.label }} {{ form.marital(class="form-control") }}
+                            {{ form.marital_other.label }} {{ form.marital_other(class="form-control", disabled=True) }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.edu.label }} {{ form.edu() }}
-                            {{ form.edu_other.label }} {{ form.edu_other(disabled=True) }}
-                            {{ form.edu_years.label }} {{ form.edu_years(disabled=True) }}
+                            <div class="form-inline">
+                            {{ form.edu.label }} {{ form.edu(class="form-control") }}
+                            {{ form.edu_other.label }} {{ form.edu_other(class="form-control", disabled=True) }}
+                            {{ form.edu_years.label }} {{ form.edu_years(class="form-control", disabled=True) }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.living.label }} {{ form.living() }}
-                            {{ form.living_caregiver.label }} {{ form.living_caregiver(disabled=True) }}
-                            {{ form.living_other.label }} {{ form.living_other(disabled=True) }}
+                            <div class="form-inline">
+                            {{ form.living.label }} {{ form.living(class="form-control") }}
+                            {{ form.living_caregiver.label }} {{ form.living_caregiver(class="form-control", disabled=True) }}
+                            {{ form.living_other.label }} {{ form.living_other(class="form-control", disabled=True) }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.income.label }} {{ form.income() }}
+                            <div class="form-inline">
+                            {{ form.income.label }} {{ form.income(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.elder_club.label }} {{ form.elder_club() }}
+                            <div class="form-inline">
+                            {{ form.elder_club.label }} {{ form.elder_club(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.health_status.label }} {{ form.health_status() }}
+                            <div class="form-inline">
+                            {{ form.health_status.label }} {{ form.health_status(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.smoking.label }} {{ form.smoking() }}
-                            {{ form.smoke_freq.label }} {{ form.smoke_freq() }}
-                            {{ form.smoke_per_week.label }} {{ form.smoke_per_week() }}
-                            {{ form.smoke_per_day.label }} {{ form.smoke_per_day() }}
-                            {{ form.smoke_years.label }} {{ form.smoke_years() }}
-                            {{ form.quit_smoke_years.label }} {{ form.quit_smoke_years() }}
+                            <div class="form-inline">
+                            {{ form.smoking.label }} {{ form.smoking(class="form-control") }}
+                            {{ form.smoke_freq.label }} {{ form.smoke_freq(class="form-control") }}
+                            {{ form.smoke_per_week.label }} {{ form.smoke_per_week(class="form-control") }}
+                            {{ form.smoke_per_day.label }} {{ form.smoke_per_day(class="form-control") }}
+                            {{ form.smoke_years.label }} {{ form.smoke_years(class="form-control") }}
+                            {{ form.quit_smoke_years.label }} {{ form.quit_smoke_years(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.alcohol.label }} {{ form.alcohol() }}
-                            {{ form.drink_per_day.label }} {{ form.drink_per_day() }}
-                            {{ form.drink_years.label }} {{ form.drink_years() }}
-                            {{ form.quit_drink_years.label }} {{ form.quit_drink_years() }}
+                            <div class="form-inline">
+                            {{ form.alcohol.label }} {{ form.alcohol(class="form-control") }}
+                            {{ form.drink_per_day.label }} {{ form.drink_per_day(class="form-control") }}
+                            {{ form.drink_years.label }} {{ form.drink_years(class="form-control") }}
+                            {{ form.quit_drink_years.label }} {{ form.quit_drink_years(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.congenital_disease.label }} {{ form.congenital_disease() }}
+                            <div class="form-inline">
+                            {{ form.congenital_disease.label }} {{ form.congenital_disease(class="form-control") }}
+                            </div>
                         </td></tr>
                         <tr><td>
-                            {{ form.congenital_dis_other.label }} {{ form.congenital_dis_other() }}
-                            {{ form.congenital_dis_years.label }} {{ form.congenital_dis_years() }}
+                            <div class="form-inline">
+                            {{ form.congenital_dis_other.label }} {{ form.congenital_dis_other(class="form-control") }}
+                            {{ form.congenital_dis_years.label }} {{ form.congenital_dis_years(class="form-control") }}
+                            </div>
+                        </td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <h4><strong>ระดับน้ำตาล</strong></h4>
+        <div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered">
+                        <tr><td>
+                                {{ form.fpg_level.label }} {{ form.fpg_level() }} มก/ดล.
+                        </td></tr>
+                        <tr><td>
+                                {{ form.fcg_level.label }} {{ form.fcg_level() }} มก/ดล.
                         </td></tr>
                     </table>
                 </div>
@@ -1949,7 +1998,7 @@ $(document).ready(function() {
     </div>
     <br/>
     <br/>
-    <center>{{ form.submit(value="ส่งข้อมูล") }}</center>
+    <center>{{ form.submit(value="ส่งข้อมูล", class="btn btn-primary btn-lg") }}</center>
     </form>
 
     {% else %}

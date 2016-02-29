@@ -8,6 +8,7 @@ from wtforms import (StringField,
                         SelectField,
                         BooleanField,
                         RadioField,
+                        DecimalField,
                         )
 
 class NotValidatingSelectField(SelectField):
@@ -148,6 +149,8 @@ class Form1(Form):
     congenital_dis_years = IntegerField(u'เป็นมาเป็นเวลา (ปี)', validators=[Optional()])
 
     # Other parts
+    fpg_level = DecimalField(u'น้ำตาลในเลือด', validators=[Optional()])
+    fcg_level = DecimalField(u'น้ำตาลปลายนิ้ว', validators=[Optional()])
     systolic = IntegerField(u'ความดันโลหิตตัวบน หรือซิสโตลิค (SBP)', validators=[Optional()])
     diastolic = IntegerField(u'ความดันโลหิตตัวล่าง หรือไดแอสโตลิค (DBP)', validators=[Optional()])
     smoke_screening = BooleanField(u'ยังคงสูบบุหรี่ ยาเส้น ยาสูบ บุหรี่ซิกาแรต บุหรี่ซิการ์ หรือหยุดสูบไม่เกิน 1 ปี', validators=[Optional()])

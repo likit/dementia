@@ -65,6 +65,8 @@ class AnswerForm(db.Model):
     congenital_dis_other = db.Column(db.String(128))
     congenital_dis_years = db.Column(db.Integer)
 
+    fpg_level = db.Column(db.Float)
+    fcg_level = db.Column(db.Float)
     systolic = db.Column(db.Integer)
     diastolic = db.Column(db.Integer)
     smoke_screening = db.Column(db.Boolean)
