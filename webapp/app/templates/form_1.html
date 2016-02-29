@@ -804,9 +804,11 @@ $(document).ready(function() {
                     <div class="alert alert-warning">
                     <small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small> ต้องกรอก
                     </div>
+                    <div class="form-inline">
                     <label class="control-label" for="collectdate">โปรดเลือกวันที่เก็บข้อมูล </label>
                     {# <input type="text" id="datepicker"> #}
-                    {{ form.collectdate() }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                    {{ form.collectdate(class="form-control") }}<small><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></small>
+                    </div>
                 </div>
             </div>
         </div>
